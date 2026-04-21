@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 42 42.0007" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="frame">
+<g id="object">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M18.2241 10.5014H12.3137V16.5069H18.2241V10.5014ZM10.8361 9V18.0083H19.7017V9H10.8361Z" fill="var(--fill-0, black)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M31.5224 24.0138H25.612V30.0193H31.5224V24.0138ZM24.1344 22.5124V31.5207H33V22.5124H24.1344Z" fill="var(--fill-0, black)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M19.4482 26.6302L15.2689 22.3836L11.0896 26.6302L15.2689 30.8767L19.4482 26.6302ZM15.2689 20.2604L9 26.6302L15.2689 33L21.5378 26.6302L15.2689 20.2604Z" fill="var(--fill-0, black)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M27.8284 14.2548V18.0083H29.306V14.2548H33V12.7535H29.306V9H27.8284V12.7535H24.1344V14.2548H27.8284Z" fill="var(--fill-0, black)"/>
+</g>
+</g>
+</svg>
