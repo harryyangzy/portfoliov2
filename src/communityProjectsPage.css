@@ -67,7 +67,7 @@
 
 .cp__brand-title {
   margin: 0;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 36px;
   font-weight: 700;
   line-height: 32px;
@@ -77,7 +77,7 @@
 
 .cp__brand-tag {
   margin: 4px 0 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 16px;
@@ -108,7 +108,7 @@
   border-radius: 16px;
   border: 2px solid var(--cp-beige-400, #e2e1df);
   background: var(--cp-beige-100, #fffffd);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 18px;
   letter-spacing: -0.04em;
   color: var(--cp-beige-800, #98938a);
@@ -235,7 +235,7 @@
 
 .cp-mail__title {
   margin: 0;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 18px;
   font-weight: 500;
   line-height: 20px;
@@ -251,7 +251,7 @@
 
 .cp-mail__sub {
   margin: 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 16px;
   line-height: 16px;
   letter-spacing: -0.02em;
@@ -260,7 +260,7 @@
 
 .cp-mail__snippet {
   margin: 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: -0.02em;
@@ -293,7 +293,7 @@
   margin: 0;
   padding: 40px 40px 32px;
   border-bottom: 2px solid var(--cp-beige-400, #e2e1df);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 32px;
   font-weight: 700;
   line-height: 32px;
@@ -347,7 +347,7 @@
 
 .cp-meta__name {
   margin: 0;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 20px;
   font-weight: 700;
   line-height: 32px;
@@ -357,7 +357,7 @@
 
 .cp-meta__to {
   margin: 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 18px;
   line-height: 20px;
   letter-spacing: -0.02em;
@@ -366,7 +366,7 @@
 
 .cp-meta__date {
   margin: 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 16px;
   line-height: 16px;
   letter-spacing: -0.02em;
@@ -408,7 +408,7 @@
 
 .cp-attachment__name {
   margin: 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: -0.02em;
@@ -417,14 +417,14 @@
 
 .cp-attachment__date {
   margin: 0;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 14px;
   line-height: 16px;
   color: var(--cp-grey-120, #5c6166);
 }
 
 .cp-prose {
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 16px;
   line-height: 16px;
   letter-spacing: -0.02em;

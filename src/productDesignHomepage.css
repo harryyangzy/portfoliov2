@@ -79,7 +79,7 @@
 
 .pd-sidebar__bio {
   margin: 0;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 18px;
   font-weight: 400;
   line-height: 20px;
@@ -95,7 +95,7 @@
   border-radius: 100px;
   border: 1px solid var(--pd-btn-secondary-stroke);
   background: var(--pd-white);
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 16px;
@@ -195,7 +195,7 @@
 }
 
 .pd-nav-item__label {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 18px;
   font-weight: 500;
   line-height: 20px;
@@ -311,7 +311,7 @@
 .pd-card__eyebrow {
   margin: 0;
   width: 100%;
-  font-family: 'Hedvig Letters Sans', 'DM Sans', sans-serif;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 16px;
@@ -349,7 +349,7 @@
   position: relative;
   z-index: 1;
   max-width: 100%;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica-text);
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.96px;
@@ -523,7 +523,7 @@
 
 .pd-section-placeholder__title {
   margin: 0 0 12px;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.04em;
@@ -532,7 +532,7 @@
 
 .pd-section-placeholder__body {
   margin: 0;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-parabolica);
   font-size: 16px;
   line-height: 1.5;
   color: var(--pd-text-secondary);

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Hedvig+Letters+Sans&family=Reenie+Beanie&display=swap');
+/* Fonts load from <link> in index.html (avoids @import delay / opsz quirks). */
 
 *,
 *::before,
@@ -15,6 +15,7 @@ body,
 body {
   margin: 0;
   min-height: 100%;
+  font-family: var(--font-parabolica);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
