@@ -1,0 +1,859 @@
+/* STUSH case study — Figma 2302:2301, content column 2371:4957 (size-full, w-full) */
+
+/*
+ * Quick map — “which class runs which block”
+ *   .stush / .stush__panel     → white case-study shell + main padding
+ *   .stush__back                → “← Back” pill link (top of page)
+ *   .stush-hero*                → grey hero band (title, meta, right image)
+ *   .stush-skills / .stush-skill → skill tag row under hero
+ *   .stush-stack + .stush-band  → vertical stack of grey rounded sections
+ *   .stush-band--tight         → abuts the next .stush-band (e.g. Problem→Solution, Initial obs→Pain)
+ *   .stush-card*                → generic white content cards (shared padding/variants)
+ *   .stush-kicker, .stush-h2, .stush-prose, .stush-subh → type inside cards
+ *   .stush-split*               → two-column rows (Problem, Solution, Initial obs, Outcomes)
+ *   .stush-audit*                → “Initial observation” screenshot mosaic + sizes per tile
+ *   .stush-pain-card--left / --right → column shell; left = .stush-pain__body--fill; right = .stush-pain__body--whatnow (Figma 2307:2439)
+ *   .stush-wire-grid*            → wireframe strip inside a white card
+ *   .stush-ds-banner             → full-width design-system image band
+ *   .stush-outcome-learned*      → “I learned a lot” white card + metrics (+85% / +31%)
+ *   .stush-metrics-row / .stush-metric → stat cards (outcomes + learned row)
+ *   .stush-img-rounded*         → image shapes/aspect ratios for splits
+ */
+
+/* -------- Shell: white study surface in sidebar layout (.stush* on <body> wrapper) -------- */
+.pd-case-study-body .stush {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* Main white column: left edge rounded, right flush to viewport */
+.stush {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 50px 0 0 50px;
+  box-sizing: border-box;
+}
+
+/* Inner padding for all case content */
+.stush__panel {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 40px 80px 0;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+}
+
+/* Back link (text “← Back”, not a card) */
+.stush__back {
+  display: inline-flex;
+  align-items: center;
+  height: 60px;
+  padding: 8px 20px;
+  margin-bottom: 25px;
+  border-radius: 999px;
+  background: var(--stush-grey-40, #f6f6f6);
+  font-family: var(--font-parabolica);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+  color: #000;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.stush__back:hover {
+  background: #fff;
+  color: #5c6166;
+}
+
+.stush__back:focus-visible {
+  outline: 2px solid var(--pd-blue-80, #77b7f8);
+  outline-offset: 2px;
+  background: #fff;
+  color: #5c6166;
+}
+
+/* -------- Hero: top grey band — title, season, team, video/image -------- */
+.stush-hero {
+  display: flex;
+  min-height: 0;
+  position: relative;
+  padding: 0 60px;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+  background: #f6f6f6;
+  margin-bottom: 25px;
+  border-radius: 60px;
+  overflow: visible;
+  box-sizing: border-box;
+  /* Override .pd-page body text (#607589) — hero meta is all black except __meta-sub */
+  color: #000;
+}
+
+@media (min-width: 900px) {
+  .stush-hero {
+    flex-wrap: nowrap;
+  }
+
+  .stush-hero__copy {
+    max-width: calc(100% - 540px);
+  }
+
+  .stush-hero__img-wrap {
+    position: absolute;
+    top: 50%;
+    right: 60px;
+    transform: translateY(-50%);
+  }
+}
+
+.stush-hero__copy {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  padding: 50px 0 30px 0;
+  align-items: flex-start;
+}
+
+.stush-hero__title {
+  margin: 0;
+  font-family: var(--font-parabolica-text);
+  font-size: var(--type-h2-size);
+  font-weight: var(--type-h2-weight);
+  line-height: var(--type-h2-line);
+  letter-spacing: var(--type-h2-track);
+  color: #000;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+/* Case study hero — time: H6 black; team/status: H7 (weight + color) */
+.stush-hero__meta-top {
+  margin: 12px 0 0;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-h6-size);
+  font-weight: var(--type-h6-weight);
+  line-height: var(--type-h6-line);
+  letter-spacing: var(--type-h6-track);
+  color: #000;
+}
+
+.stush-hero__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.stush-hero__meta-col {
+  display: flex;
+  gap: 12px;
+  font-family: var(--font-parabolica);
+}
+
+.stush-hero__meta-label {
+  margin: 0;
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-bold-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-bold-track);
+  color: #000;
+}
+
+.stush-hero__meta-val {
+  margin: 0;
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-track);
+  color: #000;
+}
+
+.stush-hero__meta-sub {
+  margin: 0;
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-track);
+  color: var(--pd-grey-90, #a1aab2);
+}
+
+.stush-hero__img-wrap {
+  flex: 0 0 auto;
+  width: 520px;
+  height: 520px;
+  max-width: min(520px, 100%);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  overflow: visible;
+}
+
+.stush-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Skill chips (below hero) */
+.stush-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 25px;
+  font-family: var(--font-parabolica);
+  font-size: 20px;
+  letter-spacing: -0.8px;
+  box-sizing: border-box;
+}
+
+.stush-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  height: 60px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: #000;
+  border: 1px solid transparent;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.stush-skill:hover {
+  border-color: #cad1d9;
+  background: #f5f5f5;
+}
+
+/* Vertical column of all main sections (each section usually a .stush-band) */
+.stush-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Grey rounded section wrapper — holds splits, pain grid, or white cards */
+.stush-band {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border-radius: 60px;
+  background: #f6f6f6;
+  box-sizing: border-box;
+}
+
+/* Next .stush-band sits 20px higher so pairs touch: Problem→Solution, Initial observation→Pain */
+.stush-band--tight {
+  margin-bottom: -20px;
+}
+
+/* -------- Generic white card — Problem, Solution, Initial obs text, wireframes, DS copy, etc. -------- */
+.stush-card {
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.stush-card--pad-sm {
+  padding: 20px 30px 30px;
+}
+
+/* Small caps label (“PROBLEM”, “OUTCOMES”, …) at top of a white card */
+.stush-kicker {
+  margin: 0 0 16px;
+  font-family: var(--type-font-caption);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  letter-spacing: var(--type-caption-track);
+  text-transform: uppercase;
+  color: #000;
+}
+
+/* Card section titles (h2) */
+.stush-h2 {
+  margin: 0 0 16px;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-h3-size);
+  font-weight: 400;
+  line-height: var(--type-h4-line);
+  letter-spacing: var(--type-h3-track);
+  color: #000;
+}
+
+/* Body copy inside white cards + pain blocks */
+.stush-prose {
+  margin: 0;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', sans-serif;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
+  color: #5c6166;
+}
+
+.stush-prose p {
+  margin: 0 0 8px;
+}
+
+.stush-prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* H8 subheads: tight line box + less gap before body copy (line-height: 1 matches 16px type with no extra leading) */
+.stush-prose strong,
+.stush-subh {
+  display: block;
+  margin: 0 0 4px;
+  font-family: var(--font-parabolica);
+  font-size: 16px;
+  font-weight: var(--type-h8-bold-weight);
+  line-height: 1;
+  letter-spacing: var(--type-h8-bold-track);
+  color: #000;
+}
+/* -------- Split rows: image + text (Problem / Solution / Initial observation / Outcomes) -------- */
+.stush-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Text column in a .stush-split (white .stush-card or plain) */
+.stush-split__text {
+  flex: 1 1 0;
+  min-width: min(280px, 100%);
+}
+
+/* Image column in a .stush-split (holds a .stush-img-rounded) */
+.stush-split__media {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+
+.stush-split__media > .stush-img-rounded {
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+/* Problem row — right: site screenshot (.stush-img-rounded--h312) */
+.stush-split__media--problem {
+  flex: 1 1 38%;
+  max-width: min(520px, 48%);
+}
+
+/* Solution row — flips order; left image, right “So I rebuilt it” card */
+.stush-split--solution {
+  flex-direction: row;
+}
+
+.stush-split--solution .stush-split__media {
+  flex: 1 1 36%;
+  max-width: min(480px, 46%);
+}
+
+.stush-split--solution .stush-split__text {
+  flex: 1 1 0;
+  min-width: min(260px, 100%);
+}
+
+/* White card: kicker pinned top, main block bottom (Outcomes / learned sections) */
+.stush-card--top-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-self: stretch;
+}
+
+.stush-card--top-bottom .stush-kicker {
+  margin-bottom: 0;
+}
+
+.stush-card__bottom {
+  margin-top: auto;
+}
+
+.stush-split--solution .stush-card--pad-sm {
+  padding-top: 30px;
+}
+
+/* Outcome tall images (Getting patties row + I learned a lot) */
+.stush-split__media--outcome-r,
+.stush-split__media--outcome-l {
+  flex: 1 1 36%;
+  max-width: min(520px, 48%);
+}
+
+/* Right column stack (e.g. “I learned a lot” card above metrics) */
+.stush-split__stack {
+  flex: 1 1 0;
+  min-width: min(280px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+}
+
+/* Outcome row: left image, right = white “I learned a lot” + .stush-outcome-learned__metrics */
+.stush-split--outcome-learned {
+  align-items: stretch;
+}
+
+@media (min-width: 800px) {
+  .stush-split--outcome-learned {
+    flex-wrap: nowrap;
+  }
+}
+
+.stush-split--outcome-learned .stush-split__media--outcome-l {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex: 0 1 min(48%, 520px);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Spacer between the big Outcomes text card and the +85% / +31% row */
+.stush-split--outcome-learned .stush-outcome-learned__stack {
+  flex: 1 1 0;
+  min-width: min(280px, 100%);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  row-gap: 20px;
+  column-gap: 0;
+  gap: 20px;
+}
+
+/* The “I learned a lot…” white .stush-card (grows to match left image) */
+.stush-outcome-learned__card {
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+}
+
+/* “Getting patties made easier” — only that split: left .stush-card matches right outcome image */
+.stush-split:has(> .stush-split__media--outcome-r) > .stush-card.stush-split__text {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  align-self: stretch;
+}
+
+/* +85% / +31% white stat cards (row under “I learned a lot…”) */
+.stush-outcome-learned__metrics {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+/* Rounded image base — used inside .stush-split__media */
+.stush-img-rounded {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 40px;
+  display: block;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+/* Problem / solution — fixed Figma aspect ratios, scale with width */
+.stush-img-rounded--h312 {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 420 / 312;
+  object-fit: cover;
+}
+
+.stush-img-rounded--h418 {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 374 / 418;
+  object-fit: cover;
+}
+
+/* Outcomes — keep 374:418 at any column width */
+.stush-img-rounded--outcome {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 374 / 418;
+  object-fit: cover;
+}
+
+/* Full-bleed design-system banner image (sits in .stush-band, not inside a .stush-card) */
+.stush-ds-banner {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  border-radius: 40px;
+  aspect-ratio: 936 / 380;
+  object-fit: cover;
+  min-height: 180px;
+}
+
+/* -------- Initial observation: white card wrapping the 4-tile + composite screenshot grid -------- */
+.stush-audit-wrap {
+  flex: 1 1 min(48%, 90%);
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Flex row(s) of .stush-audit-tile(s) + composite */
+.stush-audit-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+}
+
+.stush-audit-tile {
+  box-sizing: border-box;
+  border-radius: 30px;
+  display: block;
+  object-fit: cover;
+  flex-shrink: 0;
+  height: auto;
+}
+
+/* Mosaic slot widths (row1 / row2) — r2a = composite + overlay */
+.stush-audit-tile--r1a {
+  flex: 0 0 calc((100% - 10px) * 318 / 530);
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 318 / 231;
+}
+
+.stush-audit-tile--r1b {
+  flex: 0 0 calc((100% - 10px) * 212 / 530);
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 212 / 231;
+}
+
+.stush-audit-tile--r2a {
+  flex: 0 0 calc((100% - 10px) * 141 / 542);
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 141 / 128;
+  padding: 0;
+  overflow: hidden;
+  background: #e8f0e8;
+}
+
+.stush-audit-tile--r2b {
+  flex: 0 0 calc((100% - 10px) * 391 / 542);
+  min-width: 0;
+  max-width: 100%;
+  aspect-ratio: 391 / 128;
+}
+
+.stush-audit-composite {
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 30px;
+}
+
+.stush-audit-composite__base {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 30px;
+}
+
+.stush-audit-composite__aa {
+  position: absolute;
+  left: 14.54px;
+  top: 37.75px;
+  width: 91.66px;
+  height: 60.54px;
+  object-fit: contain;
+  object-position: left top;
+  display: block;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   PAIN POINTS — two columns
+
+   HTML: .stush-pain-card--left  |  .stush-pain-card--right
+   Body: .stush-pain__body--fill (left)  |  .stush-pain__body--whatnow (right)
+   ============================================================================= */
+
+/* --- Pain — shared (grid + card shell + base text + screenshot frame) --- */
+.stush-pain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+
+.stush-pain-card {
+  background: #fff;
+  border-radius: 40px;
+  padding: 10px 10px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.stush-pain__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+.stush-pain__body .stush-kicker {
+  margin: 0;
+}
+
+.stush-pain__body .stush-pain__title {
+  margin: 0;
+}
+
+.stush-pain__prose {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+}
+
+.stush-pain__prose .stush-subh,
+.stush-pain__prose p {
+  margin: 0;
+}
+
+.stush-pain-cap {
+  flex: 0 0 auto;
+  width: 100%;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stush-pain-cap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 700px) {
+  .stush-pain-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Pain — LEFT (“I can’t see squat”) — .stush-pain-card--left ---
+   Text area fills under the image; head vs prose uses flexible space (space-between). */
+.stush-pain-card--left .stush-pain-cap {
+  aspect-ratio: 490 / 478;
+}
+
+.stush-pain-card--left .stush-pain__body--fill {
+  flex: 1 1 0;
+  min-height: 0;
+  align-self: stretch;
+  justify-content: space-between;
+  gap: 0;
+}
+
+.stush-pain-card--left .stush-pain__body--fill .stush-pain__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stush-pain-card--left .stush-pain__body--fill .stush-pain__head .stush-pain__title {
+  margin: 0;
+}
+
+.stush-pain-card--left .stush-pain__body--fill .stush-pain__prose {
+  flex-shrink: 0;
+}
+
+/* --- Pain — RIGHT (“What do I do now?”) — .stush-pain-card--right — Figma 2307:2439
+   Card: gap 20 image↔text, pt 10 / px 10 / pb 30, r 40. Text block 2307:2441: gap 16, px 20, shrink-0. */
+.stush-pain-card--right .stush-pain-cap {
+  aspect-ratio: 299 / 292;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 100%;
+  gap: 16px;
+  padding: 0 20px;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow .stush-pain__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow .stush-pain__head .stush-pain__title {
+  margin: 0;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow .stush-pain__prose {
+  gap: 0;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow .stush-pain__prose .stush-subh {
+  margin: 0 0 8px;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow .stush-pain__prose p {
+  margin: 0 0 8px;
+}
+
+.stush-pain-card--right .stush-pain__body--whatnow .stush-pain__prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* -------- Wireframes: 2-up images inside a padded white .stush-card -------- */
+.stush-wire-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.4705fr) minmax(0, 0.5295fr);
+  grid-template-rows: minmax(240px, 1fr);
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  min-height: clamp(200px, 32vw, 480px);
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .stush-wire-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}
+
+.stush-wire-grid img {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  vertical-align: middle;
+}
+
+/* Stat row — two .stush-metric white cards (also under “I learned a lot” via .stush-outcome-learned__metrics) */
+.stush-metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Single +85% / +31% (etc.) card */
+.stush-metric {
+  flex: 1 1 200px;
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  min-width: 0;
+}
+
+/* Big number in a .stush-metric */
+.stush-metric__val {
+  margin: 0 0 16px;
+  font-family: var(--font-parabolica);
+  font-size: 32px;
+  line-height: 28px;
+  letter-spacing: -1.28px;
+  color: #000;
+}
+
+/* Caption under the metric value */
+.stush-metric__note {
+  margin: 0;
+  font-family: 'Hedvig Letters Sans', 'Parabolica', sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  color: #3e3e3e;
+  letter-spacing: -0.32px;
+}
+
+/* --- Breakpoint: stack hero + tighten padding --- */
+@media (max-width: 1100px) {
+  .stush__panel {
+    padding: 0 24px 48px 0;
+  }
+
+  .stush-hero {
+    padding: 0 24px 24px;
+    border-radius: 32px;
+  }
+
+  .stush-hero__copy {
+    gap: 40px;
+    padding-top: 32px;
+    max-width: 100%;
+  }
+
+  .stush-hero__img-wrap {
+    position: static;
+    width: min(520px, 100%);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    transform: none;
+  }
+
+}

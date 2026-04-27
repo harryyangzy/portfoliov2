@@ -13,8 +13,8 @@
   --pd-border-soft: #eee;
   --pd-white: #fff;
 
-  --pd-canvas-min-width: 1600px;
-  --pd-canvas-min-height: 1100px;
+  --pd-canvas-min-width: 100%;
+  --pd-canvas-min-height: 100%;
 
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -71,18 +71,18 @@
 .pd-sidebar__handwriting {
   margin: 0;
   font-family: 'Reenie Beanie', cursive;
-  font-size: 48px;
+  font-size: var(--type-h1-size);
   font-weight: 400;
-  line-height: 1;
+  line-height: var(--type-h1-line);
   color: #000;
 }
 
 .pd-sidebar__bio {
   margin: 0;
   font-family: var(--font-parabolica);
-  font-size: 18px;
+  font-size: var(--type-h7-size);
   font-weight: 400;
-  line-height: 20px;
+  line-height: var(--type-h7-line);
   letter-spacing: -0.72px;
   color: var(--pd-text-primary);
 }
@@ -96,10 +96,10 @@
   border: 1px solid var(--pd-btn-secondary-stroke);
   background: var(--pd-white);
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: var(--type-small-size);
   font-weight: 400;
-  line-height: 16px;
-  letter-spacing: -0.28px;
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
   color: var(--pd-text-primary);
   text-decoration: none;
   cursor: pointer;
@@ -120,6 +120,60 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
+}
+
+.pd-sidebar__social {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  padding: 4px 16px;
+  border: 1px solid var(--pd-btn-secondary-stroke);
+  border-radius: 16px;
+  background: var(--pd-white);
+}
+
+.pd-sidebar__social-label {
+  margin: 0;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-bold-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-bold-track);
+  color: var(--pd-text-primary);
+  white-space: nowrap;
+}
+
+.pd-sidebar__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 5px;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-track);
+  color: var(--pd-text-primary);
+  text-decoration: none;
+  border: 0.5px solid transparent;
+  border-radius: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pd-sidebar__social-link:hover {
+  background: #e5ecf2;
+  border-color: #93a6ba;
+  color: var(--pd-text-primary);
+}
+
+.pd-sidebar__social-link:focus-visible {
+  outline: 2px solid var(--pd-blue-80);
+  outline-offset: 2px;
 }
 
 .pd-nav-item {
@@ -196,10 +250,10 @@
 
 .pd-nav-item__label {
   font-family: var(--font-parabolica);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: -0.36px;
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-track);
   white-space: nowrap;
   color: var(--pd-text-primary);
 }
@@ -222,7 +276,16 @@
   color: var(--pd-text-secondary);
 }
 
-/* ——— Main workspace: scrollable canvas + docked toolbar ——— */
+/* ——— Main workspace: Figma 2214:532 canvas + toolbar (toolbar overlays bottom) ——— */
+
+.pd-canvas-workspace {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
 
 .pd-main {
   position: relative;
@@ -231,11 +294,80 @@
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
-  margin: 16px 16px 16px 0;
+  margin: 0;
   border: 2px solid var(--pd-neutral-disabled);
-  border-radius: 32px;
-  background: var(--pd-grey-30);
+  border-radius: 60px 0 0 60px;
+  background: none;
   overflow: hidden;
+}
+
+.pd-main--community {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  min-height: 0;
+}
+
+.pd-main--case-study {
+  margin: 0;
+  border: none;
+  border-radius: 60px 0 0 60px;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-self: stretch;
+  background: none;
+}
+
+/* Case study: blue chrome — avoid white wedge at arc (root shows through if background: none) */
+.pd-page[data-shell='case-study'] {
+  border: none;
+  min-height: 100dvh;
+  background: var(--pd-blue-10);
+}
+
+/* Case study main: flush edges even when .pd-main--community is also on the same node */
+.pd-main.pd-main--community.pd-main--case-study {
+  margin: 0;
+  border: none;
+  box-shadow: none;
+}
+
+/* Fill viewport height so no strip shows above/below the main column */
+.pd-page[data-shell='case-study'] .pd-shell {
+  flex: 1 1 auto;
+  min-height: min(100%, 100dvh);
+}
+
+.pd-page[data-shell='case-study'] .pd-main.pd-main--case-study {
+  min-height: min(100%, 100dvh);
+}
+
+.pd-page[data-shell='case-study'] .pd-case-study-body {
+  flex: 1 1 auto;
+  min-height: min(100%, 100dvh);
+}
+
+.pd-community-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.pd-case-study-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--pd-white);
+  padding: 60px 0 60px 60px;
+  box-sizing: border-box;
 }
 
 .pd-canvas {
@@ -245,32 +377,45 @@
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   outline: none;
+  position: relative;
 }
 
 .pd-canvas:focus-visible {
   box-shadow: inset 0 0 0 2px rgba(119, 183, 248, 0.6);
 }
 
+/* Content container ~2338:3713: centered in canvas; room below for floating toolbar */
 .pd-canvas__document {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   box-sizing: border-box;
-  width: max-content;
-  min-width: max(100%, var(--pd-canvas-min-width));
-  min-height: max(100%, var(--pd-canvas-min-height));
+  width: 100%;
+  min-width: var(--pd-canvas-min-width);
+  min-height: 100%;
   margin: 0 auto;
-  padding: clamp(48px, 8vw, 124px) clamp(24px, 6vw, 96px) clamp(80px, 12vw, 140px);
+  padding: 40px 24px 120px;
 }
 
 .pd-toolbar-dock {
-  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 45px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding: 8px 16px 16px;
+  min-width: 0;
+  padding: 0 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   z-index: 2;
-  background: linear-gradient(to top, var(--pd-grey-30) 65%, rgba(245, 245, 245, 0));
+  background: linear-gradient(
+    to top,
+    var(--pd-grey-30) 0%,
+    var(--pd-grey-30) 40%,
+    rgba(245, 245, 245, 0) 100%
+  );
   pointer-events: none;
 }
 
@@ -320,9 +465,6 @@
   transition: color 0.15s ease;
 }
 
-.pd-card--stush .pd-card__eyebrow {
-  color: var(--pd-blue-80);
-}
 
 .pd-card__media {
   position: relative;
@@ -350,15 +492,17 @@
   z-index: 1;
   max-width: 100%;
   font-family: var(--font-parabolica-text);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.96px;
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  letter-spacing: var(--type-h4-track);
 }
 
-/* STUSH — image hero + white title on photo */
-.pd-card__media--stush {
-  border: 4px solid var(--pd-blue-80);
+/* STUSH / QUX — Figma 2337:3102: 4px transparent; hover = blue-80 stroke (no layout shift) */
+.pd-card__media--stush,
+.pd-card__media--qux {
+  border: 4px solid transparent;
   background: var(--pd-grey-50, #d3d9df);
+  transition: border-color 0.15s ease;
 }
 
 .pd-card__title--on-photo {
@@ -366,12 +510,6 @@
   color: var(--pd-white);
   flex: 1 1 auto;
   min-width: 0;
-}
-
-/* QUX — coral title, image over grey */
-.pd-card__media--qux {
-  border: 4px solid transparent;
-  background: var(--pd-grey-50, #d3d9df);
 }
 
 .pd-card__media-fill {
@@ -410,12 +548,12 @@
   min-width: 0;
 }
 
-/* Hover — community + placeholder cards (not STUSH / QUX featured tiles) */
-.pd-card--hover:not(.pd-card--stush):not(.pd-card--qux) .pd-card__eyebrow {
+/* Project item hover — Figma 2337:3102 (ProjectItem default → hover) */
+.pd-project-item:hover .pd-card__eyebrow {
   color: var(--pd-blue-80);
 }
 
-.pd-card--hover:not(.pd-card--stush):not(.pd-card--qux) .pd-card__media {
+.pd-project-item:hover .pd-card__media {
   border-color: var(--pd-blue-80);
 }
 
@@ -430,88 +568,85 @@
   line-height: 18px;
 }
 
-/* ——— Toolbar (docked; icons from src/assets/toolbar) ——— */
+/* ——— Figma toolbar (node 2338:3546) — state = image swaps only; no CSS fills on tools ——— */
 
 .pd-toolbar {
   display: flex;
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  width: min(500px, calc(100% - 8px));
-  padding: 10px 12px;
+  box-sizing: border-box;
+  gap: 20px;
+  width: max-content;
+  max-width: min(499.8px, 100%);
+  padding: 10px;
   border-radius: 16px;
   border: 1px solid var(--pd-neutral-disabled);
   background: var(--pd-white);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
-.pd-toolbar__btn {
+.pd-toolbar__group {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 6px;
+  flex-shrink: 0;
+  gap: 0;
   margin: 0;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: none;
   font: inherit;
   color: inherit;
-  transition:
-    background 0.14s ease,
-    box-shadow 0.14s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.pd-toolbar__btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.pd-toolbar__btn:focus-visible {
+.pd-toolbar__group:focus-visible {
   outline: 2px solid var(--pd-blue-80);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.pd-toolbar__btn--active {
-  background: rgba(24, 160, 251, 0.12);
-  box-shadow: inset 0 0 0 1px rgba(24, 160, 251, 0.45);
+/*
+ * Figma exports: flyout row = 111×84 (icon + chevron baked in); solo = 84×84.
+ * One shared display height (42px @1x) so pointer/line tools match Text/Search.
+ */
+.pd-toolbar__icon-slot {
+  flex-shrink: 0;
+  line-height: 0;
+  pointer-events: none;
 }
 
-.pd-toolbar__btn--active:hover {
-  background: rgba(24, 160, 251, 0.18);
-}
-
-.pd-toolbar__icon-wrap {
-  position: relative;
-  width: 42px;
+.pd-toolbar__icon-slot--flyout {
+  display: block;
   height: 42px;
-  flex-shrink: 0;
-  pointer-events: none;
+  width: calc(42px * 111 / 84);
+  max-width: 100%;
 }
 
-.pd-toolbar__icon {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.pd-toolbar__chevron-wrap {
-  position: relative;
-  width: 7.159px;
-  height: 3px;
-  flex-shrink: 0;
-  align-self: center;
-  pointer-events: none;
-  opacity: 0.85;
-}
-
-.pd-toolbar__chevron {
+.pd-toolbar__icon-slot--flyout .pd-toolbar__icon {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center;
+}
+
+.pd-toolbar__icon-slot--solo {
+  display: block;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+}
+
+.pd-toolbar__icon-slot--solo .pd-toolbar__icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 /* Empty section placeholder (e.g. Marketing route) */
@@ -524,17 +659,19 @@
 .pd-section-placeholder__title {
   margin: 0 0 12px;
   font-family: var(--font-parabolica);
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  font-size: var(--type-h5-size);
+  font-weight: var(--type-h5-weight);
+  line-height: var(--type-h5-line);
+  letter-spacing: var(--type-h5-track);
   color: var(--pd-text-primary);
 }
 
 .pd-section-placeholder__body {
   margin: 0;
   font-family: var(--font-parabolica);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
   color: var(--pd-text-secondary);
 }
 
@@ -559,18 +696,34 @@
   .pd-main {
     flex: 1 1 auto;
     min-height: min(70vh, 900px);
-    margin: 0 12px 12px;
-    border-radius: 24px;
+    margin: 0;
+    border-radius: 60px 0 0 60px;
+  }
+
+  .pd-main.pd-main--case-study {
+    margin: 0;
+    min-height: 0;
+    border-radius: 60px 0 0 60px;
   }
 
   .pd-page {
-    --pd-canvas-min-width: 100%;
-    --pd-canvas-min-height: 780px;
+    --pd-canvas-min-height: 100%;
+  }
+
+  .pd-page[data-shell='case-study'] {
+    min-height: 100dvh;
+  }
+
+  .pd-case-study-body {
+    padding: 24px 0 24px 24px;
   }
 
   .pd-canvas__document {
-    min-width: 100%;
-    padding: 48px 20px 80px;
+    padding: 32px 20px 100px;
+  }
+
+  .pd-toolbar-dock {
+    bottom: 24px;
   }
 
   .pd-grid {

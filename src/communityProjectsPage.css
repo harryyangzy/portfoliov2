@@ -21,7 +21,7 @@
   background: transparent;
   border: none;
   box-shadow: none;
-  margin: 16px 16px 16px 0;
+  margin: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -68,20 +68,20 @@
 .cp__brand-title {
   margin: 0;
   font-family: var(--font-parabolica);
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 32px;
-  letter-spacing: -0.04em;
+  font-size: var(--type-h2-size);
+  font-weight: var(--type-h2-weight);
+  line-height: var(--type-h2-line);
+  letter-spacing: var(--type-h2-track);
   color: var(--cp-beige-900, #424031);
 }
 
 .cp__brand-tag {
   margin: 4px 0 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: var(--type-small-size);
   font-weight: 400;
-  line-height: 16px;
-  letter-spacing: -0.02em;
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
   color: var(--cp-beige-900, #424031);
 }
 
@@ -109,8 +109,8 @@
   border: 2px solid var(--cp-beige-400, #e2e1df);
   background: var(--cp-beige-100, #fffffd);
   font-family: var(--font-parabolica);
-  font-size: 18px;
-  letter-spacing: -0.04em;
+  font-size: var(--type-h7-size);
+  letter-spacing: var(--type-h7-track);
   color: var(--cp-beige-800, #98938a);
 }
 
@@ -236,10 +236,10 @@
 .cp-mail__title {
   margin: 0;
   font-family: var(--font-parabolica);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-track);
   color: var(--cp-beige-900, #424031);
 }
 
@@ -252,18 +252,18 @@
 .cp-mail__sub {
   margin: 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
   color: var(--cp-beige-900, #424031);
 }
 
 .cp-mail__snippet {
   margin: 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
   color: var(--cp-grey-110, #737980);
 }
 
@@ -294,10 +294,10 @@
   padding: 40px 40px 32px;
   border-bottom: 2px solid var(--cp-beige-400, #e2e1df);
   font-family: var(--font-parabolica);
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 32px;
-  letter-spacing: -0.04em;
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--type-h3-line);
+  letter-spacing: var(--type-h3-track);
   color: var(--cp-beige-900, #424031);
 }
 
@@ -348,28 +348,28 @@
 .cp-meta__name {
   margin: 0;
   font-family: var(--font-parabolica);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 32px;
-  letter-spacing: -0.04em;
+  font-size: var(--type-h6-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--type-h3-line);
+  letter-spacing: var(--type-h6-track);
   color: var(--cp-beige-900, #424031);
 }
 
 .cp-meta__to {
   margin: 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 18px;
-  line-height: 20px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-h7-size);
+  line-height: var(--type-h7-line);
+  letter-spacing: var(--type-h7-track);
   color: var(--cp-beige-900, #424031);
 }
 
 .cp-meta__date {
   margin: 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
   color: var(--cp-beige-900, #424031);
   white-space: nowrap;
 }
@@ -409,25 +409,25 @@
 .cp-attachment__name {
   margin: 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
   color: var(--cp-grey-130, #45494d);
 }
 
 .cp-attachment__date {
   margin: 0;
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-line);
   color: var(--cp-grey-120, #5c6166);
 }
 
 .cp-prose {
   font-family: 'Hedvig Letters Sans', 'Parabolica', 'DM Sans', sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  letter-spacing: -0.02em;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
   color: var(--cp-grey-120, #5c6166);
 }
 
@@ -529,7 +529,7 @@
 
 @media (max-width: 1100px) {
   .pd-main--community {
-    margin: 0 12px 12px;
+    margin: 0;
   }
 }
 

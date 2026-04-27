@@ -1,43 +1,52 @@
-/**
- * Design Engineering toolbar — Figma exports from
- * `src/assets/design-engineering/toolbar icons/`
- *
- * Naming: Property 1={default|hover|active}[-1..-4].png for the five flyout tools;
- * Variant2/3 (+ -1) for Text / Search.
- */
-import active0 from './toolbar icons/Property 1=active.png'
-import active1 from './toolbar icons/Property 1=active-1.png'
-import active2 from './toolbar icons/Property 1=active-2.png'
-import active3 from './toolbar icons/Property 1=active-3.png'
-import active4 from './toolbar icons/Property 1=active-4.png'
-import default0 from './toolbar icons/Property 1=default.png'
-import default1 from './toolbar icons/Property 1=default-1.png'
-import default2 from './toolbar icons/Property 1=default-2.png'
-import default3 from './toolbar icons/Property 1=default-3.png'
-import default4 from './toolbar icons/Property 1=default-4.png'
-import hover0 from './toolbar icons/Property 1=hover.png'
-import hover1 from './toolbar icons/Property 1=hover-1.png'
-import hover2 from './toolbar icons/Property 1=hover-2.png'
-import hover3 from './toolbar icons/Property 1=hover-3.png'
-import hover4 from './toolbar icons/Property 1=hover-4.png'
-import textDefault from './toolbar icons/Property 1=Variant2.png'
-import textHover from './toolbar icons/Property 1=Variant2-1.png'
-import searchDefault from './toolbar icons/Property 1=Variant3.png'
-import searchHover from './toolbar icons/Property 1=Variant3-1.png'
+import commentActive from './toolbar icons/comment active.png'
+import commentDefault from './toolbar icons/comment default.png'
+import commentHover from './toolbar icons/comment hover.png'
+import frameActive from './toolbar icons/frame active.png'
+import frameHover from './toolbar icons/frame hover.png'
+import penActive from './toolbar icons/pen active.png'
+import penDefault from './toolbar icons/pen default.png'
+import penHover from './toolbar icons/pen hover.png'
+import pointerActive from './toolbar icons/pointer active.png'
+import pointerHover from './toolbar icons/pointer hover.png'
+import searchActive from './toolbar icons/search active.png'
+import searchDefault from './toolbar icons/search default.png'
+import searchHover from './toolbar icons/search hover.png'
+import stickActive from './toolbar icons/stick active.png'
+import stickDefault from './toolbar icons/stick default.png'
+import stickHover from './toolbar icons/stick hover.png'
+import textActive from './toolbar icons/text active.png'
+import textDefault from './toolbar icons/text default.png'
+import textHover from './toolbar icons/text hover.png'
 
-/** Pointer → Comment (order matches Figma toolbar). */
+/** default / hover / active — all states from assets. Flyout tools are 111×84 (chevron in-image). */
+export type ToolbarIconTrio = {
+  default: string
+  hover: string
+  active: string
+}
+
+// Figma has no separate idle asset for pointer/frame; `hover` doubles as rest.
+const pointer: ToolbarIconTrio = {
+  default: pointerHover,
+  hover: pointerHover,
+  active: pointerActive,
+}
+const frame: ToolbarIconTrio = {
+  default: frameHover,
+  hover: frameHover,
+  active: frameActive,
+}
+
+/** Pointer → Comment. `line` uses stick. */
 export const designEngineeringChevronToolIcons = [
-  { default: default0, hover: hover0, active: active0 },
-  { default: default1, hover: hover1, active: active1 },
-  { default: default2, hover: hover2, active: active2 },
-  { default: default3, hover: hover3, active: active3 },
-  { default: default4, hover: hover4, active: active4 },
+  pointer,
+  frame,
+  { default: stickDefault, hover: stickHover, active: stickActive },
+  { default: penDefault, hover: penHover, active: penActive },
+  { default: commentDefault, hover: commentHover, active: commentActive },
 ] as const
 
 export const designEngineeringSoloToolIcons = {
-  text: { default: textDefault, hover: textHover },
-  search: { default: searchDefault, hover: searchHover },
+  text: { default: textDefault, hover: textHover, active: textActive } satisfies ToolbarIconTrio,
+  search: { default: searchDefault, hover: searchHover, active: searchActive } satisfies ToolbarIconTrio,
 } as const
-
-export type ToolbarIconTrio = { default: string; hover: string; active: string }
-export type ToolbarIconDuo = { default: string; hover: string }

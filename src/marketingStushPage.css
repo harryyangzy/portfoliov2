@@ -1,0 +1,204 @@
+.mstush {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 100%;
+  background: #fff;
+  border: 1px solid #93a6ba;
+  border-radius: 60px 0 0 60px;
+}
+
+.mstush__panel {
+  padding: 80px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.mstush__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 50px;
+}
+
+.mstush__back {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.mstush__back-icon {
+  position: absolute;
+  inset: 0;
+  width: 28px;
+  height: 28px;
+  display: block;
+  object-fit: contain;
+  transition: opacity 0.15s ease;
+}
+
+.mstush__back-icon--default {
+  opacity: 1;
+}
+
+.mstush__back-icon--hover {
+  opacity: 0;
+}
+
+.mstush__back:hover {
+  opacity: 1;
+}
+
+.mstush__back:hover .mstush__back-icon--default {
+  opacity: 0;
+}
+
+.mstush__back:hover .mstush__back-icon--hover {
+  opacity: 1;
+}
+
+.mstush__back:focus-visible {
+  outline: 2px solid #77b7f8;
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.mstush__back:focus-visible .mstush__back-icon--default {
+  opacity: 0;
+}
+
+.mstush__back:focus-visible .mstush__back-icon--hover {
+  opacity: 1;
+}
+
+.mstush__title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mstush__title {
+  margin: 0;
+  font-family: var(--font-parabolica-text);
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--type-h3-line);
+  letter-spacing: var(--type-h3-track);
+  color: #000;
+}
+
+.mstush__meta-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mstush__size {
+  margin: 0;
+  font-family: var(--font-parabolica);
+  font-size: 36px;
+  line-height: 32px;
+  letter-spacing: -1.44px;
+  color: #000;
+}
+
+.mstush__role-title {
+  margin: 0;
+  font-family: var(--font-parabolica-text);
+  font-size: 20px;
+  line-height: 16px;
+  letter-spacing: -0.8px;
+  color: #000;
+}
+
+.mstush__role-date {
+  margin: 0;
+  font-family: var(--type-font-body);
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: -0.36px;
+  color: #000;
+}
+
+.mstush-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mstush-section__copy {
+  display: grid;
+  grid-template-columns: 60px repeat(3, minmax(200px, 270px));
+  column-gap: 20px;
+  align-items: start;
+}
+
+.mstush-section__idx {
+  margin: 0;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.56px;
+  color: #607589;
+  text-transform: uppercase;
+}
+
+.mstush-section__text {
+  margin: 0;
+  font-family: var(--type-font-body);
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: -0.28px;
+  color: #000;
+  text-align: justify;
+}
+
+.mstush-section__text strong {
+  font-family: var(--font-parabolica);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.32px;
+}
+
+.mstush-carousel {
+  display: flex;
+  gap: 10px;
+  width: calc(100% - 80px);
+  margin-left: 80px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.mstush-carousel img {
+  display: block;
+  height: 400px;
+  width: auto;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .mstush__panel {
+    padding: 40px 24px 64px;
+    gap: 72px;
+  }
+
+  .mstush__header {
+    gap: 24px;
+  }
+
+  .mstush-section__copy {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+
+  .mstush-carousel {
+    width: 100%;
+    margin-left: 0;
+  }
+}

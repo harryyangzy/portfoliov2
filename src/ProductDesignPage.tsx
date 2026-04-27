@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 
 type CardConfig =
@@ -45,44 +45,23 @@ const PRODUCT_DESIGN_CARDS: CardConfig[] = [
   {
     id: 'cc-a',
     variant: 'placeholder',
-    eyebrow: 'Case Competition - 1',
-    title: 'Healthcare Finance for a Fintech Startup',
+    eyebrow: 'work in progress one',
+    title: 'Spending less time waiting for the buss - coming soon!',
   },
   {
     id: 'cc-b',
     variant: 'placeholder',
-    eyebrow: 'Case Competition - 1',
-    title: 'Healthcare Finance for a Fintech Startup',
+    eyebrow: 'case competition one',
+    title: 'Healthcare Finance for a Fintech Startup - coming soon!',
   },
 ]
 
-function ProductDesignCard({
-  card,
-  hovered,
-  onEnter,
-  onLeave,
-}: {
-  card: CardConfig
-  hovered: boolean
-  onEnter: () => void
-  onLeave: () => void
-}) {
-  const isPlaceholder = card.variant === 'placeholder'
-  const rootClass = [
-    'pd-card',
-    `pd-card--${card.variant}`,
-    hovered && isPlaceholder ? 'pd-card--hover' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
+const projectItemClass = (variant: CardConfig['variant']) =>
+  `pd-project-item pd-card pd-card--${variant}`
 
-  return (
-    <article
-      className={rootClass}
-      data-variant={card.variant}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-    >
+function ProjectItem({ card }: { card: CardConfig }) {
+  const common = (
+    <>
       <p className="pd-card__eyebrow">{card.eyebrow}</p>
 
       {card.variant === 'stush' && (
@@ -117,24 +96,36 @@ function ProductDesignCard({
           <h2 className="pd-card__title pd-card__title--placeholder">{card.title}</h2>
         </div>
       )}
+    </>
+  )
+
+  if (card.variant === 'stush') {
+    return (
+      <Link
+        to="/work/stush"
+        className={projectItemClass('stush')}
+        data-variant="stush"
+        style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+        aria-label="STUSH Foods — case study"
+      >
+        {common}
+      </Link>
+    )
+  }
+
+  return (
+    <article className={projectItemClass(card.variant)} data-variant={card.variant}>
+      {common}
     </article>
   )
 }
 
 export default function ProductDesignPage() {
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-
   return (
     <PortfolioShell pageName="Product Design Homepage">
       <div className="pd-grid pd-grid--product">
         {PRODUCT_DESIGN_CARDS.map((card) => (
-          <ProductDesignCard
-            key={card.id}
-            card={card}
-            hovered={hoveredId === card.id}
-            onEnter={() => setHoveredId(card.id)}
-            onLeave={() => setHoveredId(null)}
-          />
+          <ProjectItem key={card.id} card={card} />
         ))}
       </div>
     </PortfolioShell>

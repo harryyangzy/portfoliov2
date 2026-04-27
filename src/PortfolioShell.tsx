@@ -1,17 +1,13 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   designEngineeringChevronToolIcons,
   designEngineeringSoloToolIcons,
-  type ToolbarIconDuo,
   type ToolbarIconTrio,
 } from './assets/design-engineering/toolbar-icons'
 import navFigmaIcon from './assets/figma icon.png'
 import './productDesignHomepage.css'
-
-/** Flyout chevron — not in the DE export set; keep from public assets. */
-const CHEVRON_SRC = '/assets/group5.png'
 
 type ToolId = 'pointer' | 'frame' | 'line' | 'pen' | 'comment' | 'text' | 'search'
 
@@ -19,13 +15,9 @@ const CHEVRON_IDS: ToolId[] = ['pointer', 'frame', 'line', 'pen', 'comment']
 
 const CHEVRON_LABELS = ['Pointer', 'Frame', 'Line', 'Pen', 'Comment'] as const
 
-function pickIconSrc(icons: ToolbarIconTrio | ToolbarIconDuo, active: boolean, hovered: boolean) {
-  if ('active' in icons) {
-    if (active) return icons.active
-    if (hovered) return icons.hover
-    return icons.default
-  }
-  if (active) return icons.hover
+/** Active → active asset; else pointer over control → hover; else default. */
+function pickIconSrc(icons: ToolbarIconTrio, active: boolean, hovered: boolean) {
+  if (active) return icons.active
   if (hovered) return icons.hover
   return icons.default
 }
@@ -34,38 +26,39 @@ function ToolbarToolButton({
   toolId,
   icons,
   active,
-  hasChevron,
+  iconLayout,
   label,
   onSelect,
 }: {
   toolId: ToolId
-  icons: ToolbarIconTrio | ToolbarIconDuo
+  icons: ToolbarIconTrio
   active: boolean
-  hasChevron: boolean
+  /** Figma: flyout tools use 111×84 assets (glyph + chevron in one); text/search use 84×84. */
+  iconLayout: 'flyout' | 'solo'
   label: string
   onSelect: (id: ToolId) => void
 }) {
   const [hovered, setHovered] = useState(false)
   const iconSrc = pickIconSrc(icons, active, hovered)
+  const slotClass =
+    iconLayout === 'flyout'
+      ? 'pd-toolbar__icon-slot pd-toolbar__icon-slot--flyout'
+      : 'pd-toolbar__icon-slot pd-toolbar__icon-slot--solo'
 
   return (
     <button
       type="button"
-      className={`pd-toolbar__btn${active ? ' pd-toolbar__btn--active' : ''}`}
+      className="pd-toolbar__group"
       aria-pressed={active}
       aria-label={label}
       onClick={() => onSelect(toolId)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onPointerCancel={() => setHovered(false)}
     >
-      <span className="pd-toolbar__icon-wrap">
-        <img src={iconSrc} alt="" className="pd-toolbar__icon" />
+      <span className={slotClass} aria-hidden>
+        <img src={iconSrc} alt="" className="pd-toolbar__icon" draggable={false} />
       </span>
-      {hasChevron ? (
-        <span className="pd-toolbar__chevron-wrap">
-          <img src={CHEVRON_SRC} alt="" className="pd-toolbar__chevron" />
-        </span>
-      ) : null}
     </button>
   )
 }
@@ -78,14 +71,19 @@ function FigmaToolbar({
   onToolChange: (id: ToolId) => void
 }) {
   return (
-    <div className="pd-toolbar" role="toolbar" aria-label="Canvas tools">
+    <div
+      className="pd-toolbar"
+      role="toolbar"
+      aria-label="Canvas tools"
+      aria-orientation="horizontal"
+    >
       {CHEVRON_IDS.map((id, i) => (
         <ToolbarToolButton
           key={id}
           toolId={id}
           icons={designEngineeringChevronToolIcons[i]!}
           active={activeTool === id}
-          hasChevron
+          iconLayout="flyout"
           label={CHEVRON_LABELS[i]!}
           onSelect={onToolChange}
         />
@@ -94,7 +92,7 @@ function FigmaToolbar({
         toolId="text"
         icons={designEngineeringSoloToolIcons.text}
         active={activeTool === 'text'}
-        hasChevron={false}
+        iconLayout="solo"
         label="Text"
         onSelect={onToolChange}
       />
@@ -102,7 +100,7 @@ function FigmaToolbar({
         toolId="search"
         icons={designEngineeringSoloToolIcons.search}
         active={activeTool === 'search'}
-        hasChevron={false}
+        iconLayout="solo"
         label="Search"
         onSelect={onToolChange}
       />
@@ -120,10 +118,34 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { id: 'de', label: 'Design Engineering', path: '/', end: true },
   { id: 'cp', label: 'Community Projects', path: '/community' },
-  { id: 'mc', label: 'Marketing + Communications', path: '/marketing' },
+  { id: 'mc', label: 'Campaigns', path: '/marketing' },
 ]
 
+const SOCIAL_LINKS = [
+  { label: '/in/', href: 'https://www.linkedin.com/in/harryyangzy/' },
+  { label: '.git', href: 'https://github.com/harryyangzy' },
+  { label: '@uwo.ca', href: 'mailto:hyang746@uwo.ca' },
+] as const
+
 function NavTab({ item }: { item: NavItem }) {
+  const { pathname } = useLocation()
+  const designEngineeringActive =
+    item.id === 'de' && (pathname === '/' || pathname.startsWith('/work'))
+
+  if (item.id === 'de') {
+    return (
+      <Link
+        to={item.path}
+        className={`pd-nav-item${designEngineeringActive ? ' pd-nav-item--active' : ' pd-nav-item--default'}`}
+      >
+        <span className="pd-nav-item__icon-box">
+          <img src={navFigmaIcon} alt="" className="pd-nav-item__icon" />
+        </span>
+        <span className="pd-nav-item__label">{item.label}</span>
+      </Link>
+    )
+  }
+
   return (
     <NavLink
       to={item.path}
@@ -140,7 +162,7 @@ function NavTab({ item }: { item: NavItem }) {
   )
 }
 
-export type PortfolioShellVariant = 'studio' | 'community'
+export type PortfolioShellVariant = 'studio' | 'community' | 'case-study'
 
 export default function PortfolioShell({
   children,
@@ -154,6 +176,9 @@ export default function PortfolioShell({
   const { pathname } = useLocation()
   const [activeTool, setActiveTool] = useState<ToolId>('pointer')
   const isStudio = shellVariant === 'studio'
+  const useCommunityMain = shellVariant === 'community' || shellVariant === 'case-study'
+  const isCaseStudy = shellVariant === 'case-study'
+  const caseStudyBodyClass = shellVariant === 'case-study' ? 'pd-case-study-body' : 'pd-community-body'
 
   return (
     <div
@@ -178,20 +203,39 @@ export default function PortfolioShell({
               <NavTab key={item.id} item={item} />
             ))}
           </nav>
+          <div className="pd-sidebar__social" aria-label="Social links">
+            <p className="pd-sidebar__social-label">find me at</p>
+            {SOCIAL_LINKS.map((link) => {
+              const isExternal = link.href.startsWith('http')
+              return (
+                <a
+                  key={link.label}
+                  className="pd-sidebar__social-link"
+                  href={link.href}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noreferrer noopener' : undefined}
+                >
+                  {link.label}
+                </a>
+              )
+            })}
+          </div>
         </aside>
 
-        <div className={`pd-main${isStudio ? '' : ' pd-main--community'}`}>
+        <div
+          className={`pd-main${useCommunityMain ? ' pd-main--community' : ''}${isCaseStudy ? ' pd-main--case-study' : ''}`}
+        >
           {isStudio ? (
-            <>
+            <div className="pd-canvas-workspace">
               <div className="pd-canvas" tabIndex={0} role="region" aria-label="Scrollable canvas">
                 <div className="pd-canvas__document">{children}</div>
               </div>
               <div className="pd-toolbar-dock">
                 <FigmaToolbar activeTool={activeTool} onToolChange={setActiveTool} />
               </div>
-            </>
+            </div>
           ) : (
-            <div className="pd-community-body">{children}</div>
+            <div className={caseStudyBodyClass}>{children}</div>
           )}
         </div>
       </div>
