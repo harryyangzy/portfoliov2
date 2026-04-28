@@ -26,12 +26,18 @@ export default function MarketingCsaPage() {
               <div className="mstush__meta-row">
                 <p className="mstush__size">(2.1 GB)</p>
                 <div className="mstush__role">
-                  <p className="mstush__role-title">Graphics Executive</p>
-                  <p className="mstush__role-date">September 2024 - April 2025</p>
-                  <p className="mstush__role-title">Graphics Director</p>
-                  <p className="mstush__role-date">April 2025 - April 2026</p>
-                  <p className="mstush__role-title">Vice-President of Graphics</p>
-                  <p className="mstush__role-date">Present!</p>
+                  <div className="mstush__role-group">
+                    <p className="mstush__role-title">Graphics Executive</p>
+                    <p className="mstush__role-date">September 2024 - April 2025</p>
+                  </div>
+                  <div className="mstush__role-group">
+                    <p className="mstush__role-title">Graphics Director</p>
+                    <p className="mstush__role-date">April 2025 - April 2026</p>
+                  </div>
+                  <div className="mstush__role-group">
+                    <p className="mstush__role-title">Vice-President of Graphics</p>
+                    <p className="mstush__role-date">Present!</p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -2,11 +2,13 @@ import commentActive from './toolbar icons/comment active.png'
 import commentDefault from './toolbar icons/comment default.png'
 import commentHover from './toolbar icons/comment hover.png'
 import frameActive from './toolbar icons/frame active.png'
+import frameDefault from './toolbar icons/frame default.png'
 import frameHover from './toolbar icons/frame hover.png'
 import penActive from './toolbar icons/pen active.png'
 import penDefault from './toolbar icons/pen default.png'
 import penHover from './toolbar icons/pen hover.png'
 import pointerActive from './toolbar icons/pointer active.png'
+import pointerDefault from './toolbar icons/pointer default.png'
 import pointerHover from './toolbar icons/pointer hover.png'
 import searchActive from './toolbar icons/search active.png'
 import searchDefault from './toolbar icons/search default.png'
@@ -25,14 +27,13 @@ export type ToolbarIconTrio = {
   active: string
 }
 
-// Figma has no separate idle asset for pointer/frame; `hover` doubles as rest.
 const pointer: ToolbarIconTrio = {
-  default: pointerHover,
+  default: pointerDefault,
   hover: pointerHover,
   active: pointerActive,
 }
 const frame: ToolbarIconTrio = {
-  default: frameHover,
+  default: frameDefault,
   hover: frameHover,
   active: frameActive,
 }

@@ -109,6 +109,28 @@
   align-items: flex-start;
 }
 
+.pd-page[data-name="Campaigns / Chinese Students’ Association at Western"] .mstush__role {
+  padding: 0 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-page[data-name="Campaigns / Chinese Students’ Association at Western"] .mstush__role-group {
+  margin: 0;
+}
+
+.pd-page[data-name='Campaigns / Yee Hong Foundation'] .mstush__role {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-page[data-name='Campaigns / Yee Hong Foundation'] .mstush__role-group {
+  margin: 0;
+}
+
 .mstush__size {
   margin: 0;
   font-family: var(--font-parabolica);

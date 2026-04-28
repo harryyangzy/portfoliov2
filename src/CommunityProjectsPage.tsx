@@ -18,7 +18,7 @@ function Attachment({ name, date }: { name: string; date: string }) {
   )
 }
 
-type EmailId = 'wfn' | 'w5'
+type EmailId = 'wfn' | 'w5' | 'usc'
 
 type Email = {
   id: EmailId
@@ -28,6 +28,7 @@ type Email = {
   title: string
   date: string
   to: string
+  preview: string
   attachments: Array<{ name: string; date: string }>
 }
 
@@ -40,6 +41,7 @@ const EMAILS: Email[] = [
     title: 'Canada’s Biggest Product Design Competition at a School Without a Design Program',
     date: 'March 21 2026',
     to: 'wfn@westernu.ca',
+    preview: 'Over 1,300 pieces of merch and 20+ mentors ...',
     attachments: [
       { name: 'PDS by the numbers.png', date: '20/04/2026' },
       { name: 'Sponsorship Package', date: '20/04/2026' },
@@ -53,18 +55,33 @@ const EMAILS: Email[] = [
     title: 'Leading a Case Competition, Career Panel, Firms Trip and Design Competition',
     date: 'January 12 2026',
     to: 'w5@westernu.ca',
+    preview: '4 events in 4 months with over 400 attendees ...',
     attachments: [{ name: 'Sponsorship Package.pdf', date: '20/04/2026' }],
+  },
+  {
+    id: 'usc',
+    subject: 'Managing a $38M Budget at 17',
+    sender: 'Western University Students’ Council',
+    snippet: 'Over 6 hours a week spent in meetings ...',
+    title:
+      'Overseeing a 2 Restaurants, a Newspaper, Elections and Health Insurance for 30,000 Students',
+    date: 'January 12 2025',
+    to: 'harryyang@westernusc.ca',
+    preview: 'Managing a $38M Budget at 17',
+    attachments: [],
   },
 ]
 
 const W5_SUMMIT_IMAGE = 'https://www.figma.com/api/mcp/asset/14690e48-6ebe-4973-b354-e218227975ff'
 const W5_DCA_IMAGE = 'https://www.figma.com/api/mcp/asset/22642931-7f3a-47de-b6dd-a7f198093892'
 const W5_TEAM_IMAGE = 'https://www.figma.com/api/mcp/asset/f1b419f2-5394-4572-9c33-d409f3fe2169'
+const WFN_IMG_52 = 'https://www.figma.com/api/mcp/asset/aa088096-5eff-45ea-ac60-ffdec973788a'
+const WFN_IMG_53 = 'https://www.figma.com/api/mcp/asset/7f7efffc-c837-4e88-a830-c98e7ca5095e'
 
 export default function CommunityProjectsPage() {
   const [search, setSearch] = useState('')
-  const [activeEmailId, setActiveEmailId] = useState<EmailId | null>(null)
-  const [visitedEmailIds, setVisitedEmailIds] = useState<Set<EmailId>>(new Set())
+  const [activeEmailId, setActiveEmailId] = useState<EmailId | null>('usc')
+  const [visitedEmailIds, setVisitedEmailIds] = useState<Set<EmailId>>(new Set(['usc']))
 
   const filteredEmails = useMemo(() => {
     const query = search.trim().toLowerCase()
@@ -87,6 +104,12 @@ export default function CommunityProjectsPage() {
   const openEmail = (emailId: EmailId) => {
     setActiveEmailId(emailId)
     setVisitedEmailIds((prev) => new Set(prev).add(emailId))
+  }
+
+  const getThumbByEmailId = (emailId: EmailId) => {
+    if (emailId === 'wfn') return a.pdsLogoPfp
+    if (emailId === 'w5') return a.pdsLogoPfp2
+    return a.pdsLogoPfp3
   }
 
   return (
@@ -153,7 +176,7 @@ export default function CommunityProjectsPage() {
                     >
                       <div className="cp-mail__row">
                         <div className="cp-mail__thumb">
-                          <img src={a.pdsLogoPfp} alt="" width={40} height={40} />
+                          <img src={getThumbByEmailId(email.id)} alt="" width={40} height={40} />
                         </div>
                         <div className="cp-mail__body">
                           <div>
@@ -214,23 +237,15 @@ export default function CommunityProjectsPage() {
                           dissipate. But, I had a plan and in May of 2025, I was trusted to run my own Design
                           team creating designs for 16 events over 5 portfolios.
                         </p>
-                        <p>&nbsp;</p>
-                        <p>
-                          Through the Summer, we roadmapped through a somewhat productive cottage trip. As the
-                          school year came through, we built our team from 0-100, teaching them Figma and having
-                          dinners, desserts and sleepovers building an unmatched team culture.
-                        </p>
                       </div>
 
-                      <div className="cp-polaroids" aria-hidden="true">
-                        <div className="cp-polaroid cp-polaroid--1">
-                          <img src={a.polaroid1} alt="" />
-                        </div>
-                        <div className="cp-polaroid cp-polaroid--2">
-                          <img src={a.polaroid2} alt="" />
-                        </div>
-                        <div className="cp-polaroid cp-polaroid--3">
-                          <img src={a.polaroid3} alt="" />
+                      <div className="cp-wfn-row cp-wfn-row--pair">
+                        <div className="cp-prose cp-wfn-row__text cp-wfn-row__text--narrow">
+                          <p className="cp-wfn-cottage-copy">
+                            Through the Summer, we roadmapped through a somewhat productive cottage trip. As
+                            the school year came through, we built our team from 0-100, teaching them Figma
+                            and having dinners, desserts and sleepovers building an unmatched team culture.
+                          </p>
                         </div>
                       </div>
 
@@ -240,7 +255,6 @@ export default function CommunityProjectsPage() {
                           vision for a new magnitude of PDS a vision with more competitors, more mentorship and
                           a true in-person competitor experiences with merch, food and workshops.
                         </p>
-                        <p>&nbsp;</p>
                         <p>
                           Every week, we met in-person and had dinner together. I learned how to motivate, and
                           lead the team. We constantly set goals, for the team and for each member. Together, we
@@ -249,40 +263,28 @@ export default function CommunityProjectsPage() {
                         </p>
                       </div>
 
-                      <div className="cp-gallery">
-                        <div className="cp-gallery__img cp-gallery__img--a">
-                          <img src={a.image51} alt="" />
-                        </div>
-                        <div className="cp-gallery__img cp-gallery__img--b">
-                          <img src={a.image52} alt="" />
-                        </div>
-                        <div className="cp-gallery__img cp-gallery__img--c">
-                          <img src={a.image53} alt="" />
-                        </div>
-                      </div>
-
                       <div className="cp-prose">
                         <p>
                           We had over 1,300 pieces of merch given away, 20+ mentors and judges. Each team was
                           given the opportunity to learn about product design, build a project, get feedback and
                           leave with a free meal and t-shirt.
                         </p>
-                        <p>&nbsp;</p>
+                      </div>
+
+                      <div className="cp-prose">
                         <p>
                           Who knew? Understanding what people want, and creating a unique experience that provides
                           value made PDS26 the biggest one yet.
                         </p>
-                        <p>&nbsp;</p>
                         <p>
                           I&apos;ll be returning to the team as a Senior Advisor next year, let us know if you&apos;d
                           like to be involved!
                         </p>
-                        <p>&nbsp;</p>
                         <p>Regards,</p>
                         <p>Harry</p>
                       </div>
                     </>
-                  ) : (
+                  ) : activeEmail.id === 'w5' ? (
                     <>
                       <div className="cp-prose">
                         <p>
@@ -363,6 +365,47 @@ export default function CommunityProjectsPage() {
                         <p>Hopefully that&apos;s true...</p>
                         <p>Talk later,</p>
                         <p>Harry</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="cp-prose">
+                        <p>
+                          The board is where I&apos;ve felt most out of place, under qualified and overwhelmed by
+                          the amount of information presented to us.
+                        </p>
+                        <p>&nbsp;</p>
+                        <p>
+                          The University Students&apos; Council is a non-profit and think of the board as just
+                          that, the board of a corporation. This means we meet in committees and oversee
+                          strategic planing, investments and all the other arms of the non-profit.
+                        </p>
+                        <p>&nbsp;</p>
+                        <p>
+                          How hard could overseeing a student council even be... With a budget of over $38M and
+                          over 30 full time staff the board is a quiet force that does it&apos;s job well when you
+                          never hear about us.
+                        </p>
+                        <p>&nbsp;</p>
+                        <p>
+                          Some weeks, there are over 6 hours worth of meetings, asking questions to senior
+                          staff, lawyers and our portfolio managers to ensure the Is are dotted and the Ts are
+                          crossed, literally, reading through policy amendments to spot typos and inconsistencies.
+                        </p>
+                        <p>&nbsp;</p>
+                        <p>
+                          This year the board had major wins, separating our cash into investment tranches for
+                          short to long term uses and creating an elections governance board removing the burden
+                          of certifying elections from a single student. Elements that ensure the long-term
+                          success of the organization.
+                        </p>
+                        <p>&nbsp;</p>
+                        <p>
+                          Now imagine this, you&apos;re a first year student being presented with these votes,
+                          decisions and information. I was overwhelmed to say the least. But, I&apos;ve grown so
+                          much in this position, understanding the true role of the board, the functions of the
+                          USC and how to manage a $38M budget at 17 years old.
+                        </p>
                       </div>
                     </>
                   )}

@@ -15,7 +15,7 @@ const CHEVRON_IDS: ToolId[] = ['pointer', 'frame', 'line', 'pen', 'comment']
 
 const CHEVRON_LABELS = ['Pointer', 'Frame', 'Line', 'Pen', 'Comment'] as const
 
-/** Active → active asset; else pointer over control → hover; else default. */
+/** Active -> active; else hovered -> hover; else default. */
 function pickIconSrc(icons: ToolbarIconTrio, active: boolean, hovered: boolean) {
   if (active) return icons.active
   if (hovered) return icons.hover
@@ -26,19 +26,24 @@ function ToolbarToolButton({
   toolId,
   icons,
   active,
+  hovered,
   iconLayout,
   label,
   onSelect,
+  onHoverStart,
+  onHoverEnd,
 }: {
   toolId: ToolId
   icons: ToolbarIconTrio
   active: boolean
+  hovered: boolean
   /** Figma: flyout tools use 111×84 assets (glyph + chevron in one); text/search use 84×84. */
   iconLayout: 'flyout' | 'solo'
   label: string
   onSelect: (id: ToolId) => void
+  onHoverStart: (id: ToolId) => void
+  onHoverEnd: (id: ToolId) => void
 }) {
-  const [hovered, setHovered] = useState(false)
   const iconSrc = pickIconSrc(icons, active, hovered)
   const slotClass =
     iconLayout === 'flyout'
@@ -52,9 +57,9 @@ function ToolbarToolButton({
       aria-pressed={active}
       aria-label={label}
       onClick={() => onSelect(toolId)}
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      onPointerCancel={() => setHovered(false)}
+      onMouseEnter={() => onHoverStart(toolId)}
+      onMouseLeave={() => onHoverEnd(toolId)}
+      onBlur={() => onHoverEnd(toolId)}
     >
       <span className={slotClass} aria-hidden>
         <img src={iconSrc} alt="" className="pd-toolbar__icon" draggable={false} />
@@ -70,12 +75,20 @@ function FigmaToolbar({
   activeTool: ToolId
   onToolChange: (id: ToolId) => void
 }) {
+  const [hoveredTool, setHoveredTool] = useState<ToolId | null>(null)
+  const handleToolSelect = (id: ToolId) => {
+    setHoveredTool(null)
+    onToolChange(id)
+  }
+
   return (
     <div
       className="pd-toolbar"
       role="toolbar"
       aria-label="Canvas tools"
       aria-orientation="horizontal"
+      onPointerLeave={() => setHoveredTool(null)}
+      onPointerCancel={() => setHoveredTool(null)}
     >
       {CHEVRON_IDS.map((id, i) => (
         <ToolbarToolButton
@@ -83,26 +96,41 @@ function FigmaToolbar({
           toolId={id}
           icons={designEngineeringChevronToolIcons[i]!}
           active={activeTool === id}
+          hovered={hoveredTool === id}
           iconLayout="flyout"
           label={CHEVRON_LABELS[i]!}
-          onSelect={onToolChange}
+          onSelect={handleToolSelect}
+          onHoverStart={setHoveredTool}
+          onHoverEnd={(toolId) => {
+            setHoveredTool((prev) => (prev === toolId ? null : prev))
+          }}
         />
       ))}
       <ToolbarToolButton
         toolId="text"
         icons={designEngineeringSoloToolIcons.text}
         active={activeTool === 'text'}
+        hovered={hoveredTool === 'text'}
         iconLayout="solo"
         label="Text"
-        onSelect={onToolChange}
+        onSelect={handleToolSelect}
+        onHoverStart={setHoveredTool}
+        onHoverEnd={(toolId) => {
+          setHoveredTool((prev) => (prev === toolId ? null : prev))
+        }}
       />
       <ToolbarToolButton
         toolId="search"
         icons={designEngineeringSoloToolIcons.search}
         active={activeTool === 'search'}
+        hovered={hoveredTool === 'search'}
         iconLayout="solo"
         label="Search"
-        onSelect={onToolChange}
+        onSelect={handleToolSelect}
+        onHoverStart={setHoveredTool}
+        onHoverEnd={(toolId) => {
+          setHoveredTool((prev) => (prev === toolId ? null : prev))
+        }}
       />
     </div>
   )

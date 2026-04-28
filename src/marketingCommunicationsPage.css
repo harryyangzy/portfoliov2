@@ -190,85 +190,20 @@
 .mc-grid__bar {
   grid-column: 1 / -1;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  gap: 180px;
   margin-bottom: 2px;
-  color: #1e2e3e;
 }
 
-.mc-bar-btn {
-  appearance: none;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font-family: var(--font-parabolica);
-  font-size: 22px;
-  line-height: 1;
-  width: 33px;
-  height: 30px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-}
-
-.mc-bar-btn--active {
-  position: relative;
-}
-
-.mc-bar-btn--active::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 1.5px;
-  background: #1e2e3e;
-}
-
-.mc-bar-btn__grid {
-  width: 19px;
-  height: 19px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.3px;
-}
-
-.mc-bar-btn__grid::before,
-.mc-bar-btn__grid::after {
-  content: '';
-}
-
-.mc-bar-btn__grid,
-.mc-bar-btn__grid::before,
-.mc-bar-btn__grid::after {
-  background-image:
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%),
-    radial-gradient(circle, #1e2e3e 70%, transparent 71%);
-  background-size: 5px 5px;
-  background-repeat: no-repeat;
-  background-position:
-    0 0,
-    7px 0,
-    14px 0,
-    0 7px,
-    7px 7px,
-    14px 7px,
-    0 14px,
-    7px 14px,
-    14px 14px;
+.mc-grid__bar-icon {
+  display: block;
+  width: min(75%, 642px);
+  height: auto;
 }
 
 .mc-card {
   position: relative;
-  height: 333px;
+  aspect-ratio: 284 / 333;
   border: 1px solid #fff;
   border-radius: 24px;
   overflow: hidden;
@@ -347,10 +282,6 @@
 }
 
 @media (max-width: 860px) {
-  .mc-grid__bar {
-    gap: 72px;
-  }
-
   .mc__actions {
     grid-template-columns: 1fr;
   }
@@ -370,11 +301,10 @@
   }
 
   .mc-grid__bar {
-    justify-content: space-between;
-    gap: 20px;
+    justify-content: center;
   }
 
   .mc-card {
-    height: 260px;
+    aspect-ratio: 284 / 333;
   }
 }

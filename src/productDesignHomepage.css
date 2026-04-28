@@ -27,6 +27,12 @@
   color: var(--pd-text-primary);
 }
 
+/* Product Design Homepage: free-flowing canvas area (2D scroll) */
+.pd-page[data-name='Product Design Homepage'] {
+  --pd-canvas-min-width: 1600px;
+  --pd-canvas-min-height: 1400px;
+}
+
 .pd-page *,
 .pd-page *::before,
 .pd-page *::after {
@@ -54,7 +60,7 @@
   display: flex;
   flex-direction: column;
   gap: 112px;
-  padding: 160px 40px 80px;
+  padding: 160px 40px 40px;
   background: var(--pd-blue-10);
   overflow-x: hidden;
   overflow-y: auto;
@@ -298,7 +304,7 @@
   margin: 0;
   border: 2px solid var(--pd-neutral-disabled);
   border-radius: 60px 0 0 60px;
-  background: none;
+  background: var(--pd-grey-30);
   overflow: hidden;
 }
 
@@ -382,7 +388,8 @@
 .pd-canvas {
   flex: 1 1 auto;
   min-height: 0;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   outline: none;
@@ -393,17 +400,19 @@
   box-shadow: inset 0 0 0 2px rgba(119, 183, 248, 0.6);
 }
 
-/* Content container ~2338:3713: centered in canvas; room below for floating toolbar */
+/* Content container ~2338:3713: centered in canvas; toolbar overlays content */
 .pd-canvas__document {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   box-sizing: border-box;
-  width: 100%;
+  width: max-content;
   min-width: var(--pd-canvas-min-width);
-  min-height: 100%;
+  min-height: var(--pd-canvas-min-height);
   margin: 0 auto;
-  padding: 40px 24px 120px;
+  padding: 140px 24px 40px;
+  position: relative;
+  z-index: 1;
 }
 
 .pd-toolbar-dock {
@@ -415,10 +424,10 @@
   justify-content: center;
   align-items: flex-end;
   min-width: 0;
-  padding: 0 8px;
+  padding: 8px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  z-index: 2;
+  z-index: 3;
   background: linear-gradient(
     to top,
     var(--pd-grey-30) 0%,
@@ -484,6 +493,17 @@
   height: 309px;
   padding: 20px;
   overflow: hidden;
+  transition: box-shadow 0.15s ease;
+}
+
+.pd-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 4px solid transparent;
+  pointer-events: none;
+  z-index: 2;
+  transition: border-color 0.15s ease;
 }
 
 .pd-card__cover {
@@ -493,25 +513,27 @@
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+  transition: box-shadow 0.15s ease;
+  box-shadow: inset 0 0 0 0 transparent;
 }
 
 .pd-card__title {
   margin: 0;
   position: relative;
-  z-index: 1;
+  z-index: 3;
   max-width: 100%;
   font-family: var(--font-parabolica-text);
-  font-size: var(--type-h4-size);
-  font-weight: var(--type-h4-weight);
-  letter-spacing: var(--type-h4-track);
+  font-size: var(--type-h5-size);
+  font-weight: var(--type-h5-weight);
+  line-height: var(--type-h5-line);
+  letter-spacing: var(--type-h5-track);
 }
 
-/* STUSH / QUX — Figma 2337:3102: 4px transparent; hover = blue-80 stroke (no layout shift) */
+/* STUSH / QUX — no image stroke */
 .pd-card__media--stush,
 .pd-card__media--qux {
-  border: 4px solid transparent;
+  border: 0;
   background: var(--pd-grey-50, #d3d9df);
-  transition: border-color 0.15s ease;
 }
 
 .pd-card__title--on-photo {
@@ -546,8 +568,7 @@
 /* Placeholder — solid grey, white title (Frame 169) */
 .pd-card__media--placeholder {
   background: var(--pd-grey-50, #d3d9df);
-  border: 4px solid transparent;
-  transition: border-color 0.15s ease;
+  border: 0;
 }
 
 .pd-card__title--placeholder {
@@ -563,14 +584,21 @@
 }
 
 .pd-project-item:hover .pd-card__media {
+  box-shadow: none;
+}
+
+.pd-project-item:hover .pd-card__media::after {
   border-color: var(--pd-blue-80);
+}
+
+.pd-project-item:hover .pd-card__cover {
+  box-shadow: none;
 }
 
 /* Community project cards — Figma Frame 170 (grey-50 fill, tighter title line-height) */
 .pd-card__media--community {
   background: var(--pd-grey-50, #d3d9df);
-  border: 4px solid transparent;
-  transition: border-color 0.15s ease;
+  border: 0;
 }
 
 .pd-card__title--community {
@@ -624,6 +652,10 @@
 .pd-toolbar__icon-slot {
   flex-shrink: 0;
   line-height: 0;
+  pointer-events: none;
+}
+
+.pd-toolbar__icon {
   pointer-events: none;
 }
 

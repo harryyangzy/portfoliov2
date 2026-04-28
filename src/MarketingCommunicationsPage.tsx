@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 import csaCard from './assets/marketing/csa-blue.png'
 import csaCardHover from './assets/marketing/csa.png'
+import iconBar from './assets/marketing/iconbar.png'
 import otherCard from './assets/marketing/other-blue.png'
 import otherCardHover from './assets/marketing/other.png'
 import profilePicture from './assets/marketing/profile picture.png'
@@ -73,18 +74,7 @@ export default function MarketingCommunicationsPage() {
 
         <section className="mc-grid" aria-label="Campaign gallery">
           <div className="mc-grid__bar" aria-hidden>
-            <button type="button" className="mc-bar-btn mc-bar-btn--active" tabIndex={-1}>
-              <span className="mc-bar-btn__grid" />
-            </button>
-            <button type="button" className="mc-bar-btn" tabIndex={-1}>
-              ▶
-            </button>
-            <button type="button" className="mc-bar-btn" tabIndex={-1}>
-              ↻
-            </button>
-            <button type="button" className="mc-bar-btn" tabIndex={-1}>
-              ⌂
-            </button>
+            <img src={iconBar} alt="" className="mc-grid__bar-icon" />
           </div>
           {cards.map((card) =>
             ['stush', 'yeehong', 'csa', 'tsac', 'other'].includes(card.id) ? (

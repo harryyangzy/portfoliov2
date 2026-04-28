@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 import backArrowDefault from './assets/marketing/Property 1=Default.png'
 import backArrowHover from './assets/marketing/Property 1=hover.png'
-import popup from './assets/marketing/yee hong/001/popup.png'
-import draft1 from './assets/marketing/yee hong/001/draft1.png'
-import thankYouCertificate from './assets/marketing/yee hong/001/Thank-You Certificate - Draft 2.png'
+import holidayCard from './assets/marketing/yee hong/001/Holiday Card Draft 2-04.png'
+import garageSale from './assets/marketing/yee hong/001/garage sale.png'
+import gradientBkg from './assets/marketing/yee hong/001/gradient bkg-05.png'
+import poster from './assets/marketing/yee hong/001/poster PNG.png'
+import ticketDesign from './assets/marketing/yee hong/001/ticket design v1 (front).png'
 import golf2024Draft from './assets/marketing/yee hong/002/Golf 2024 Draft-03.png'
 import coverV4 from './assets/marketing/yee hong/002/coverv4.png'
 import golf2023Sponsors from './assets/marketing/yee hong/002/golf-2023-sponsors.png'
@@ -15,11 +17,9 @@ import annualReport06 from './assets/marketing/yee hong/003/annual-report_previe
 import annualReport18 from './assets/marketing/yee hong/003/annual-report_preview-18.png'
 import annualReport19 from './assets/marketing/yee hong/003/annual-report_preview-19.png'
 import annualReport26 from './assets/marketing/yee hong/003/annual-report_preview-26.png'
-import holidayCard from './assets/marketing/yee hong/004/Holiday Card Draft 2-04.png'
-import garageSale from './assets/marketing/yee hong/004/garage sale.png'
-import gradientBkg from './assets/marketing/yee hong/004/gradient bkg-05.png'
-import poster from './assets/marketing/yee hong/004/poster PNG.png'
-import ticketDesign from './assets/marketing/yee hong/004/ticket design v1 (front).png'
+import popup from './assets/marketing/yee hong/004/popup.png'
+import draft1 from './assets/marketing/yee hong/004/draft1.png'
+import thankYouCertificate from './assets/marketing/yee hong/004/Thank-You Certificate - Draft 2.png'
 import './marketingStushPage.css'
 
 export default function MarketingYeeHongPage() {
@@ -35,13 +35,16 @@ export default function MarketingYeeHongPage() {
             <div className="mstush__title-wrap">
               <h1 className="mstush__title">Yee Hong Foundation</h1>
               <div className="mstush__meta-row">
+                <p className="mstush__size">(14.8 GB)</p>
                 <div className="mstush__role">
-                  <p className="mstush__role-title">Intern</p>
-                  <p className="mstush__role-date">June 2022 - August 2022</p>
-                </div>
-                <div className="mstush__role">
-                  <p className="mstush__role-title">Communications Assistant</p>
-                  <p className="mstush__role-date">August 2022 - August 2024</p>
+                  <div className="mstush__role-group">
+                    <p className="mstush__role-title">Intern</p>
+                    <p className="mstush__role-date">June 2022 - August 2022</p>
+                  </div>
+                  <div className="mstush__role-group">
+                    <p className="mstush__role-title">Communications Assistant</p>
+                    <p className="mstush__role-date">August 2022 - August 2024</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -51,23 +54,20 @@ export default function MarketingYeeHongPage() {
             <div className="mstush-section__copy">
               <p className="mstush-section__idx">[001]</p>
               <p className="mstush-section__text">
-                <strong>pop-up for love gives</strong> - as one of my last projects, i worked closely with
-                the senior management team to create the brand for a new flagship fundraiser.
+                <strong>misc. designs</strong> - supporting fundraising through unique designs from
+                micro-campaigns like holiday donations and community garage sale fundraisers to supporting
+                our flagship Dragon Ball gala.
               </p>
-              <p className="mstush-section__text">
-                positioned towards inspiring a new generation of community members, i created a reusable
-                branding package for a group of grassroots community events.
-              </p>
-              <p className="mstush-section__text">
-                our first pop-up was a walkathon to toronto zoo, bringing hundreds of families together
-                raising over $400,000 in one weekend.
-              </p>
+              <p className="mstush-section__text">&nbsp;</p>
+              <p className="mstush-section__text">&nbsp;</p>
             </div>
 
-            <div className="mstush-carousel" aria-label="Pop-up for Love Gives campaign design assets">
-              <img src={popup} alt="Pop-up campaign poster" />
-              <img src={draft1} alt="Pop-up campaign draft layout" />
-              <img src={thankYouCertificate} alt="Pop-up campaign thank-you certificate design" />
+            <div className="mstush-carousel" aria-label="Miscellaneous campaign design assets">
+              <img src={holidayCard} alt="Holiday card campaign design" />
+              <img src={garageSale} alt="Garage sale campaign poster design" />
+              <img src={gradientBkg} alt="Dragon Ball gala gradient background design" />
+              <img src={poster} alt="Dragon Ball gala poster design" />
+              <img src={ticketDesign} alt="Dragon Ball gala ticket design" />
             </div>
           </section>
 
@@ -123,20 +123,23 @@ export default function MarketingYeeHongPage() {
             <div className="mstush-section__copy">
               <p className="mstush-section__idx">[004]</p>
               <p className="mstush-section__text">
-                <strong>misc. designs</strong> - supporting fundraising through unique designs from
-                micro-campaigns like holiday donations and community garage sale fundraisers to supporting
-                our flagship Dragon Ball gala.
+                <strong>pop-up for love gives</strong> - as one of my last projects, i worked closely with
+                the senior management team to create the brand for a new flagship fundraiser.
               </p>
-              <p className="mstush-section__text">&nbsp;</p>
-              <p className="mstush-section__text">&nbsp;</p>
+              <p className="mstush-section__text">
+                positioned towards inspiring a new generation of community members, i created a reusable
+                branding package for a group of grassroots community events.
+              </p>
+              <p className="mstush-section__text">
+                our first pop-up was a walkathon to toronto zoo, bringing hundreds of families together
+                raising over $400,000 in one weekend.
+              </p>
             </div>
 
-            <div className="mstush-carousel" aria-label="Miscellaneous campaign design assets">
-              <img src={holidayCard} alt="Holiday card campaign design" />
-              <img src={garageSale} alt="Garage sale campaign poster design" />
-              <img src={gradientBkg} alt="Dragon Ball gala gradient background design" />
-              <img src={poster} alt="Dragon Ball gala poster design" />
-              <img src={ticketDesign} alt="Dragon Ball gala ticket design" />
+            <div className="mstush-carousel" aria-label="Pop-up for Love Gives campaign design assets">
+              <img src={popup} alt="Pop-up campaign poster" />
+              <img src={draft1} alt="Pop-up campaign draft layout" />
+              <img src={thankYouCertificate} alt="Pop-up campaign thank-you certificate design" />
             </div>
           </section>
         </div>
