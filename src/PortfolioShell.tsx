@@ -195,7 +195,7 @@ export default function PortfolioShell({
               i spent all my time working on clubs this year and now I don’t have a job.
             </p>
             <a className="pd-more-btn" href="#about">
-              more about me&nbsp;&nbsp;&nbsp;→
+              more about me&nbsp;&nbsp;&nbsp;&nbsp;🡢
             </a>
           </div>
           <nav className="pd-sidebar__nav" aria-label="Sections">

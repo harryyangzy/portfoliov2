@@ -4,6 +4,8 @@
  */
 import hero from './figma/figma-39-hero.png'
 import heroVideo from '../stush assets/figma-50-design-system.webm'
+/** Still from `stush assets` — poster + Safari / no-WebM fallback (matches design-system webm) */
+import heroVideoPreview from '../stush assets/pattiesmadebetter0.png'
 import problemSite from './figma/figma-48-problem.png'
 import solutionFood from './figma/figma-49-solution.png'
 import audit14543 from './figma/figma-audit-14543.png'
@@ -21,6 +23,8 @@ import outcomeTallLeft from './figma/figma-52-outcome-l.png'
 
 export const stushMedia = {
   hero,
+  /** PNG poster + static fallback when `heroVideo` (WebM) cannot play (e.g. Safari) */
+  heroVideoPreview,
   heroVideo,
   problemSite,
   solutionFood,

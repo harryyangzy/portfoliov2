@@ -1,10 +1,22 @@
+.pd-page[data-name='Campaigns / STUSH'] .pd-case-study-body,
+.pd-page[data-name='Campaigns / Yee Hong Foundation'] .pd-case-study-body,
+.pd-page[data-name='Campaigns / Trudeau Student Activities Council'] .pd-case-study-body,
+.pd-page[data-name="Campaigns / Chinese Students’ Association at Western"] .pd-case-study-body,
+.pd-page[data-name='Campaigns / For the Love of Designing'] .pd-case-study-body {
+  overflow: hidden;
+}
+
 .mstush {
   flex: 1 1 auto;
+  align-self: stretch;
   width: 100%;
-  min-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
   background: #fff;
   border: 1px solid #93a6ba;
   border-radius: 60px 0 0 60px;
+  overflow: auto;
 }
 
 .mstush__panel {

@@ -87,12 +87,22 @@ export default function MarketingCommunicationsPage() {
             </button>
           </div>
           {cards.map((card) =>
-            card.id === 'stush' ? (
+            ['stush', 'yeehong', 'csa', 'tsac', 'other'].includes(card.id) ? (
               <Link
                 key={card.id}
-                to="/marketing/stush"
+                to={
+                  card.id === 'stush'
+                    ? '/marketing/stush'
+                    : card.id === 'yeehong'
+                      ? '/marketing/yee-hong'
+                      : card.id === 'csa'
+                        ? '/marketing/csa'
+                        : card.id === 'tsac'
+                          ? '/marketing/tsac'
+                          : '/marketing/other'
+                }
                 className="mc-card"
-                aria-label="Open STUSH campaign details"
+                aria-label={`Open ${card.title} campaign details`}
               >
                 <img
                   src={card.defaultImage}

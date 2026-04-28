@@ -113,6 +113,20 @@ function ProjectItem({ card }: { card: CardConfig }) {
     )
   }
 
+  if (card.variant === 'qux') {
+    return (
+      <Link
+        to="/work/coeur"
+        className={projectItemClass('qux')}
+        data-variant="qux"
+        style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+        aria-label="Coeur (QUX Designathon) — case study"
+      >
+        {common}
+      </Link>
+    )
+  }
+
   return (
     <article className={projectItemClass(card.variant)} data-variant={card.variant}>
       {common}

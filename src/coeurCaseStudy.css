@@ -1,0 +1,414 @@
+/* Coeur (QUX) case study — Figma 2378:5130. Import stushCaseStudy.css before this in the page. */
+
+/* Design system + user-journey — Figma 2396:5414 / 2423:6330: aspect 936×380, r40, object-cover */
+.coeur-ds-flow__frame {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 936 / 380;
+  border-radius: 40px;
+  overflow: hidden;
+  background: #e8e8e8;
+}
+
+.coeur-ds-flow__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 40px;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Journey / flow graphic: full diagram visible — width-fill, intrinsic height, no cover crop */
+.coeur-ds-flow__frame--journey {
+  aspect-ratio: unset;
+  overflow: hidden;
+}
+
+.coeur-ds-flow__frame--journey .coeur-ds-flow__media {
+  position: static;
+  inset: unset;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Feature row — Figma 2407:5817 / 2423:6325: portrait phone 443×586, r30, object-cover crop */
+/* Scene-1 / feature still: scales with sibling column — ratio locked to figma phone frame */
+.coeur-feature__crop {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  flex: 0 0 auto;
+  aspect-ratio: 443 / 586;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #000;
+}
+
+.coeur-feature__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 30px;
+}
+
+.coeur-feature__crop--capture .coeur-feature__media {
+  transform: scale(1.15);
+  transform-origin: center center;
+}
+
+.coeur .stush-img-rounded,
+.coeur .stush-img-rounded--h312,
+.coeur .stush-img-rounded--h418 {
+  aspect-ratio: unset !important;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hero: implement Figma node 2378:5133 */
+.coeur .stush-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 321px;
+  padding: 0 60px;
+  border-radius: 60px;
+  overflow: visible;
+}
+
+.coeur .stush-hero__title {
+  max-width: 382px;
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-line);
+  letter-spacing: var(--type-h2-track);
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.coeur .stush-hero__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: calc(100% - 560px);
+  padding: 50px 0 30px;
+  gap: 80px;
+}
+
+@media (min-width: 901px) {
+  .coeur .stush-hero .stush-hero__img-wrap {
+    position: absolute;
+    top: 50%;
+    right: 60px;
+    width: 460px;
+    height: 460px;
+    max-width: min(460px, 48vw);
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .coeur .stush-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 30px;
+    min-height: 0;
+  }
+
+  .coeur .stush-hero__copy {
+    max-width: 100%;
+    padding: 0;
+    gap: 30px;
+  }
+
+  .coeur .stush-hero__title {
+    white-space: normal;
+  }
+
+  .coeur .stush-hero__img-wrap {
+    position: static;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    transform: none;
+    z-index: 0;
+  }
+}
+
+.coeur .stush-hero__img-wrap {
+  flex: 0 0 auto;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Stush 1100px hero rules target square 520px asset — keep Coeur phone sizing */
+@media (max-width: 1100px) {
+  .coeur .stush-hero__img-wrap {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+  }
+}
+
+.coeur .stush-hero__img-wrap img,
+.coeur .stush-hero__img-wrap video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hero video area: intrinsic video aspect, not forced square */
+.coeur .stush-hero__img-wrap .stush-hero__img {
+  height: 100%;
+}
+
+.coeur .stush-split__media img {
+  height: auto;
+}
+
+/* Slightly smaller section titles to match Figma 32/28 in white cards */
+.coeur .coeur-card-title {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.04em;
+}
+
+/* Problem + solution: two white cards in one grey band (no lead image) */
+.coeur-ps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+.coeur-ps__card {
+  flex: 1 1 280px;
+  min-width: 0;
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.coeur-ps__card--problem {
+  background: #fff;
+}
+
+.coeur-ps__card--solution {
+  background: #fff;
+  padding-top: 30px;
+}
+
+/* Inspiration — inspogrid.png in Figma card ~562× collage; proportional flex with copy */
+.coeur-insp {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+.coeur-insp__mosaic {
+  flex: 1 1 0;
+  min-width: min(280px, 100%);
+  max-width: 100%;
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 0;
+}
+
+.coeur-insp__copy {
+  flex: 1 1 0;
+  min-width: min(280px, 100%);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Collage bounding ≈ figma white frame; inset image cover */
+.coeur-insp__frame {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 562 / 377;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.coeur-insp__grid-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 30px;
+}
+
+/* Design-system + flow: image on top, white text card below */
+.coeur-ds-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.coeur-ds-flow__body {
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* Feature pair */
+.coeur-feature-pair {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.coeur-feature {
+  flex: 1 1 0;
+  min-width: min(280px, 100%);
+  max-width: 100%;
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.coeur img.coeur-feature__media {
+  background: #f0f0f0;
+}
+
+.coeur-feature__body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Next steps: stacked left + tall gradient / image at right */
+.coeur-outro {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.coeur-outro__stack {
+  flex: 1 1 0;
+  min-width: min(300px, 100%);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.coeur-outro__card {
+  background: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 0;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+}
+
+/* Outro video — figma 2407:5833 374×418; scale proportionally next to stacked cards */
+.coeur-outro__crop {
+  position: relative;
+  flex: 1 1 0;
+  min-width: min(260px, 100%);
+  max-width: min(374px, 100%);
+  width: 100%;
+  aspect-ratio: 374 / 418;
+  overflow: hidden;
+  border-radius: 40px;
+  background: #0a0a0a;
+  align-self: stretch;
+}
+
+@media (min-width: 900px) {
+  .coeur-outro__crop {
+    flex: 0 1 374px;
+    width: 374px;
+    max-width: 374px;
+  }
+}
+
+.coeur-outro__visual {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 40px;
+  transform: scale(1.05);
+  transform-origin: center center;
+}
+
+@media (max-width: 699px) {
+  .coeur-outro__crop {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+/* Competitive row: same as stush split but narrow text column in Figma */
+.coeur .stush-card--competitive {
+  flex: 0 1 405px;
+  max-width: 100%;
+}
+
+.coeur .coeur-competitive__media {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.coeur-ask {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.coeur .stush-card--pad-sm {
+  padding-top: 30px;
+}

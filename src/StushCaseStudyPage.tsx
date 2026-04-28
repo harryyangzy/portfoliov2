@@ -1,11 +1,25 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 import { stushMedia } from './assets/design-engineering/stush/media'
 import './stushCaseStudy.css'
 
+function canPlayWebM(): boolean {
+  if (typeof document === 'undefined') return false
+  const v = document.createElement('video')
+  const c =
+    v.canPlayType('video/webm; codecs="vp8"') ||
+    v.canPlayType('video/webm; codecs="vp9"') ||
+    v.canPlayType('video/webm') ||
+    ''
+  return c.length > 0
+}
+
 export default function StushCaseStudyPage() {
   const heroVideoRef = useRef<HTMLVideoElement | null>(null)
+  const [heroIsStatic, setHeroIsStatic] = useState(
+    () => typeof document === 'undefined' || !canPlayWebM(),
+  )
 
   const playHeroVideo = () => {
     const video = heroVideoRef.current
@@ -21,6 +35,10 @@ export default function StushCaseStudyPage() {
     if (!video) return
     video.pause()
     video.currentTime = 0
+  }
+
+  const onHeroVideoError = () => {
+    setHeroIsStatic(true)
   }
 
   return (
@@ -66,17 +84,28 @@ export default function StushCaseStudyPage() {
               onFocus={playHeroVideo}
               onBlur={resetHeroVideo}
             >
-              <video
-                ref={heroVideoRef}
-                className="stush-hero__img"
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                poster={stushMedia.hero}
-              >
-                <source src={stushMedia.heroVideo} type="video/webm" />
-              </video>
+              {heroIsStatic ? (
+                <img
+                  src={stushMedia.heroVideoPreview}
+                  className="stush-hero__img"
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                />
+              ) : (
+                <video
+                  ref={heroVideoRef}
+                  className="stush-hero__img"
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster={stushMedia.heroVideoPreview}
+                  onError={onHeroVideoError}
+                >
+                  <source src={stushMedia.heroVideo} type="video/webm" />
+                </video>
+              )}
             </div>
           </header>
 

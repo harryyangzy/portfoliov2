@@ -208,7 +208,8 @@
     rgba(229, 236, 242, 0.95) 0%,
     #fff 55%
   );
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  /* Figma Tab Button (active): drop-shadow 1px 1px 1.5px */
+  box-shadow: 1px 1px 1.5px rgba(0, 0, 0, 0.2);
 }
 
 .pd-nav-item--default {
@@ -306,6 +307,8 @@
   border: none;
   box-shadow: none;
   min-height: 0;
+  /* Search dropdown / overlays paint outside the main column; overflow:hidden clips borders */
+  overflow: visible;
 }
 
 .pd-main--case-study {
@@ -368,6 +371,12 @@
   background: var(--pd-white);
   padding: 60px 0 60px 60px;
   box-sizing: border-box;
+}
+
+/* Marketing STUSH: .mstush is the full-bleed white surface (no inset padding on the body) */
+.pd-case-study-body:has(> .mstush) {
+  padding: 0;
+  background: transparent;
 }
 
 .pd-canvas {
@@ -716,6 +725,10 @@
 
   .pd-case-study-body {
     padding: 24px 0 24px 24px;
+  }
+
+  .pd-case-study-body:has(> .mstush) {
+    padding: 0;
   }
 
   .pd-canvas__document {
