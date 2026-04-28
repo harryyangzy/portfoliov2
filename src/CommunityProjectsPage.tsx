@@ -75,8 +75,6 @@ const EMAILS: Email[] = [
 const W5_SUMMIT_IMAGE = 'https://www.figma.com/api/mcp/asset/14690e48-6ebe-4973-b354-e218227975ff'
 const W5_DCA_IMAGE = 'https://www.figma.com/api/mcp/asset/22642931-7f3a-47de-b6dd-a7f198093892'
 const W5_TEAM_IMAGE = 'https://www.figma.com/api/mcp/asset/f1b419f2-5394-4572-9c33-d409f3fe2169'
-const WFN_IMG_52 = 'https://www.figma.com/api/mcp/asset/aa088096-5eff-45ea-ac60-ffdec973788a'
-const WFN_IMG_53 = 'https://www.figma.com/api/mcp/asset/7f7efffc-c837-4e88-a830-c98e7ca5095e'
 
 export default function CommunityProjectsPage() {
   const [search, setSearch] = useState('')

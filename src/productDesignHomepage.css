@@ -364,6 +364,8 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+  border-top-left-radius: 60px;
+  border-bottom-left-radius: 60px;
 }
 
 .pd-case-study-body {

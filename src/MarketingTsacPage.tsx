@@ -6,8 +6,8 @@ import lvwkOverview from './assets/marketing/tsac/001/lvwk overview-01.png'
 import photosLvwk from './assets/marketing/tsac/001/photos lvwk-04.png'
 import eventPhoto from './assets/marketing/tsac/001/e0467688-9c78-4fd8-9add-11b18f4d1956.jpg'
 import tsacExample from './assets/marketing/tsac/002/example.png'
-import tsacBlazers from './assets/marketing/tsac/002/blazers-03.png'
-import tsacBotsAlt from './assets/marketing/tsac/002/bots-v3-alt.png'
+import tsacBlazers from './assets/marketing/tsac/002/blazers-03.webp'
+import tsacBotsAlt from './assets/marketing/tsac/002/bots-v3-alt.webp'
 import './marketingStushPage.css'
 
 export default function MarketingTsacPage() {

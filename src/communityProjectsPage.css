@@ -39,12 +39,14 @@
 /* Community Projects uses the post-office card border as the main frame */
 .pd-page[data-name^='Community Projects'] .pd-main.pd-main--community:not(.pd-main--case-study) {
   border: none;
-  border-radius: 0;
+  border-radius: 60px 0 0 60px;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
 .pd-page[data-name^='Community Projects'] .pd-community-body {
   background: var(--cp-beige-200, #faf9f5);
+  border-radius: 60px 0 0 60px;
 }
 
 .cp {
@@ -54,20 +56,23 @@
   min-height: 100%;
   background: var(--cp-beige-200, #faf9f5);
   border: 4px solid var(--cp-beige-400, #e2e1df);
-  border-radius: 30px 0 0 30px;
+  border-radius: 60px 0 0 60px;
   overflow: visible;
 }
 
 .cp__top {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: stretch;
   width: 100%;
+  height: 126px;
+  min-height: 126px;
   background: var(--cp-beige-300, #f4f3ed);
   border-bottom: 2px solid var(--cp-beige-400, #e2e1df);
   position: relative;
   z-index: 2;
-  overflow: visible;
+  border-top-left-radius: 60px;
+  overflow: hidden;
 }
 
 .cp__brand {
@@ -78,7 +83,7 @@
   align-items: center;
   padding: 24px 40px;
   background: var(--cp-beige-300, #f4f3ed);
-  border-radius: 30px 0 0 0;
+  border-radius: 0;
 }
 
 .cp__brand-title {
@@ -287,7 +292,7 @@
   flex-direction: column;
   gap: 0;
   background: var(--cp-beige-200, #faf9f5);
-  border-radius: 0 0 0 30px;
+  border-radius: 0 0 0 60px;
 }
 
 .cp__inbox-scroll {
@@ -316,7 +321,9 @@
 .cp-mail--active {
   background: var(--cp-beige-300, #f4f3ed);
   border: 1px solid var(--cp-beige-400, #e2e1df);
+  width: 351px;
   max-width: 351px;
+  min-height: 82px;
 }
 
 .cp-mail--active:hover {
@@ -324,8 +331,9 @@
 }
 
 .cp-mail--unread {
-  width: 100%;
-  max-width: 342px;
+  width: 351px;
+  max-width: 351px;
+  min-height: 82px;
   background: transparent;
   border: 1px solid transparent;
   box-shadow: none;
@@ -341,6 +349,9 @@
 
 .cp-mail--read {
   gap: 12px;
+  width: 351px;
+  max-width: 351px;
+  min-height: 82px;
   background: transparent;
   border: 1px solid transparent;
   box-shadow: none;
