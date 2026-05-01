@@ -4,7 +4,7 @@
 import hero from './feature1.png'
 import heroPoster from './vid preview0.png'
 import heroVideo from './demovid-hero.webm'
-import heroVideoMp4 from './Scene-1 (1).mp4'
+import heroAnimationWebp from './Scene-1 (1).webp'
 import userResearch from './image48.png'
 import competitive from './image49.png'
 import designSystemWide from './image50.png'
@@ -19,7 +19,7 @@ export const coeurMedia = {
   hero,
   poster: heroPoster,
   heroVideo,
-  heroVideoMp4,
+  heroAnimationWebp,
   userResearch,
   competitive,
   designSystemWide,
@@ -27,7 +27,7 @@ export const coeurMedia = {
   flowGraphic,
   inspirationGrid,
   featureReminders,
-  /** Right feature column — Figma embeds Scene-1 (1).mp4 (same file as hero MP4) */
-  featureCaptureMp4: heroVideoMp4,
+  /** Right feature column animated preview */
+  featureCaptureWebp: heroAnimationWebp,
   outroSharingVideo,
 } as const

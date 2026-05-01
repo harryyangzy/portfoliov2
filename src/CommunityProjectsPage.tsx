@@ -1,9 +1,40 @@
 import { useMemo, useState } from 'react'
 import PortfolioShell from './PortfolioShell'
 import { communityProjectAssets as a } from './assets/community-projects/assets'
+import w5SummitImage from './assets/community-projects/w5/summit-2.webp'
+import w5DcaImage from './assets/community-projects/w5/14690e48-6ebe-4973-b354-e218227975ff.png'
+import w5TeamImage from './assets/community-projects/w5/team picture.webp'
 import './communityProjectsPage.css'
 
-function Attachment({ name, date }: { name: string; date: string }) {
+function Attachment({
+  name,
+  date,
+  href,
+}: {
+  name: string
+  date: string
+  href?: string
+}) {
+  if (href) {
+    return (
+      <button
+        type="button"
+        className="cp-attachment"
+        aria-label={`Attachment: ${name}`}
+        onClick={() => window.open(href, '_blank', 'noopener,noreferrer')}
+      >
+        <span className="cp-attachment__doc" aria-hidden="true">
+          <span className="cp-attachment__doc-a" />
+          <span className="cp-attachment__doc-b" />
+        </span>
+        <span className="cp-attachment__text">
+          <span className="cp-attachment__name">{name}</span>
+          <span className="cp-attachment__date">{date}</span>
+        </span>
+      </button>
+    )
+  }
+
   return (
     <button type="button" className="cp-attachment" aria-label={`Attachment: ${name}`}>
       <span className="cp-attachment__doc" aria-hidden="true">
@@ -29,7 +60,7 @@ type Email = {
   date: string
   to: string
   preview: string
-  attachments: Array<{ name: string; date: string }>
+  attachments: Array<{ name: string; date: string; href?: string }>
 }
 
 const EMAILS: Email[] = [
@@ -43,8 +74,12 @@ const EMAILS: Email[] = [
     to: 'wfn@westernu.ca',
     preview: 'Over 1,300 pieces of merch and 20+ mentors ...',
     attachments: [
-      { name: 'PDS by the numbers.png', date: '20/04/2026' },
-      { name: 'Sponsorship Package', date: '20/04/2026' },
+      { name: 'PDS by the numbers.png', date: '20/04/2026', href: a.pdsRecap },
+      {
+        name: 'Sponsorship Package',
+        date: '20/04/2026',
+        href: 'https://drive.google.com/file/d/1_4kyTly5yhWizMXk18Mye9Td5sPWLMc6/view?usp=sharing',
+      },
     ],
   },
   {
@@ -56,7 +91,13 @@ const EMAILS: Email[] = [
     date: 'January 12 2026',
     to: 'w5@westernu.ca',
     preview: '4 events in 4 months with over 400 attendees ...',
-    attachments: [{ name: 'Sponsorship Package.pdf', date: '20/04/2026' }],
+    attachments: [
+      {
+        name: 'Sponsorship Package.pdf',
+        date: '20/04/2026',
+        href: 'https://drive.google.com/file/d/1AoKQYBZkBAD-e9Rr6QDpo_mAvkT5e5zC/view?usp=sharing',
+      },
+    ],
   },
   {
     id: 'usc',
@@ -72,14 +113,18 @@ const EMAILS: Email[] = [
   },
 ]
 
-const W5_SUMMIT_IMAGE = 'https://www.figma.com/api/mcp/asset/14690e48-6ebe-4973-b354-e218227975ff'
-const W5_DCA_IMAGE = 'https://www.figma.com/api/mcp/asset/22642931-7f3a-47de-b6dd-a7f198093892'
-const W5_TEAM_IMAGE = 'https://www.figma.com/api/mcp/asset/f1b419f2-5394-4572-9c33-d409f3fe2169'
+const W5_SUMMIT_IMAGE = w5SummitImage
+const W5_DCA_IMAGE = w5DcaImage
+const W5_TEAM_IMAGE = w5TeamImage
+const WFN_IMAGE_GROUP = a.imageGroup
+const WFN_IMAGE_52 = a.image52
+const WFN_IMAGE_53 = a.image53
 
 export default function CommunityProjectsPage() {
   const [search, setSearch] = useState('')
   const [activeEmailId, setActiveEmailId] = useState<EmailId | null>('usc')
   const [visitedEmailIds, setVisitedEmailIds] = useState<Set<EmailId>>(new Set(['usc']))
+  const hasSearchQuery = search.trim().length > 0
 
   const filteredEmails = useMemo(() => {
     const query = search.trim().toLowerCase()
@@ -121,7 +166,7 @@ export default function CommunityProjectsPage() {
             </div>
           </div>
           <div className="cp__toolbar">
-            <div className="cp-search-wrap">
+            <div className={`cp-search-wrap${hasSearchQuery ? ' cp-search-wrap--open' : ''}`}>
               <label className="cp__search">
                 <span className="visually-hidden">Search mail</span>
                 <input
@@ -133,7 +178,7 @@ export default function CommunityProjectsPage() {
                   onChange={(event) => setSearch(event.target.value)}
                 />
               </label>
-              {search.trim() ? (
+              {hasSearchQuery ? (
                 <div className="cp-search-hint">
                   {filteredEmails.length > 0 ? (
                     filteredEmails.map((email) => (
@@ -216,6 +261,7 @@ export default function CommunityProjectsPage() {
                         key={`${activeEmail.id}-${attachment.name}`}
                         name={attachment.name}
                         date={attachment.date}
+                        href={attachment.href}
                       />
                     ))}
                   </div>
@@ -238,35 +284,50 @@ export default function CommunityProjectsPage() {
                       </div>
 
                       <div className="cp-wfn-row cp-wfn-row--pair">
-                        <div className="cp-prose cp-wfn-row__text cp-wfn-row__text--narrow">
+                        <div className="cp-prose cp-wfn-row__text">
                           <p className="cp-wfn-cottage-copy">
                             Through the Summer, we roadmapped through a somewhat productive cottage trip. As
                             the school year came through, we built our team from 0-100, teaching them Figma
                             and having dinners, desserts and sleepovers building an unmatched team culture.
                           </p>
                         </div>
+                        <div className="cp-wfn-overlap">
+                          <figure className="cp-wfn-media cp-wfn-media--group cp-wfn-media--plain">
+                            <img src={WFN_IMAGE_GROUP} alt="PDS team culture moments collage" />
+                          </figure>
+                        </div>
                       </div>
 
-                      <div className="cp-prose">
-                        <p>
-                          Building that team culture is what allowed me to push them further than ever. I had a
-                          vision for a new magnitude of PDS a vision with more competitors, more mentorship and
-                          a true in-person competitor experiences with merch, food and workshops.
-                        </p>
-                        <p>
-                          Every week, we met in-person and had dinner together. I learned how to motivate, and
-                          lead the team. We constantly set goals, for the team and for each member. Together, we
-                          sent over 1,917 emails, and pitched our event to 19 brands. The fact that we were so
-                          close kept everyone accountable to the team. It worked.
-                        </p>
+                      <div className="cp-wfn-row">
+                        <figure className="cp-wfn-media cp-wfn-media--52">
+                          <img src={WFN_IMAGE_52} alt="PDS organizing team portrait" />
+                        </figure>
+                        <div className="cp-prose cp-wfn-row__text">
+                          <p>
+                            Building that team culture is what allowed me to push them further than ever. I had
+                            a vision for a new magnitude of PDS a vision with more competitors, more mentorship
+                            and a true in-person competitor experiences with merch, food and workshops.
+                          </p>
+                          <p>
+                            Every week, we met in-person and had dinner together. I learned how to motivate, and
+                            lead the team. We constantly set goals, for the team and for each member. Together,
+                            we sent over 1,917 emails, and pitched our event to 19 brands. The fact that we were
+                            so close kept everyone accountable to the team. It worked.
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="cp-prose">
-                        <p>
-                          We had over 1,300 pieces of merch given away, 20+ mentors and judges. Each team was
-                          given the opportunity to learn about product design, build a project, get feedback and
-                          leave with a free meal and t-shirt.
-                        </p>
+                      <div className="cp-wfn-row">
+                        <div className="cp-prose cp-wfn-row__text">
+                          <p>
+                            We had over 1,300 pieces of merch given away, 20+ mentors and judges. Each team was
+                            given the opportunity to learn about product design, build a project, get feedback
+                            and leave with a free meal and t-shirt.
+                          </p>
+                        </div>
+                        <figure className="cp-wfn-media cp-wfn-media--53">
+                          <img src={WFN_IMAGE_53} alt="PDS participants workshop moment" />
+                        </figure>
                       </div>
 
                       <div className="cp-prose">

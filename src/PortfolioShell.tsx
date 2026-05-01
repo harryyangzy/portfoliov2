@@ -7,6 +7,8 @@ import {
   type ToolbarIconTrio,
 } from './assets/design-engineering/toolbar-icons'
 import navFigmaIcon from './assets/figma icon.png'
+import navEmailIcon from './assets/email favicon.png'
+import navInstagramIcon from './assets/Instagram_logo_2016.svg'
 import './productDesignHomepage.css'
 
 type ToolId = 'pointer' | 'frame' | 'line' | 'pen' | 'comment' | 'text' | 'search'
@@ -159,6 +161,14 @@ function NavTab({ item }: { item: NavItem }) {
   const { pathname } = useLocation()
   const designEngineeringActive =
     item.id === 'de' && (pathname === '/' || pathname.startsWith('/work'))
+  const navIconSrc =
+    item.id === 'cp' ? navEmailIcon : item.id === 'mc' ? navInstagramIcon : navFigmaIcon
+  const navIconClass =
+    item.id === 'cp'
+      ? 'pd-nav-item__icon pd-nav-item__icon--email'
+      : item.id === 'mc'
+        ? 'pd-nav-item__icon pd-nav-item__icon--instagram'
+        : 'pd-nav-item__icon pd-nav-item__icon--figma'
 
   if (item.id === 'de') {
     return (
@@ -167,7 +177,7 @@ function NavTab({ item }: { item: NavItem }) {
         className={`pd-nav-item${designEngineeringActive ? ' pd-nav-item--active' : ' pd-nav-item--default'}`}
       >
         <span className="pd-nav-item__icon-box">
-          <img src={navFigmaIcon} alt="" className="pd-nav-item__icon" />
+          <img src={navIconSrc} alt="" className={navIconClass} />
         </span>
         <span className="pd-nav-item__label">{item.label}</span>
       </Link>
@@ -183,7 +193,7 @@ function NavTab({ item }: { item: NavItem }) {
       }
     >
       <span className="pd-nav-item__icon-box">
-        <img src={navFigmaIcon} alt="" className="pd-nav-item__icon" />
+        <img src={navIconSrc} alt="" className={navIconClass} />
       </span>
       <span className="pd-nav-item__label">{item.label}</span>
     </NavLink>
@@ -220,11 +230,8 @@ export default function PortfolioShell({
           <div className="pd-sidebar__intro">
             <p className="pd-sidebar__handwriting">hey, i’m harry</p>
             <p className="pd-sidebar__bio">
-              i spent all my time working on clubs this year and now I don’t have a job.
+              i love making, designing and living life, see what my browser looks like
             </p>
-            <a className="pd-more-btn" href="#about">
-              more about me&nbsp;&nbsp;&nbsp;&nbsp;🡢
-            </a>
           </div>
           <nav className="pd-sidebar__nav" aria-label="Sections">
             {NAV_ITEMS.map((item) => (

@@ -10,6 +10,7 @@ import imageGroup from './pds/image_group.png'
 import image51 from './pds/image-51.png'
 import image52 from './pds/image-52.png'
 import image53 from './pds/image-53.png'
+import pdsRecap from './pds recap.png'
 
 export const communityProjectAssets = {
   harryPfp,
@@ -24,4 +25,5 @@ export const communityProjectAssets = {
   image51,
   image52,
   image53,
+  pdsRecap,
 } as const

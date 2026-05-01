@@ -85,7 +85,6 @@ export default function CoeurCaseStudyPage() {
                   onError={onHeroVideoError}
                 >
                   <source src={coeurMedia.heroVideo} type="video/webm" />
-                  <source src={coeurMedia.heroVideoMp4} type="video/mp4" />
                 </video>
               )}
             </div>
@@ -313,18 +312,13 @@ export default function CoeurCaseStudyPage() {
                 </div>
                 <div className="coeur-feature">
                   <div className="coeur-feature__crop coeur-feature__crop--capture">
-                    <video
+                    <img
                       className="coeur-feature__media"
-                      muted
-                      loop
-                      autoPlay
-                      playsInline
-                      preload="auto"
-                      poster={coeurMedia.poster}
+                      src={coeurMedia.featureCaptureWebp}
+                      loading="lazy"
+                      decoding="async"
                       aria-label="Capture flow on device"
-                    >
-                      <source src={coeurMedia.featureCaptureMp4} type="video/mp4" />
-                    </video>
+                    />
                   </div>
                   <div className="coeur-feature__body">
                     <h2 className="stush-h2 coeur-card-title">
