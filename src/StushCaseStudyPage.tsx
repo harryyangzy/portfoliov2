@@ -1,8 +1,114 @@
-import { useRef, useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 import { stushMedia } from './assets/design-engineering/stush/media'
 import './stushCaseStudy.css'
+
+function classNames(...tokens: Array<string | undefined>) {
+  return tokens.filter(Boolean).join(' ')
+}
+
+function StushHero({
+  heroIsStatic,
+  onHeroVideoError,
+}: {
+  heroIsStatic: boolean
+  onHeroVideoError: () => void
+}) {
+  return (
+    <header className="stush-hero">
+      <div className="stush-hero__band">
+        <div className="stush-hero__band-inner">
+          <div className="stush-hero__copy">
+            <div className="stush-hero__lede">
+              <h1 className="stush-hero__title">Creating a Renewed Brand Experience</h1>
+              <p className="stush-hero__meta-top">Summer 2025</p>
+            </div>
+            <div className="stush-hero__meta-row">
+              <div className="stush-hero__meta-col">
+                <p className="stush-hero__meta-label">Team</p>
+                <div>
+                  <p className="stush-hero__meta-val">Designer</p>
+                  <p className="stush-hero__meta-sub">Founder</p>
+                </div>
+              </div>
+              <div className="stush-hero__meta-col">
+                <p className="stush-hero__meta-label">Status</p>
+                <div>
+                  <p className="stush-hero__meta-val">Shipped</p>
+                  <p className="stush-hero__meta-sub">Built</p>
+                  <p className="stush-hero__meta-sub">Scoped</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="stush-hero__img-wrap">
+        {heroIsStatic ? (
+          <img
+            src={stushMedia.heroVideoPreview}
+            className="stush-hero__img"
+            alt=""
+            loading="eager"
+            decoding="async"
+          />
+        ) : (
+          <video
+            className="stush-hero__img"
+            muted
+            loop
+            autoPlay
+            playsInline
+            preload="metadata"
+            poster={stushMedia.heroVideoPreview}
+            onError={onHeroVideoError}
+          >
+            <source src={stushMedia.heroVideo} type="video/webm" />
+          </video>
+        )}
+      </div>
+    </header>
+  )
+}
+
+function StushSkills() {
+  return (
+    <div className="stush-skills" aria-label="Skills">
+      <span className="stush-skill">
+        <span aria-hidden>💻</span> Front-End Engineering
+      </span>
+      <span className="stush-skill">
+        <span aria-hidden>📁</span> Product Strategy
+      </span>
+      <span className="stush-skill">
+        <span aria-hidden>🖼️</span> Product Design
+      </span>
+    </div>
+  )
+}
+
+function StushSplitTextCard({
+  kicker,
+  title,
+  className,
+  children,
+}: {
+  kicker: string
+  title: string
+  className?: string
+  children: ReactNode
+}) {
+  return (
+    <div className={classNames('stush-card stush-split__text stush-card--top-bottom', className)}>
+      <p className="stush-kicker">{kicker}</p>
+      <div className="stush-card__bottom">
+        <h2 className="stush-h2">{title}</h2>
+        <div className="stush-prose">{children}</div>
+      </div>
+    </div>
+  )
+}
 
 function canPlayWebM(): boolean {
   if (typeof document === 'undefined') return false
@@ -16,26 +122,9 @@ function canPlayWebM(): boolean {
 }
 
 export default function StushCaseStudyPage() {
-  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
   const [heroIsStatic, setHeroIsStatic] = useState(
     () => typeof document === 'undefined' || !canPlayWebM(),
   )
-
-  const playHeroVideo = () => {
-    const video = heroVideoRef.current
-    if (!video) return
-    video.currentTime = 0
-    void video.play().catch(() => {
-      /* Ignore autoplay restrictions on some devices/browsers. */
-    })
-  }
-
-  const resetHeroVideo = () => {
-    const video = heroVideoRef.current
-    if (!video) return
-    video.pause()
-    video.currentTime = 0
-  }
 
   const onHeroVideoError = () => {
     setHeroIsStatic(true)
@@ -49,97 +138,25 @@ export default function StushCaseStudyPage() {
             ← Back
           </Link>
 
-          <header className="stush-hero">
-            <div className="stush-hero__copy">
-              <div>
-                <h1 className="stush-hero__title">
-                  Creating a Renewed
-                  <br />
-                  Brand Experience
-                </h1>
-                <p className="stush-hero__meta-top">Summer 2025</p>
-              </div>
-              <div className="stush-hero__meta-row">
-                <div className="stush-hero__meta-col">
-                  <p className="stush-hero__meta-label">Team</p>
-                  <div>
-                    <p className="stush-hero__meta-val">Designer</p>
-                    <p className="stush-hero__meta-sub">Founder</p>
-                  </div>
-                </div>
-                <div className="stush-hero__meta-col">
-                  <p className="stush-hero__meta-label">Status</p>
-                  <div>
-                    <p className="stush-hero__meta-val">Shipped</p>
-                    <p className="stush-hero__meta-sub">Built</p>
-                    <p className="stush-hero__meta-sub">Scoped</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="stush-hero__img-wrap"
-              onMouseEnter={playHeroVideo}
-              onMouseLeave={resetHeroVideo}
-              onFocus={playHeroVideo}
-              onBlur={resetHeroVideo}
-            >
-              {heroIsStatic ? (
-                <img
-                  src={stushMedia.heroVideoPreview}
-                  className="stush-hero__img"
-                  alt=""
-                  loading="eager"
-                  decoding="async"
-                />
-              ) : (
-                <video
-                  ref={heroVideoRef}
-                  className="stush-hero__img"
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster={stushMedia.heroVideoPreview}
-                  onError={onHeroVideoError}
-                >
-                  <source src={stushMedia.heroVideo} type="video/webm" />
-                </video>
-              )}
-            </div>
-          </header>
-
-          <div className="stush-skills" aria-label="Skills">
-            <span className="stush-skill">
-              <span aria-hidden>💻</span> Front-End Engineering
-            </span>
-            <span className="stush-skill">
-              <span aria-hidden>📁</span> Product Strategy
-            </span>
-            <span className="stush-skill">
-              <span aria-hidden>🖼️</span> Product Design
-            </span>
-          </div>
+          <StushHero heroIsStatic={heroIsStatic} onHeroVideoError={onHeroVideoError} />
+          <StushSkills />
 
           <div className="stush-stack">
             <div className="stush-band stush-band--tight">
               <div className="stush-split">
-                <div className="stush-card stush-split__text stush-card--top-bottom">
-                  <p className="stush-kicker">Problem</p>
-                  <div className="stush-card__bottom">
-                    <h2 className="stush-h2">Stush’s site felt generic, confusing and unappetizing</h2>
-                    <div className="stush-prose">
-                      <p>
-                        STUSH’s brand was built on the fundamentals of wholesome, cultural and vibrant
-                        flavours.
-                      </p>
-                      <p>
-                        Built on an e-commerce Shopify template, the digital experience failed to bring
-                        the same energy and had a complicated, overwhelming checkout flow.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <StushSplitTextCard
+                  kicker="Problem"
+                  title="Stush’s site felt generic, confusing and unappetizing"
+                >
+                  <p>
+                    STUSH’s brand was built on the fundamentals of wholesome, cultural and vibrant
+                    flavours.
+                  </p>
+                  <p>
+                    Built on an e-commerce Shopify template, the digital experience failed to bring the
+                    same energy and had a complicated, overwhelming checkout flow.
+                  </p>
+                </StushSplitTextCard>
                 <div className="stush-split__media stush-split__media--problem">
                   <img
                     className="stush-img-rounded stush-img-rounded--h312"
@@ -159,86 +176,52 @@ export default function StushCaseStudyPage() {
                     alt=""
                   />
                 </div>
-                <div className="stush-card stush-split__text stush-card--pad-sm stush-card--top-bottom">
-                  <p className="stush-kicker">Solution</p>
-                  <div className="stush-card__bottom">
-                    <h2 className="stush-h2">So I rebuilt it.</h2>
-                    <div className="stush-prose">
-                      <span className="stush-subh">Vibes First</span>
-                      <p>
-                        Playful colors, vibrant flavours and stunning product photos defined the brand.
-                        Through contrast and hierarchy, users were able to experience the energy of the
-                        brand firsthand.
-                      </p>
-                      <span className="stush-subh">Shopping Experience</span>
-                      <p>
-                        I used design to reorganize SKUs, separating them by flavour then quantity at
-                        checkout, instead of 18 overwhelming SKUs.
-                      </p>
-                      <span className="stush-subh">21st Century Design</span>
-                      <p>
-                        I worked with the founder to create a design system that felt true to the brand
-                        while making the site consistent and easy to navigate.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <StushSplitTextCard kicker="Solution" title="So I rebuilt it." className="stush-card--pad-sm">
+                  <span className="stush-subh">Vibes First</span>
+                  <p>
+                    Playful colors, vibrant flavours and stunning product photos defined the brand.
+                    Through contrast and hierarchy, users were able to experience the energy of the brand
+                    firsthand.
+                  </p>
+                  <span className="stush-subh">Shopping Experience</span>
+                  <p>
+                    I used design to reorganize SKUs, separating them by flavour then quantity at
+                    checkout, instead of 18 overwhelming SKUs.
+                  </p>
+                  <span className="stush-subh">21st Century Design</span>
+                  <p>
+                    I worked with the founder to create a design system that felt true to the brand while
+                    making the site consistent and easy to navigate.
+                  </p>
+                </StushSplitTextCard>
               </div>
             </div>
 
             <div className="stush-band stush-band--tight">
               <div className="stush-split">
                 <div className="stush-card stush-audit-wrap">
-                  <div className="stush-audit-grid">
-                    <img
-                      className="stush-audit-tile stush-audit-tile--r1a"
-                      src={stushMedia.audit14543}
-                      alt=""
-                    />
-                    <img
-                      className="stush-audit-tile stush-audit-tile--r1b"
-                      src={stushMedia.audit14559}
-                      alt=""
-                    />
-                    <div
-                      className="stush-audit-tile stush-audit-tile--r2a stush-audit-composite"
-                      aria-hidden
-                    >
-                      <img
-                        className="stush-audit-composite__base"
-                        src={stushMedia.audit14821}
-                        alt=""
-                      />
-                      <img
-                        className="stush-audit-composite__aa"
-                        src={stushMedia.auditAaGlyph}
-                        alt=""
-                      />
-                    </div>
-                    <img
-                      className="stush-audit-tile stush-audit-tile--r2b"
-                      src={stushMedia.audit14658}
-                      alt=""
-                    />
-                  </div>
+                  <img
+                    className="stush-audit-bento"
+                    src={stushMedia.auditBento}
+                    alt=""
+                    loading="lazy"
+                  />
                 </div>
-                <div className="stush-card stush-split__text stush-card--top-bottom">
-                  <p className="stush-kicker">Initial observation</p>
-                  <div className="stush-card__bottom">
-                    <h2 className="stush-h2">The site’s pretty bad.</h2>
-                    <div className="stush-prose">
-                      <span className="stush-subh">Organization and Hierarchy</span>
-                      <p>Everything looked the same, walls of text that overwhelmed you when you try to look at it.</p>
-                      <span className="stush-subh">Branding and Aesthetics</span>
-                      <p>Fonts and colours were all over the place—inconsistent and misused.</p>
-                      <span className="stush-subh">Clarity and Action</span>
-                      <p>
-                        Screens were left with no clear call to action and next step, leaving users
-                        disengaged.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <StushSplitTextCard
+                  kicker="Initial observation"
+                  title="The site’s pretty bad."
+                  className="stush-initial-observation__text"
+                >
+                  <span className="stush-subh">Organization and Hierarchy</span>
+                  <p>Everything looked the same, walls of text that overwhelmed you when you try to look at it.</p>
+                  <span className="stush-subh">Branding and Aesthetics</span>
+                  <p>Fonts and colours were all over the place—inconsistent and misused.</p>
+                  <span className="stush-subh">Clarity and Action</span>
+                  <p>
+                    Screens were left with no clear call to action and next step, leaving users
+                    disengaged.
+                  </p>
+                </StushSplitTextCard>
               </div>
             </div>
 
@@ -321,33 +304,27 @@ export default function StushCaseStudyPage() {
               </div>
             </div>
 
-            <div className="stush-band">
+            <div className="stush-band stush-band--outcome-first">
               <div className="stush-split">
-                <div className="stush-card stush-split__text stush-card--top-bottom">
-                  <p className="stush-kicker">Outcomes</p>
-                  <div className="stush-card__bottom">
-                    <h2 className="stush-h2">Getting patties made easier</h2>
-                    <div className="stush-prose">
-                      <span className="stush-subh">No More Paragraphs</span>
-                      <p>
-                        Essays of information overload were broken down into interfaces with icons and
-                        titles. Through vibrant symbolism and imagery we were able to tell our story
-                        without paragraphs.
-                      </p>
-                      <span className="stush-subh">Simplified Shopping Flow</span>
-                      <p>
-                        Instead of hunting for the shopping page and choosing between 18 SKUs, product
-                        sizes were segmented and the interface guided users toward a purchase.
-                      </p>
-                      <span className="stush-subh">A Bunch of New Features</span>
-                      <p>
-                        The site is a first touchpoint for shoppers and retail buyers as STUSH enters new
-                        stores. We included testimonials, a way to suggest stores, and a live scrolling
-                        banner so the brand feels like a conversation.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <StushSplitTextCard kicker="Outcomes" title="Getting patties made easier">
+                  <span className="stush-subh">No More Paragraphs</span>
+                  <p>
+                    Essays of information overload were broken down into interfaces with icons and titles.
+                    Through vibrant symbolism and imagery we were able to tell our story without
+                    paragraphs.
+                  </p>
+                  <span className="stush-subh">Simplified Shopping Flow</span>
+                  <p>
+                    Instead of hunting for the shopping page and choosing between 18 SKUs, product sizes
+                    were segmented and the interface guided users toward a purchase.
+                  </p>
+                  <span className="stush-subh">A Bunch of New Features</span>
+                  <p>
+                    The site is a first touchpoint for shoppers and retail buyers as STUSH enters new
+                    stores. We included testimonials, a way to suggest stores, and a live scrolling banner
+                    so the brand feels like a conversation.
+                  </p>
+                </StushSplitTextCard>
                 <div className="stush-split__media stush-split__media--outcome-r">
                   <img
                     className="stush-img-rounded stush-img-rounded--outcome"
@@ -358,7 +335,7 @@ export default function StushCaseStudyPage() {
               </div>
             </div>
 
-            <div className="stush-band">
+            <div className="stush-band stush-band--outcome-second">
               <div className="stush-split stush-split--outcome-learned">
                 <div className="stush-split__media stush-split__media--outcome-l">
                   <img

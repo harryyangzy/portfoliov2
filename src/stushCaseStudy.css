@@ -117,6 +117,32 @@
     right: 60px;
     transform: translateY(-50%);
   }
+
+  /* Desktop: white text cards fill available height with automatic top/bottom distribution */
+  .stush-card.stush-split__text.stush-card--top-bottom,
+  .stush-card.stush-split__text.stush-card--top-bottom.stush-initial-observation__text {
+    display: flex;
+    height: fill;
+
+    min-height: 0;
+    align-self: stretch;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .stush-card.stush-split__text.stush-card--top-bottom .stush-card__bottom,
+  .stush-card.stush-split__text.stush-card--top-bottom.stush-initial-observation__text .stush-card__bottom {
+    margin-top: auto;
+    height: fill;
+  }
+}
+
+.stush-hero__lede {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
 }
 
 .stush-hero__copy {

@@ -36,7 +36,7 @@ export default function MarketingCommunicationsPage() {
             <div className="mc-profile__avatar-wrap" aria-hidden>
               <img src={profilePicture} alt="" className="mc-profile__avatar" />
             </div>
-            <div className="mc-profile__body">
+            <div className="mc-profile__head">
               <div className="mc-profile__intro">
                 <div className="mc-profile__name-row">
                   <h1 className="mc-profile__name">harryyang</h1>
@@ -47,13 +47,17 @@ export default function MarketingCommunicationsPage() {
                 <p className="mc-profile__role">Previous Marketing Intern (x2)</p>
               </div>
               <div className="mc-profile__stats">
-                <span className="mc-profile__stat-item">
-                  <strong>5</strong> Brands
+                <span className="mc-profile__stat-block">
+                  <strong className="mc-profile__stat-value">5</strong>
+                  <span className="mc-profile__stat-label">Brands</span>
                 </span>
-                <span className="mc-profile__stat-item">
-                  <strong>23.2K</strong> Followers
+                <span className="mc-profile__stat-block">
+                  <strong className="mc-profile__stat-value">23.2K</strong>
+                  <span className="mc-profile__stat-label">Followers</span>
                 </span>
               </div>
+            </div>
+            <div className="mc-profile__tail">
               <div className="mc-profile__about">
                 <p className="mc-profile__tagline">Telling stories beautifully through marketing</p>
                 <p className="mc-profile__school">🐎&nbsp; Business and CS @ Western</p>
