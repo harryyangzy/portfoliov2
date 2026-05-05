@@ -1,103 +1,82 @@
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
+import stushCardImg from './assets/design-engineering/STUSHbanner.png'
+import quxCardImg from './assets/design-engineering/QUXbanner.png'
+import stumblCardImg from './assets/design-engineering/stumblbanner.png'
 
-type CardConfig =
-  | {
-      id: string
-      variant: 'stush'
-      eyebrow: string
-      title: string
-      imageSrc: string
-      imageAlt: string
-    }
-  | {
-      id: string
-      variant: 'qux'
-      eyebrow: string
-      title: string
-      imageSrc: string
-      imageAlt: string
-    }
-  | {
-      id: string
-      variant: 'placeholder'
-      eyebrow: string
-      title: string
-    }
+type CardVariant = 'stush' | 'qux' | 'stumbl'
+
+type CardConfig = {
+  id: string
+  variant: CardVariant
+  eyebrow: string
+  title: string
+  imageSrc: string
+  imageAlt: string
+}
 
 const PRODUCT_DESIGN_CARDS: CardConfig[] = [
   {
     id: 'stush',
     variant: 'stush',
-    eyebrow: 'STUSH Foods',
-    title: 'Bringing vibes and a friendly experience to online shopping',
-    imageSrc: '/assets/stush-banner.png',
-    imageAlt: 'STUSH Foods product mockups',
+    eyebrow: 'Case Competition - 1',
+    title: 'GETTING PATTIES MADE BETTER',
+    imageSrc: stushCardImg,
+    imageAlt: 'STUSH Foods storefront and product UI',
   },
   {
     id: 'qux',
     variant: 'qux',
-    eyebrow: 'QUX Designathon',
-    title: 'Reshaping how we capture moments in life',
-    imageSrc: '/assets/qux-banner.png',
-    imageAlt: 'QUX Designathon scene',
+    eyebrow: "Queen's UX Designathon: First Place -2",
+    title: 'Capturing Moments in Life',
+    imageSrc: quxCardImg,
+    imageAlt: 'Coeur / QUX hero motion still',
   },
   {
-    id: 'cc-a',
-    variant: 'placeholder',
-    eyebrow: 'work in progress one',
-    title: 'Spending less time waiting for the buss - coming soon!',
-  },
-  {
-    id: 'cc-b',
-    variant: 'placeholder',
-    eyebrow: 'case competition one',
-    title: 'Healthcare Finance for a Fintech Startup - coming soon!',
+    id: 'stumbl',
+    variant: 'stumbl',
+    eyebrow: 'Stumbl - 3',
+    title: 'Less Waiting for the Bus',
+    imageSrc: stumblCardImg,
+    imageAlt: 'Stumbl transit app preview',
   },
 ]
 
-const projectItemClass = (variant: CardConfig['variant']) =>
-  `pd-project-item pd-card pd-card--${variant}`
+const projectItemClass = (variant: CardVariant) =>
+  `pd-project-item pd-card pd-card--gallery pd-card--${variant}`
 
-function ProjectItem({ card }: { card: CardConfig }) {
-  const common = (
+function GalleryCardMedia({ card }: { card: CardConfig }) {
+  return (
+    <div className={`pd-card__media pd-card__media--gallery pd-card__media--${card.variant}`}>
+      <img
+        className="pd-card__cover pd-card__cover--gallery"
+        src={card.imageSrc}
+        alt={card.imageAlt}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  )
+}
+
+function GalleryCardInner({ card }: { card: CardConfig }) {
+  return (
     <>
       <p className="pd-card__eyebrow">{card.eyebrow}</p>
-
-      {card.variant === 'stush' && (
-        <div className="pd-card__media pd-card__media--stush">
-          <img
-            className="pd-card__cover"
-            src={card.imageSrc}
-            alt={card.imageAlt}
-            loading="lazy"
-            decoding="async"
-          />
-          <h2 className="pd-card__title pd-card__title--on-photo">{card.title}</h2>
+      <div className="pd-card__stack">
+        <GalleryCardMedia card={card} />
+        <div className="pd-card__title-strip">
+          <h2 className={`pd-card__title pd-card__title--strip pd-card__title--strip-${card.variant}`}>
+            {card.title}
+          </h2>
         </div>
-      )}
-
-      {card.variant === 'qux' && (
-        <div className="pd-card__media pd-card__media--qux">
-          <div className="pd-card__media-fill" aria-hidden />
-          <img
-            className="pd-card__cover pd-card__cover--qux"
-            src={card.imageSrc}
-            alt={card.imageAlt}
-            loading="lazy"
-            decoding="async"
-          />
-          <h2 className="pd-card__title pd-card__title--qux">{card.title}</h2>
-        </div>
-      )}
-
-      {card.variant === 'placeholder' && (
-        <div className="pd-card__media pd-card__media--placeholder">
-          <h2 className="pd-card__title pd-card__title--placeholder">{card.title}</h2>
-        </div>
-      )}
+      </div>
     </>
   )
+}
+
+function ProjectItem({ card }: { card: CardConfig }) {
+  const inner = <GalleryCardInner card={card} />
 
   if (card.variant === 'stush') {
     return (
@@ -108,7 +87,7 @@ function ProjectItem({ card }: { card: CardConfig }) {
         style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
         aria-label="STUSH Foods — case study"
       >
-        {common}
+        {inner}
       </Link>
     )
   }
@@ -122,14 +101,14 @@ function ProjectItem({ card }: { card: CardConfig }) {
         style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
         aria-label="Coeur (QUX Designathon) — case study"
       >
-        {common}
+        {inner}
       </Link>
     )
   }
 
   return (
-    <article className={projectItemClass(card.variant)} data-variant={card.variant}>
-      {common}
+    <article className={projectItemClass('stumbl')} data-variant="stumbl">
+      {inner}
     </article>
   )
 }

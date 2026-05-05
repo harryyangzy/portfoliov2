@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 import { coeurMedia } from './assets/design-engineering/coeur/media'
@@ -6,22 +6,7 @@ import './stushCaseStudy.css'
 import './coeurCaseStudy.css'
 
 export default function CoeurCaseStudyPage() {
-  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
   const [heroIsStatic, setHeroIsStatic] = useState(false)
-
-  const playHeroVideo = () => {
-    const video = heroVideoRef.current
-    if (!video) return
-    video.currentTime = 0
-    void video.play().catch(() => {})
-  }
-
-  const resetHeroVideo = () => {
-    const video = heroVideoRef.current
-    if (!video) return
-    video.pause()
-    video.currentTime = 0
-  }
 
   const onHeroVideoError = () => {
     setHeroIsStatic(true)
@@ -58,13 +43,7 @@ export default function CoeurCaseStudyPage() {
                 </div>
               </div>
             </div>
-            <div
-              className="stush-hero__img-wrap"
-              onMouseEnter={playHeroVideo}
-              onMouseLeave={resetHeroVideo}
-              onFocus={playHeroVideo}
-              onBlur={resetHeroVideo}
-            >
+            <div className="stush-hero__img-wrap">
               {heroIsStatic ? (
                 <img
                   src={coeurMedia.hero}
@@ -75,10 +54,10 @@ export default function CoeurCaseStudyPage() {
                 />
               ) : (
                 <video
-                  ref={heroVideoRef}
                   className="stush-hero__img"
                   muted
                   loop
+                  autoPlay
                   playsInline
                   preload="metadata"
                   poster={coeurMedia.poster}

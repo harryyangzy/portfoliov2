@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import PortfolioShell from './PortfolioShell'
 import { communityProjectAssets as a } from './assets/community-projects/assets'
+import chevronBackward from './assets/community-projects/chevron.backward 1.svg'
 import w5SummitImage from './assets/community-projects/w5/summit-2.webp'
 import w5DcaImage from './assets/community-projects/w5/14690e48-6ebe-4973-b354-e218227975ff.png'
 import w5TeamImage from './assets/community-projects/w5/team picture.webp'
@@ -181,10 +182,9 @@ export default function CommunityProjectsPage() {
     if (!isWideLayout) setReaderLayerOpen(true)
   }
 
-  const closeReaderLayer = () => setReaderLayerOpen(false)
   const goBackFromReader = () => {
     if (!isWideLayout) {
-      closeReaderLayer()
+      setReaderLayerOpen(false)
       return
     }
     setActiveEmailId(null)
@@ -208,7 +208,7 @@ export default function CommunityProjectsPage() {
               <p className="cp__brand-tag">you’ve got mail!</p>
             </div>
           </div>
-          <div className="cp__search-strip">
+          <div className="cp__toolbar">
             <div className={`cp-search-wrap${hasSearchQuery ? ' cp-search-wrap--open' : ''}`}>
               <label className="cp__search">
                 <span className="visually-hidden">Search mail</span>
@@ -241,11 +241,45 @@ export default function CommunityProjectsPage() {
                 </div>
               ) : null}
             </div>
-          </div>
-          <div className="cp__avatar">
-            <img src={a.userPfp} alt="" width={50} height={50} />
+            <div className="cp__avatar">
+              <img src={a.userPfp} alt="" width={50} height={50} />
+            </div>
           </div>
         </header>
+        <div className="cp__mobile-search">
+          <div className={`cp-search-wrap${hasSearchQuery ? ' cp-search-wrap--open' : ''}`}>
+            <label className="cp__search">
+              <span className="visually-hidden">Search mail</span>
+              <input
+                type="search"
+                className="cp__search-input"
+                placeholder="Search"
+                autoComplete="off"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </label>
+            {hasSearchQuery ? (
+              <div className="cp-search-hint">
+                {filteredEmails.length > 0 ? (
+                  filteredEmails.map((email) => (
+                    <button
+                      key={`mobile-hint-${email.id}`}
+                      type="button"
+                      className="cp-search-hint__row"
+                      onClick={() => openEmail(email.id)}
+                    >
+                      <span className="cp-search-hint__title">{email.subject}</span>
+                      <span className="cp-search-hint__date">{email.date}</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="cp-search-hint__empty">No matching emails</div>
+                )}
+              </div>
+            ) : null}
+          </div>
+        </div>
 
         <div className="cp__split">
           <aside className="cp__inbox" aria-label="Inbox">
@@ -285,17 +319,17 @@ export default function CommunityProjectsPage() {
             aria-label="Message"
             inert={!isWideLayout && !readerLayerOpen ? true : undefined}
           >
-            <div className="cp-reader__topbar">
-              <button type="button" className="cp__reader-back" onClick={goBackFromReader}>
-                <span className="cp__reader-back-chevron" aria-hidden="true">
-                  &#8249;
-                </span>
-                back
-              </button>
-              <div className="cp-reader__top-avatar">
-                <img src={a.userPfp} alt="" width={30} height={30} />
+            {!isWideLayout && readerLayerOpen ? (
+              <div className="cp-reader-mobile-topbar">
+                <button type="button" className="cp-reader-mobile-topbar__back" onClick={goBackFromReader}>
+                  <img src={chevronBackward} alt="" aria-hidden="true" />
+                  <span>back</span>
+                </button>
+                <div className="cp-reader-mobile-topbar__avatar">
+                  <img src={a.userPfp} alt="" width={30} height={30} />
+                </div>
               </div>
-            </div>
+            ) : null}
             {activeEmail ? (
               <div className="cp-reader__card">
                 <h2 className="cp-reader__subject">{activeEmail.title}</h2>

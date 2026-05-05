@@ -63,11 +63,11 @@ export default function MarketingYeeHongPage() {
             </div>
 
             <div className="mstush-carousel" aria-label="Miscellaneous campaign design assets">
-              <img src={holidayCard} alt="Holiday card campaign design" />
               <img src={garageSale} alt="Garage sale campaign poster design" />
               <img src={gradientBkg} alt="Dragon Ball gala gradient background design" />
               <img src={poster} alt="Dragon Ball gala poster design" />
               <img src={ticketDesign} alt="Dragon Ball gala ticket design" />
+              <img src={holidayCard} alt="Holiday card campaign design" />
             </div>
           </section>
 
@@ -138,8 +138,8 @@ export default function MarketingYeeHongPage() {
 
             <div className="mstush-carousel" aria-label="Pop-up for Love Gives campaign design assets">
               <img src={popup} alt="Pop-up campaign poster" />
-              <img src={draft1} alt="Pop-up campaign draft layout" />
               <img src={thankYouCertificate} alt="Pop-up campaign thank-you certificate design" />
+              <img src={draft1} alt="Pop-up campaign draft layout" />
             </div>
           </section>
         </div>
