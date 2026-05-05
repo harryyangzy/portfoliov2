@@ -315,6 +315,336 @@
   color: var(--pd-text-secondary);
 }
 
+/* ——— Mobile top bar + menu (Figma 2645:4705) — hidden on wide viewports ——— */
+
+.pd-mobile-top {
+  display: none;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--pd-blue-10);
+  /* Figma 2645:4706 — mobile header stroke */
+  border: 2px solid #d2dfed;
+  border-top: none;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 20px 20px 30px;
+}
+
+.pd-mobile-top__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding-left: 8px;
+  box-sizing: border-box;
+}
+
+.pd-mobile-top__name {
+  margin: 0;
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: -1.28px;
+  color: #000;
+  white-space: nowrap;
+}
+
+.pd-mobile-top__menu-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 12px;
+  margin: 0;
+  border-radius: 16px;
+  border: 0.5px solid rgba(147, 166, 186, 0.6);
+  /* Glass + gradient (Figma 2645:4702 menu button) */
+  background:
+    linear-gradient(
+      152deg,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(248, 251, 254, 0.28) 48%,
+      rgba(255, 255, 255, 0.14) 100%
+    ),
+    rgba(248, 251, 254, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.2),
+    0 6px 18px rgba(45, 69, 93, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(147, 166, 186, 0.12);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.pd-mobile-top__menu-btn:hover {
+  border-color: rgba(147, 166, 186, 0.9);
+  background:
+    linear-gradient(
+      152deg,
+      rgba(255, 255, 255, 0.88) 0%,
+      rgba(248, 251, 254, 0.42) 50%,
+      rgba(255, 255, 255, 0.22) 100%
+    ),
+    rgba(248, 251, 254, 0.28);
+  box-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.18),
+    0 8px 22px rgba(45, 69, 93, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(147, 166, 186, 0.14);
+}
+
+.pd-mobile-top__menu-btn--open {
+  background:
+    linear-gradient(
+      152deg,
+      rgba(255, 255, 255, 0.78) 0%,
+      rgba(248, 251, 254, 0.35) 100%
+    ),
+    rgba(248, 251, 254, 0.22);
+}
+
+.pd-mobile-top__menu-btn:focus-visible {
+  outline: 2px solid var(--pd-blue-80);
+  outline-offset: 2px;
+}
+
+.pd-mobile-top__menu-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 17px;
+  line-height: 0;
+}
+
+.pd-mobile-top__menu-icon {
+  display: block;
+  width: 19px;
+  height: 17px;
+  object-fit: contain;
+}
+
+.pd-mobile-top__burger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 17px;
+  gap: 4px;
+}
+
+.pd-mobile-top__burger-line {
+  display: block;
+  width: 19px;
+  height: 2px;
+  flex-shrink: 0;
+  border-radius: 1px;
+  background: var(--pd-text-primary);
+}
+
+.pd-mobile-top__burger--close {
+  position: relative;
+  gap: 0;
+}
+
+.pd-mobile-top__burger--close .pd-mobile-top__burger-line {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -1px;
+}
+
+.pd-mobile-top__burger--close .pd-mobile-top__burger-line:first-child {
+  transform: rotate(45deg);
+}
+
+.pd-mobile-top__burger--close .pd-mobile-top__burger-line:last-child {
+  transform: rotate(-45deg);
+}
+
+/* ——— Mobile menu overlay (Figma 2638:4462) — copy + nav match desktop sidebar ——— */
+
+.pd-mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  overflow: auto;
+  background: var(--pd-blue-10);
+  -webkit-overflow-scrolling: touch;
+}
+
+.pd-mobile-menu__inner {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: min(520px, 100%);
+  margin-inline: auto;
+  min-height: 100dvh;
+  padding: max(40px, env(safe-area-inset-top)) clamp(20px, 5vw, 40px) max(28px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.pd-mobile-menu__upper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 80px;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.pd-mobile-menu__back-row {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Liquid glass “back” control (Figma 2649:3524) */
+.pd-mobile-menu__back {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px 12px;
+  border-radius: 16px;
+  border: 0.5px solid rgba(255, 255, 255, 0.48);
+  background:
+    linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.12) 38%,
+      rgba(248, 251, 254, 0.22) 100%
+    ),
+    rgba(248, 251, 254, 0.12);
+  backdrop-filter: blur(22px) saturate(1.5);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  box-shadow:
+    0 0 0 0.5px rgba(147, 166, 186, 0.2),
+    0 0 1px rgba(0, 0, 0, 0.45),
+    1px 2px 8px rgba(45, 69, 93, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.92),
+    inset 0 -1px 1px rgba(147, 166, 186, 0.14);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.pd-mobile-menu__back::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 75%;
+  height: 120%;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 42%,
+    rgba(255, 255, 255, 0.08) 58%,
+    transparent 72%
+  );
+  transform: rotate(-14deg);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.pd-mobile-menu__back-label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-h8-size);
+  font-weight: var(--type-h8-weight);
+  line-height: var(--type-h8-line);
+  letter-spacing: var(--type-h8-track);
+  color: #2d455d;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
+.pd-mobile-menu__back:hover {
+  border-color: rgba(255, 255, 255, 0.62);
+  background:
+    linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.68) 0%,
+      rgba(255, 255, 255, 0.2) 40%,
+      rgba(248, 251, 254, 0.32) 100%
+    ),
+    rgba(248, 251, 254, 0.18);
+  box-shadow:
+    0 0 0 0.5px rgba(147, 166, 186, 0.22),
+    0 0 1px rgba(0, 0, 0, 0.4),
+    1px 3px 12px rgba(45, 69, 93, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.98),
+    inset 0 -1px 1px rgba(147, 166, 186, 0.12);
+}
+
+.pd-mobile-menu__back:hover::before {
+  opacity: 0.78;
+}
+
+.pd-mobile-menu__back:focus-visible {
+  outline: 2px solid var(--pd-blue-80);
+  outline-offset: 2px;
+}
+
+.pd-mobile-menu__body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 112px;
+  width: 100%;
+}
+
+.pd-mobile-menu .pd-sidebar__intro {
+  width: 100%;
+}
+
+.pd-mobile-menu .pd-sidebar__handwriting {
+  font-size: 48px;
+  line-height: 1.1;
+}
+
+.pd-mobile-menu .pd-sidebar__nav {
+  width: 100%;
+}
+
+.pd-mobile-menu .pd-sidebar__nav .pd-nav-item__label {
+  white-space: normal;
+}
+
+.pd-mobile-menu__social-dock {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.pd-mobile-menu .pd-sidebar__social {
+  margin-top: 0;
+  width: 100%;
+}
+
 /* ——— Main workspace: Figma 2214:532 canvas + toolbar (toolbar overlays bottom) ——— */
 
 .pd-canvas-workspace {
@@ -500,6 +830,106 @@
   max-width: 408px;
 }
 
+/* Design Engineering homepage — Figma 2641:2491 (label → image → title strip) */
+.pd-grid--product .pd-card--gallery {
+  gap: 6px;
+  border-radius: 0;
+}
+
+.pd-card--gallery .pd-card__stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Inset stroke must sit above image/title paint (box-shadow on the stack paints underneath children). */
+.pd-card--gallery .pd-card__stack::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.15s ease;
+}
+
+.pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 244px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.pd-grid--product .pd-card--gallery .pd-card__cover--gallery {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  pointer-events: none;
+}
+
+.pd-grid--product .pd-card--gallery .pd-card__media--stush,
+.pd-grid--product .pd-card--gallery .pd-card__media--qux,
+.pd-grid--product .pd-card--gallery .pd-card__media--stumbl {
+  border: 0;
+  background: var(--pd-grey-50, #d3d9df);
+}
+
+.pd-card--gallery .pd-card__title-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  background: var(--pd-white);
+  flex-shrink: 0;
+}
+
+.pd-card--gallery .pd-card__title--strip {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 18px;
+  line-height: 16px;
+  letter-spacing: -0.36px;
+  position: relative;
+  z-index: 1;
+}
+
+.pd-card--gallery .pd-card__title--strip-stush {
+  font-family: 'DM Sans', 'Parabolica', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #2e3133;
+}
+
+.pd-card--gallery .pd-card__title--strip-qux {
+  font-family: 'DM Sans', 'Parabolica', sans-serif;
+  font-weight: 700;
+  color: #ff7a4e;
+  letter-spacing: -0.36px;
+  text-transform: none;
+}
+
+.pd-card--gallery .pd-card__title--strip-stumbl {
+  font-family: var(--font-parabolica-text);
+  font-weight: 500;
+  letter-spacing: -0.72px;
+  color: #000;
+}
+
 .pd-card__eyebrow {
   margin: 0;
   width: 100%;
@@ -622,6 +1052,20 @@
 
 .pd-project-item:hover .pd-card__cover {
   box-shadow: none;
+}
+
+/* Gallery cards: blue inset stroke on image and on white title strip only (not eyebrow) */
+.pd-grid--product .pd-card--gallery.pd-project-item:hover .pd-card__media::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:hover .pd-card__media--gallery::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:focus-visible .pd-card__media::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:focus-visible .pd-card__media--gallery::after {
+  border-color: transparent;
+}
+
+/* One stroke around image + title strip only (not the eyebrow) */
+.pd-grid--product .pd-card--gallery.pd-project-item:hover .pd-card__stack::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:focus-visible .pd-card__stack::after {
+  border-color: var(--pd-blue-80);
 }
 
 /* Community project cards — Figma Frame 170 (grey-50 fill, tighter title line-height) */
@@ -748,6 +1192,18 @@
 /* ——— Responsive: sidebar stacks; canvas stays scrollable; smaller “infinite” min size ——— */
 
 @media (max-width: 1100px) {
+  .pd-page {
+    border: 0;
+  }
+
+  .pd-mobile-top {
+    display: flex;
+  }
+
+  .pd-sidebar {
+    display: none;
+  }
+
   .pd-shell {
     flex-direction: column;
     flex: 1 1 auto;
@@ -755,25 +1211,17 @@
     overflow: auto;
   }
 
-  .pd-sidebar {
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: none;
-    padding: 48px 24px 32px;
-    gap: 48px;
-  }
-
   .pd-main {
     flex: 1 1 auto;
     min-height: min(70vh, 900px);
     margin: 0;
-    border-radius: 60px 0 0 60px;
+    border-radius: 0;
   }
 
   .pd-main.pd-main--case-study {
     margin: 0;
     min-height: 0;
-    border-radius: 60px 0 0 60px;
+    border-radius: 0;
   }
 
   .pd-page {
@@ -784,8 +1232,8 @@
     min-height: 100dvh;
   }
 
-  .pd-case-study-body {
-    padding: 24px 0 24px 24px;
+  .pd-case-study-body:not(:has(> .mstush)) {
+    padding: 16px;
   }
 
   .pd-case-study-body:has(> .mstush) {
@@ -809,6 +1257,15 @@
     max-width: 408px;
     column-gap: 20px;
   }
+
+  /*
+   * Keep initial mobile viewport centered on the project cards while preserving
+   * a horizontally scrollable canvas.
+   */
+  .pd-page[data-name='Product Design Homepage'] .pd-canvas__document {
+    padding-left: max(20px, calc(50vw - 204px));
+    padding-right: max(20px, calc(50vw - 204px));
+  }
 }
 
 @media (max-width: 600px) {
@@ -817,4 +1274,11 @@
     aspect-ratio: 408 / 309;
     max-height: none;
   }
+
+  .pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+    height: auto;
+    aspect-ratio: 408 / 244;
+    max-height: none;
+  }
+
 }

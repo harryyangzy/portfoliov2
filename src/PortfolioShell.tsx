@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   designEngineeringChevronToolIcons,
@@ -9,6 +9,7 @@ import {
 import navFigmaIcon from './assets/figma icon.png'
 import navEmailIcon from './assets/email favicon.png'
 import navInstagramIcon from './assets/Instagram_logo_2016.svg'
+import menuIcon from './assets/menu.svg'
 import './productDesignHomepage.css'
 
 type ToolId = 'pointer' | 'frame' | 'line' | 'pen' | 'comment' | 'text' | 'search'
@@ -157,7 +158,7 @@ const SOCIAL_LINKS = [
   { label: '@uwo.ca', href: 'mailto:hyang746@uwo.ca' },
 ] as const
 
-function NavTab({ item }: { item: NavItem }) {
+function NavTab({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const { pathname } = useLocation()
   const designEngineeringActive =
     item.id === 'de' && (pathname === '/' || pathname.startsWith('/work'))
@@ -175,6 +176,7 @@ function NavTab({ item }: { item: NavItem }) {
       <Link
         to={item.path}
         className={`pd-nav-item${designEngineeringActive ? ' pd-nav-item--active' : ' pd-nav-item--default'}`}
+        onClick={onNavigate}
       >
         <span className="pd-nav-item__icon-box">
           <img src={navIconSrc} alt="" className={navIconClass} />
@@ -191,6 +193,7 @@ function NavTab({ item }: { item: NavItem }) {
       className={({ isActive }) =>
         `pd-nav-item${isActive ? ' pd-nav-item--active' : ' pd-nav-item--default'}`
       }
+      onClick={onNavigate}
     >
       <span className="pd-nav-item__icon-box">
         <img src={navIconSrc} alt="" className={navIconClass} />
@@ -213,10 +216,78 @@ export default function PortfolioShell({
 }) {
   const { pathname } = useLocation()
   const [activeTool, setActiveTool] = useState<ToolId>('pointer')
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const mobileCloseRef = useRef<HTMLButtonElement>(null)
+  const canvasRef = useRef<HTMLDivElement>(null)
+  const canvasDocumentRef = useRef<HTMLDivElement>(null)
   const isStudio = shellVariant === 'studio'
   const useCommunityMain = shellVariant === 'community' || shellVariant === 'case-study'
   const isCaseStudy = shellVariant === 'case-study'
   const caseStudyBodyClass = shellVariant === 'case-study' ? 'pd-case-study-body' : 'pd-community-body'
+
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileNavOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    mobileCloseRef.current?.focus()
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1100px)')
+    const onChange = () => {
+      if (!mq.matches) setMobileNavOpen(false)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    if (!isStudio) return
+    if (window.innerWidth > 1100) return
+    const canvas = canvasRef.current
+    const canvasDocument = canvasDocumentRef.current
+    if (!canvas || !canvasDocument) return
+
+    const frame = window.requestAnimationFrame(() => {
+      const documentRect = canvasDocument.getBoundingClientRect()
+      const contentNode = canvasDocument.firstElementChild as HTMLElement | null
+      const contentRect = contentNode?.getBoundingClientRect()
+
+      // On first mobile load, start near the project content instead of the
+      // top-left of the larger scrollable canvas.
+      canvas.scrollLeft = Math.max(0, (canvas.scrollWidth - canvas.clientWidth) / 2)
+
+      if (!contentRect) return
+
+      const contentTopInDocument = contentRect.top - documentRect.top
+      const targetTop = Math.max(0, contentTopInDocument - 16)
+      canvas.scrollTop = targetTop
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [isStudio, pathname])
+
+  const closeMobileNav = () => setMobileNavOpen(false)
 
   return (
     <div
@@ -225,6 +296,88 @@ export default function PortfolioShell({
       data-route={pathname}
       data-shell={shellVariant}
     >
+      <header className="pd-mobile-top" aria-label="Site">
+        <div className="pd-mobile-top__row">
+          <p className="pd-mobile-top__name">hey, i’m harry</p>
+          <button
+            type="button"
+            className={`pd-mobile-top__menu-btn${mobileNavOpen ? ' pd-mobile-top__menu-btn--open' : ''}`}
+            aria-expanded={mobileNavOpen}
+            aria-controls="pd-mobile-menu"
+            aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMobileNavOpen((o) => !o)}
+          >
+            {mobileNavOpen ? (
+              <span className="pd-mobile-top__burger pd-mobile-top__burger--close" aria-hidden>
+                <span className="pd-mobile-top__burger-line" />
+                <span className="pd-mobile-top__burger-line" />
+              </span>
+            ) : (
+              <span className="pd-mobile-top__menu-icon-wrap" aria-hidden>
+                <img src={menuIcon} alt="" className="pd-mobile-top__menu-icon" width={19} height={17} draggable={false} />
+              </span>
+            )}
+          </button>
+        </div>
+      </header>
+
+      {mobileNavOpen ? (
+        <div
+          className="pd-mobile-menu"
+          id="pd-mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site navigation"
+        >
+          <div className="pd-mobile-menu__inner">
+            <div className="pd-mobile-menu__upper">
+              <div className="pd-mobile-menu__back-row">
+                <button
+                  ref={mobileCloseRef}
+                  type="button"
+                  className="pd-mobile-menu__back"
+                  aria-label="Close menu"
+                  onClick={closeMobileNav}
+                >
+                  <span className="pd-mobile-menu__back-label">back</span>
+                </button>
+              </div>
+              <div className="pd-mobile-menu__body">
+                <div className="pd-sidebar__intro">
+                  <p className="pd-sidebar__handwriting">hey, i’m harry</p>
+                  <p className="pd-sidebar__bio">
+                    i love making, designing and living life, see what my browser looks like
+                  </p>
+                </div>
+                <nav className="pd-sidebar__nav" aria-label="Sections">
+                  {NAV_ITEMS.map((item) => (
+                    <NavTab key={item.id} item={item} onNavigate={closeMobileNav} />
+                  ))}
+                </nav>
+              </div>
+            </div>
+            <div className="pd-sidebar__social pd-mobile-menu__social-dock" aria-label="Social links">
+              <p className="pd-sidebar__social-label">find me at</p>
+              {SOCIAL_LINKS.map((link) => {
+                const isExternal = link.href.startsWith('http')
+                return (
+                  <a
+                    key={link.label}
+                    className="pd-sidebar__social-link"
+                    href={link.href}
+                    target={isExternal ? '_blank' : undefined}
+                    rel={isExternal ? 'noreferrer noopener' : undefined}
+                    onClick={closeMobileNav}
+                  >
+                    {link.label}
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="pd-shell">
         <aside className="pd-sidebar" aria-label="Site">
           <div className="pd-sidebar__intro">
@@ -262,8 +415,16 @@ export default function PortfolioShell({
         >
           {isStudio ? (
             <div className="pd-canvas-workspace">
-              <div className="pd-canvas" tabIndex={0} role="region" aria-label="Scrollable canvas">
-                <div className="pd-canvas__document">{children}</div>
+              <div
+                ref={canvasRef}
+                className="pd-canvas"
+                tabIndex={0}
+                role="region"
+                aria-label="Scrollable canvas"
+              >
+                <div ref={canvasDocumentRef} className="pd-canvas__document">
+                  {children}
+                </div>
               </div>
               <div className="pd-toolbar-dock">
                 <FigmaToolbar activeTool={activeTool} onToolChange={setActiveTool} />
