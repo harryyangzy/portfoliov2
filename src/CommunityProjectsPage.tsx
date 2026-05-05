@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import PortfolioShell from './PortfolioShell'
 import { communityProjectAssets as a } from './assets/community-projects/assets'
 import w5SummitImage from './assets/community-projects/w5/summit-2.webp'
@@ -120,11 +120,41 @@ const WFN_IMAGE_GROUP = a.imageGroup
 const WFN_IMAGE_52 = a.image52
 const WFN_IMAGE_53 = a.image53
 
+const READER_LAYER_MQ = '(min-width: 1001px)'
+
 export default function CommunityProjectsPage() {
   const [search, setSearch] = useState('')
   const [activeEmailId, setActiveEmailId] = useState<EmailId | null>('usc')
   const [visitedEmailIds, setVisitedEmailIds] = useState<Set<EmailId>>(new Set(['usc']))
+  const [isWideLayout, setIsWideLayout] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(READER_LAYER_MQ).matches,
+  )
+  /** Figma 2651:4340 — mobile: inbox first; reader opens as a layer after selecting an email */
+  const [readerLayerOpen, setReaderLayerOpen] = useState(false)
   const hasSearchQuery = search.trim().length > 0
+
+  useEffect(() => {
+    const mq = window.matchMedia(READER_LAYER_MQ)
+    const onChange = () => setIsWideLayout(mq.matches)
+    onChange()
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    if (isWideLayout) setReaderLayerOpen(false)
+  }, [isWideLayout])
+
+  useEffect(() => {
+    if (!isWideLayout && readerLayerOpen) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = prev
+      }
+    }
+    return undefined
+  }, [isWideLayout, readerLayerOpen])
 
   const filteredEmails = useMemo(() => {
     const query = search.trim().toLowerCase()
@@ -139,7 +169,8 @@ export default function CommunityProjectsPage() {
   const activeEmail = activeEmailId ? EMAILS.find((email) => email.id === activeEmailId) ?? null : null
 
   const getEmailVariant = (emailId: EmailId) => {
-    if (emailId === activeEmailId) return 'active'
+    const showActive = isWideLayout || readerLayerOpen
+    if (emailId === activeEmailId && showActive) return 'active'
     if (visitedEmailIds.has(emailId)) return 'read'
     return 'unread'
   }
@@ -147,6 +178,16 @@ export default function CommunityProjectsPage() {
   const openEmail = (emailId: EmailId) => {
     setActiveEmailId(emailId)
     setVisitedEmailIds((prev) => new Set(prev).add(emailId))
+    if (!isWideLayout) setReaderLayerOpen(true)
+  }
+
+  const closeReaderLayer = () => setReaderLayerOpen(false)
+  const goBackFromReader = () => {
+    if (!isWideLayout) {
+      closeReaderLayer()
+      return
+    }
+    setActiveEmailId(null)
   }
 
   const getThumbByEmailId = (emailId: EmailId) => {
@@ -157,7 +198,9 @@ export default function CommunityProjectsPage() {
 
   return (
     <PortfolioShell pageName="Community Projects — post office" shellVariant="community">
-      <div className="cp">
+      <div
+        className={`cp${!isWideLayout && readerLayerOpen ? ' cp--reader-layer' : ''}`}
+      >
         <header className="cp__top">
           <div className="cp__brand">
             <div>
@@ -165,7 +208,7 @@ export default function CommunityProjectsPage() {
               <p className="cp__brand-tag">you’ve got mail!</p>
             </div>
           </div>
-          <div className="cp__toolbar">
+          <div className="cp__search-strip">
             <div className={`cp-search-wrap${hasSearchQuery ? ' cp-search-wrap--open' : ''}`}>
               <label className="cp__search">
                 <span className="visually-hidden">Search mail</span>
@@ -198,9 +241,9 @@ export default function CommunityProjectsPage() {
                 </div>
               ) : null}
             </div>
-            <div className="cp__avatar">
-              <img src={a.userPfp} alt="" width={50} height={50} />
-            </div>
+          </div>
+          <div className="cp__avatar">
+            <img src={a.userPfp} alt="" width={50} height={50} />
           </div>
         </header>
 
@@ -237,9 +280,24 @@ export default function CommunityProjectsPage() {
             </div>
           </aside>
 
-          <main className="cp__reader" aria-label="Message">
+          <main
+            className="cp__reader"
+            aria-label="Message"
+            inert={!isWideLayout && !readerLayerOpen ? true : undefined}
+          >
+            <div className="cp-reader__topbar">
+              <button type="button" className="cp__reader-back" onClick={goBackFromReader}>
+                <span className="cp__reader-back-chevron" aria-hidden="true">
+                  &#8249;
+                </span>
+                back
+              </button>
+              <div className="cp-reader__top-avatar">
+                <img src={a.userPfp} alt="" width={30} height={30} />
+              </div>
+            </div>
             {activeEmail ? (
-              <>
+              <div className="cp-reader__card">
                 <h2 className="cp-reader__subject">{activeEmail.title}</h2>
                 <div className="cp-reader__inner">
                   <div className="cp-meta">
@@ -469,7 +527,7 @@ export default function CommunityProjectsPage() {
                     </>
                   )}
                 </div>
-              </>
+              </div>
             ) : (
               <div className="cp-reader__empty">
                 <p className="cp-reader__empty-title">Select an email to read</p>
