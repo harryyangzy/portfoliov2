@@ -1,5 +1,13 @@
 /* Product Design Homepage — from Figma node 2214:526 */
 
+@font-face {
+  font-family: 'GT Pressura Bold';
+  src: url('/fonts/GTPressura-Bold_5585.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 .pd-page {
   --pd-blue-10: #f8fbfe;
   --pd-grey-30: #f5f5f5;
@@ -12,6 +20,21 @@
   --pd-btn-secondary-stroke: #e5ecf2;
   --pd-border-soft: #eee;
   --pd-white: #fff;
+  /* Figma Tab Button (2724:1642) */
+  --pd-tab-text-active: #2d455d;
+  --pd-tab-text-default: #93a6ba;
+  --pd-tab-text-hover: #fff;
+  --pd-tab-bg-hover: #e5ecf2;
+  --pd-tab-border-start: rgba(147, 166, 186, 0.6);
+  --pd-tab-border-end: rgba(248, 251, 254, 0.6);
+  --pd-tab-border-gradient: linear-gradient(
+    to bottom right,
+    var(--pd-tab-border-start),
+    var(--pd-tab-border-end)
+  );
+  --pd-tab-shadow-active: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+  --pd-tab-shadow-default: 0.5px 0.5px 2px rgba(0, 0, 0, 0.1);
+  --pd-tab-icon-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
 
   --pd-canvas-min-width: 100%;
   --pd-canvas-min-height: 100%;
@@ -23,14 +46,25 @@
   display: flex;
   flex-direction: column;
   background: var(--pd-blue-10);
-  border: 1px solid #000;
   color: var(--pd-text-primary);
 }
 
-/* Product Design Homepage: free-flowing canvas area (2D scroll) */
-.pd-page[data-name='Product Design Homepage'] {
+/* Design Engineering: free-flowing canvas area (2D scroll) */
+.pd-page[data-route='/design-engineering'] {
   --pd-canvas-min-width: 1600px;
   --pd-canvas-min-height: 1800px;
+}
+
+/* Studio landing: no infinite canvas */
+.pd-page[data-mobile-home='true'] {
+  --pd-canvas-min-width: 100%;
+  --pd-canvas-min-height: auto;
+}
+
+@media (min-width: 1101px) {
+  .pd-page[data-mobile-home='true'] .pd-main {
+    display: none;
+  }
 }
 
 .pd-page[data-shell='studio'] {
@@ -66,15 +100,16 @@
 /* ——— Sidebar ——— */
 
 .pd-sidebar {
-  flex: 0 0 384px;
-  width: 384px;
+  flex: 0 0 calc(384px * var(--site-space-scale));
+  width: calc(384px * var(--site-space-scale));
   max-width: 100%;
   min-width: 0;
   align-self: stretch;
   display: flex;
   flex-direction: column;
   gap: 112px;
-  padding: 160px 40px 40px;
+  padding: calc(160px * var(--site-space-scale)) calc(40px * var(--site-space-scale))
+    calc(40px * var(--site-space-scale));
   background: var(--pd-blue-10);
   overflow-x: hidden;
   overflow-y: auto;
@@ -211,8 +246,8 @@
   color: inherit;
   transition:
     box-shadow 0.15s ease,
-    border-color 0.15s ease,
-    background 0.15s ease;
+    background 0.15s ease,
+    filter 0.15s ease;
 }
 
 .pd-nav-item:focus-visible {
@@ -221,35 +256,37 @@
 }
 
 .pd-nav-item--active {
-  border: 1px solid var(--pd-border-soft);
-  background-color: var(--pd-white);
-  background-image: radial-gradient(
-    ellipse 180% 120% at 50% 100%,
-    rgba(229, 236, 242, 0.95) 0%,
-    #fff 55%
-  );
-  /* Figma Tab Button (active): drop-shadow 1px 1px 1.5px */
-  box-shadow: 1px 1px 1.5px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid transparent;
+  background:
+    linear-gradient(var(--pd-white), var(--pd-white)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: none;
+  filter: drop-shadow(var(--pd-tab-shadow-active));
 }
 
 .pd-nav-item--default {
-  border: 2px solid var(--pd-btn-secondary-stroke);
-  background: var(--pd-btn-secondary-fill);
-  box-shadow: none;
+  border: 0.5px solid transparent;
+  background:
+    linear-gradient(var(--pd-blue-10), var(--pd-blue-10)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: var(--pd-tab-shadow-default);
+  filter: none;
 }
 
+.pd-nav-item--active:hover,
 .pd-nav-item--default:hover {
-  border-color: #c5d6e8;
-  background: #e8f0f8;
-}
-
-.pd-nav-item--default:hover .pd-nav-item__label {
-  color: var(--pd-text-primary);
-}
-
-.pd-nav-item--active:hover {
-  border-color: #ddd;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.22);
+  border: 0.5px solid transparent;
+  background:
+    linear-gradient(var(--pd-tab-bg-hover), var(--pd-tab-bg-hover)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: none;
+  filter: none;
 }
 
 .pd-nav-item__icon-box {
@@ -258,6 +295,7 @@
   height: 22px;
   border-radius: 6px;
   background: var(--pd-white);
+  box-shadow: var(--pd-tab-icon-shadow);
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -288,31 +326,34 @@
 }
 
 .pd-nav-item__label {
-  font-family: var(--font-parabolica);
-  font-size: var(--type-h7-size);
-  font-weight: var(--type-h7-weight);
-  line-height: var(--type-h7-line);
-  letter-spacing: var(--type-h7-track);
+  font-family: var(--font-dottonoji);
+  font-size: var(--type-h8-size);
+  font-weight: var(--type-h8-weight);
+  line-height: var(--type-h8-line);
+  letter-spacing: var(--type-h8-track);
+  text-transform: uppercase;
   white-space: nowrap;
-  color: var(--pd-text-primary);
+  -webkit-text-stroke: 0.5px currentColor;
+  paint-order: stroke fill;
+  transition: color 0.15s ease;
+}
+
+.pd-nav-item--active .pd-nav-item__label {
+  color: var(--pd-tab-text-active);
+}
+
+.pd-nav-item--default .pd-nav-item__label {
+  color: var(--pd-tab-text-default);
+}
+
+.pd-nav-item:hover .pd-nav-item__label {
+  color: var(--pd-tab-text-hover);
 }
 
 @media (max-width: 420px) {
   .pd-nav-item__label {
     white-space: normal;
   }
-}
-
-.pd-nav-item--active .pd-nav-item__label {
-  font-weight: 500;
-  letter-spacing: -0.36px;
-  color: var(--pd-text-primary);
-}
-
-.pd-nav-item--default .pd-nav-item__label {
-  font-weight: 400;
-  letter-spacing: -0.72px;
-  color: var(--pd-text-secondary);
 }
 
 /* ——— Mobile top bar + menu (Figma 2645:4705) — hidden on wide viewports ——— */
@@ -348,7 +389,17 @@
   line-height: 18px;
   letter-spacing: -1.28px;
   color: #000;
-  white-space: nowrap;
+}
+
+.pd-mobile-top__title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pd-mobile-top__lead {
+  margin: 0;
 }
 
 .pd-mobile-top__menu-btn {
@@ -424,13 +475,15 @@
   width: 19px;
   height: 17px;
   line-height: 0;
+  color: #2d455d;
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
 }
 
 .pd-mobile-top__menu-icon {
   display: block;
   width: 19px;
   height: 17px;
-  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .pd-mobile-top__burger {
@@ -645,6 +698,55 @@
   width: 100%;
 }
 
+/* ——— Mobile home (studio `/` landing): inline nav, no back button ——— */
+
+.pd-mobile-home {
+  display: none;
+}
+
+.pd-mobile-home__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 80px;
+  width: 100%;
+  max-width: min(520px, 100%);
+  margin-inline: auto;
+  padding: max(40px, env(safe-area-inset-top)) clamp(20px, 5vw, 40px) 40px;
+  box-sizing: border-box;
+}
+
+.pd-mobile-home .pd-sidebar__handwriting {
+  font-size: 48px;
+  line-height: 1.1;
+}
+
+.pd-mobile-home .pd-sidebar__nav {
+  width: 100%;
+}
+
+.pd-mobile-home .pd-sidebar__nav .pd-nav-item__label {
+  white-space: normal;
+}
+
+.pd-mobile-home__upper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 80px;
+  width: 100%;
+}
+
+.pd-mobile-home__social-dock {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.pd-mobile-home__social-dock .pd-sidebar__social {
+  margin-top: 0;
+  width: 100%;
+}
+
 /* ——— Main workspace: Figma 2214:532 canvas + toolbar (toolbar overlays bottom) ——— */
 
 .pd-canvas-workspace {
@@ -739,7 +841,8 @@
   flex-direction: column;
   align-items: stretch;
   background: var(--pd-white);
-  padding: 60px 0 60px 60px;
+  padding: calc(60px * var(--site-space-scale)) 0 calc(60px * var(--site-space-scale))
+    calc(60px * var(--site-space-scale));
   box-sizing: border-box;
 }
 
@@ -774,7 +877,8 @@
   min-width: var(--pd-canvas-min-width);
   min-height: var(--pd-canvas-min-height);
   margin: 0 auto;
-  padding: 220px 24px 180px;
+  padding: calc(220px * var(--site-space-scale)) calc(24px * var(--site-space-scale))
+    calc(180px * var(--site-space-scale));
   position: relative;
   z-index: 1;
 }
@@ -783,12 +887,12 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 45px;
+  bottom: calc(45px * var(--site-space-scale));
   display: flex;
   justify-content: center;
   align-items: flex-end;
   min-width: 0;
-  padding: 8px;
+  padding: calc(8px * var(--site-space-scale));
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 3;
@@ -909,7 +1013,7 @@
 }
 
 .pd-card--gallery .pd-card__title--strip-stush {
-  font-family: 'DM Sans', 'Parabolica', sans-serif;
+  font-family: 'GT Pressura Bold', 'DM Sans', 'Parabolica', sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   color: #2e3133;
@@ -1233,7 +1337,7 @@
   }
 
   .pd-case-study-body:not(:has(> .mstush)) {
-    padding: 16px;
+    padding: calc(16px * var(--site-space-scale));
   }
 
   .pd-case-study-body:has(> .mstush) {
@@ -1241,7 +1345,8 @@
   }
 
   .pd-canvas__document {
-    padding: 80px 20px 140px;
+    padding: calc(80px * var(--site-space-scale)) calc(20px * var(--site-space-scale))
+      calc(140px * var(--site-space-scale));
   }
 
   .pd-toolbar-dock {
@@ -1262,9 +1367,104 @@
    * Keep initial mobile viewport centered on the project cards while preserving
    * a horizontally scrollable canvas.
    */
-  .pd-page[data-name='Product Design Homepage'] .pd-canvas__document {
-    padding-left: max(20px, calc(50vw - 204px));
-    padding-right: max(20px, calc(50vw - 204px));
+  .pd-page[data-route='/design-engineering'] .pd-canvas__document {
+    padding-left: max(20px, calc(50vw - 140px));
+    padding-right: max(20px, calc(50vw - 140px));
+  }
+
+  /* Studio home (`/`, `/name-company`): nav only — no project canvas */
+  .app-root:has(> .pd-page[data-mobile-home='true']) {
+    min-height: 100dvh;
+  }
+
+  .pd-page[data-mobile-home='true'] {
+    flex: 1 1 auto;
+    min-height: 100dvh;
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-mobile-top {
+    display: none;
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-shell {
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-mobile-home {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 100dvh;
+    background: var(--pd-blue-10);
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-main {
+    display: none;
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-mobile-home__inner {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100dvh;
+    gap: 0;
+    padding-top: max(96px, calc(env(safe-area-inset-top) + 72px));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    padding-left: clamp(20px, 5vw, 40px);
+    padding-right: clamp(20px, 5vw, 40px);
+    box-sizing: border-box;
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-mobile-home__upper {
+    gap: 64px;
+  }
+
+  .pd-page[data-mobile-home='true'] .pd-mobile-home__social-dock {
+    margin-top: auto;
+  }
+
+  /* Design Engineering (`/design-engineering`): smaller project cards on mobile */
+  .pd-page[data-route='/design-engineering'] {
+    --pd-canvas-min-width: 100%;
+    --pd-canvas-min-height: auto;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-canvas__document {
+    padding: 24px max(16px, calc(50vw - 140px)) 120px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-grid--product {
+    max-width: 280px;
+    column-gap: 16px;
+    row-gap: 16px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-card {
+    max-width: 280px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+    height: 168px;
+    aspect-ratio: auto;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-card--gallery .pd-card__title--strip {
+    font-size: 15px;
+    line-height: 14px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-card__eyebrow {
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-toolbar-dock {
+    bottom: 16px;
   }
 }
 
@@ -1281,4 +1481,8 @@
     max-height: none;
   }
 
+  .pd-page[data-route='/design-engineering'] .pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+    height: 168px;
+    aspect-ratio: auto;
+  }
 }

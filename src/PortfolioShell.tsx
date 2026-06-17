@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   designEngineeringChevronToolIcons,
@@ -9,14 +9,208 @@ import {
 import navFigmaIcon from './assets/figma icon.png'
 import navEmailIcon from './assets/email favicon.png'
 import navInstagramIcon from './assets/Instagram_logo_2016.svg'
-import menuIcon from './assets/menu.svg'
+import { trackClick, type AnalyticsClickEvent } from './analytics'
+import {
+  DESIGN_ENGINEERING_PATH,
+  getSidebarGreeting,
+  isDesignEngineeringPath,
+  isStudioHomePath,
+} from './personalizedGreeting'
+import { MOBILE_LAYOUT_BREAKPOINT_PX, useMobileLayout } from './useMobileLayout'
 import './productDesignHomepage.css'
+
+function MobileMenuIcon() {
+  return (
+    <svg
+      className="pd-mobile-top__menu-icon"
+      viewBox="0 0 23 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M7.35947 2H2.87464C2.38149 2 2 2.3617 2 2.8347C2 3.3077 2.38149 3.67868 2.87464 3.67868H6.96868C7.30364 3.67868 7.54557 3.82707 7.68514 4.13313L13.8169 17.8592C14.1612 18.6383 14.7287 19 15.5848 19H20.1255C20.6094 19 21 18.6291 21 18.1654C21 17.7016 20.6094 17.3214 20.1255 17.3214H16.0035C15.6313 17.3214 15.3987 17.1823 15.2498 16.8762L9.14596 3.15931C8.8296 2.4359 8.15968 2 7.35947 2ZM20.1255 2H14.1053C13.6122 2 13.2307 2.35243 13.2307 2.82542C13.2307 3.29842 13.6122 3.66013 14.1053 3.66013H20.1255C20.6186 3.66013 20.9908 3.29842 20.9908 2.82542C20.9908 2.35243 20.6186 2 20.1255 2Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
 
 type ToolId = 'pointer' | 'frame' | 'line' | 'pen' | 'comment' | 'text' | 'search'
 
-const CHEVRON_IDS: ToolId[] = ['pointer', 'frame', 'line', 'pen', 'comment']
+type RouteMeta = {
+  title: string
+  description: string
+  image?: string
+}
 
-const CHEVRON_LABELS = ['Pointer', 'Frame', 'Line', 'Pen', 'Comment'] as const
+const SITE_URL = 'https://harryyang.ca'
+const DEFAULT_SHARE_IMAGE = `${SITE_URL}/social-preview.png`
+const DEFAULT_ROUTE_META: RouteMeta = {
+  title: 'Harry Yang - designing + building',
+  description:
+    'Portfolio of Harry Yang across product design, engineering, community leadership, and marketing campaigns.',
+  image: DEFAULT_SHARE_IMAGE,
+}
+
+const ROUTE_META: Record<string, RouteMeta> = {
+  '/': {
+    title: 'Harry Yang - designing + building',
+    description:
+      'Portfolio of Harry Yang across product design, engineering, community leadership, and marketing campaigns.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/design-engineering': {
+    title: 'Design Engineering | Harry Yang',
+    description:
+      'Product design and engineering case studies by Harry Yang — STUSH Foods, Coeur, and Stumbl.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/work/stush': {
+    title: 'STUSH Foods Case Study | Harry Yang',
+    description:
+      'How Harry Yang redesigned the STUSH Foods ecommerce experience through brand systems, UX, and front-end execution.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/work/coeur': {
+    title: 'Coeur Case Study | Harry Yang',
+    description:
+      'A case study on Coeur, a memory-capture app concept shaped through research, prototyping, storytelling, and interface design.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/work/stumbl': {
+    title: 'Stumbl Case Study | Harry Yang',
+    description:
+      'A case study on Stumbl, a transit app concept focused on glanceable bus arrivals, saved routes, and home screen widgets.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/community': {
+    title: 'Community Projects | Harry Yang',
+    description:
+      'Community leadership, events, and student initiatives from Harry Yang presented through an interactive post-office experience.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/marketing': {
+    title: 'Campaigns | Harry Yang',
+    description:
+      'Marketing campaigns and brand storytelling across STUSH, Yee Hong, CSA, TSAC, and other creative work by Harry Yang.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/marketing/stush': {
+    title: 'Campaigns / STUSH | Harry Yang',
+    description:
+      'Campaign strategy, creative, and brand storytelling work created for STUSH Foods by Harry Yang.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/marketing/yee-hong': {
+    title: 'Campaigns / Yee Hong Foundation | Harry Yang',
+    description:
+      'Marketing and communications work for Yee Hong Foundation focused on storytelling, outreach, and campaign design.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/marketing/tsac': {
+    title: 'Campaigns / TSAC | Harry Yang',
+    description:
+      'Creative campaign and communications work for Trudeau Student Activities Council by Harry Yang.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/marketing/csa': {
+    title: 'Campaigns / CSA at Western | Harry Yang',
+    description:
+      'Campaign design and marketing work for the Chinese Students’ Association at Western by Harry Yang.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+  '/marketing/other': {
+    title: 'Campaigns / Other Work | Harry Yang',
+    description:
+      'A collection of additional campaign, social, and brand storytelling work from Harry Yang.',
+    image: DEFAULT_SHARE_IMAGE,
+  },
+}
+
+function upsertMetaByName(name: string, content: string) {
+  let el = document.head.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute('name', name)
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+}
+
+function upsertMetaByProperty(property: string, content: string) {
+  let el = document.head.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute('property', property)
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+}
+
+function upsertCanonical(href: string) {
+  let el = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null
+  if (!el) {
+    el = document.createElement('link')
+    el.setAttribute('rel', 'canonical')
+    document.head.appendChild(el)
+  }
+  el.setAttribute('href', href)
+}
+
+const MOBILE_TOOLBAR_ORDER: ToolId[] = ['pointer', 'pen', 'text', 'comment']
+
+type ToolbarToolConfig = {
+  id: ToolId
+  icons: ToolbarIconTrio
+  iconLayout: 'flyout' | 'solo'
+  label: string
+}
+
+const FIGMA_TOOLBAR_TOOLS: ToolbarToolConfig[] = [
+  {
+    id: 'pointer',
+    icons: designEngineeringChevronToolIcons[0]!,
+    iconLayout: 'flyout',
+    label: 'Pointer',
+  },
+  {
+    id: 'frame',
+    icons: designEngineeringChevronToolIcons[1]!,
+    iconLayout: 'flyout',
+    label: 'Frame',
+  },
+  {
+    id: 'line',
+    icons: designEngineeringChevronToolIcons[2]!,
+    iconLayout: 'flyout',
+    label: 'Line',
+  },
+  {
+    id: 'pen',
+    icons: designEngineeringChevronToolIcons[3]!,
+    iconLayout: 'flyout',
+    label: 'Pen',
+  },
+  {
+    id: 'comment',
+    icons: designEngineeringChevronToolIcons[4]!,
+    iconLayout: 'flyout',
+    label: 'Comment',
+  },
+  {
+    id: 'text',
+    icons: designEngineeringSoloToolIcons.text,
+    iconLayout: 'solo',
+    label: 'Text',
+  },
+  {
+    id: 'search',
+    icons: designEngineeringSoloToolIcons.search,
+    iconLayout: 'solo',
+    label: 'Search',
+  },
+]
 
 /** Active -> active; else hovered -> hover; else default. */
 function pickIconSrc(icons: ToolbarIconTrio, active: boolean, hovered: boolean) {
@@ -78,7 +272,23 @@ function FigmaToolbar({
   activeTool: ToolId
   onToolChange: (id: ToolId) => void
 }) {
+  const isMobile = useMobileLayout()
   const [hoveredTool, setHoveredTool] = useState<ToolId | null>(null)
+  const toolsById = useMemo(
+    () => new Map(FIGMA_TOOLBAR_TOOLS.map((tool) => [tool.id, tool])),
+    [],
+  )
+  const visibleTools = isMobile
+    ? MOBILE_TOOLBAR_ORDER.map((id) => toolsById.get(id)).filter(
+        (tool): tool is ToolbarToolConfig => tool !== undefined,
+      )
+    : FIGMA_TOOLBAR_TOOLS
+
+  useEffect(() => {
+    if (!isMobile || MOBILE_TOOLBAR_ORDER.includes(activeTool)) return
+    onToolChange('pointer')
+  }, [activeTool, isMobile, onToolChange])
+
   const handleToolSelect = (id: ToolId) => {
     setHoveredTool(null)
     onToolChange(id)
@@ -93,15 +303,15 @@ function FigmaToolbar({
       onPointerLeave={() => setHoveredTool(null)}
       onPointerCancel={() => setHoveredTool(null)}
     >
-      {CHEVRON_IDS.map((id, i) => (
+      {visibleTools.map((tool) => (
         <ToolbarToolButton
-          key={id}
-          toolId={id}
-          icons={designEngineeringChevronToolIcons[i]!}
-          active={activeTool === id}
-          hovered={hoveredTool === id}
-          iconLayout="flyout"
-          label={CHEVRON_LABELS[i]!}
+          key={tool.id}
+          toolId={tool.id}
+          icons={tool.icons}
+          active={activeTool === tool.id}
+          hovered={hoveredTool === tool.id}
+          iconLayout={tool.iconLayout}
+          label={tool.label}
           onSelect={handleToolSelect}
           onHoverStart={setHoveredTool}
           onHoverEnd={(toolId) => {
@@ -109,32 +319,6 @@ function FigmaToolbar({
           }}
         />
       ))}
-      <ToolbarToolButton
-        toolId="text"
-        icons={designEngineeringSoloToolIcons.text}
-        active={activeTool === 'text'}
-        hovered={hoveredTool === 'text'}
-        iconLayout="solo"
-        label="Text"
-        onSelect={handleToolSelect}
-        onHoverStart={setHoveredTool}
-        onHoverEnd={(toolId) => {
-          setHoveredTool((prev) => (prev === toolId ? null : prev))
-        }}
-      />
-      <ToolbarToolButton
-        toolId="search"
-        icons={designEngineeringSoloToolIcons.search}
-        active={activeTool === 'search'}
-        hovered={hoveredTool === 'search'}
-        iconLayout="solo"
-        label="Search"
-        onSelect={handleToolSelect}
-        onHoverStart={setHoveredTool}
-        onHoverEnd={(toolId) => {
-          setHoveredTool((prev) => (prev === toolId ? null : prev))
-        }}
-      />
     </div>
   )
 }
@@ -147,21 +331,105 @@ type NavItem = {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'de', label: 'Design Engineering', path: '/', end: true },
+  { id: 'de', label: 'Design Engineering', path: '/design-engineering', end: true },
   { id: 'cp', label: 'Community Projects', path: '/community' },
   { id: 'mc', label: 'Campaigns', path: '/marketing' },
 ]
 
-const SOCIAL_LINKS = [
-  { label: '/in/', href: 'https://www.linkedin.com/in/harryyangzy/' },
-  { label: '.git', href: 'https://github.com/harryyangzy' },
-  { label: '@uwo.ca', href: 'mailto:hyang746@uwo.ca' },
-] as const
+const SOCIAL_LINKS: ReadonlyArray<{
+  label: string
+  href: string
+  event: AnalyticsClickEvent
+}> = [
+  { label: '/in/', href: 'https://www.linkedin.com/in/harryyangzy/', event: 'linkedin_click' },
+  { label: '.git', href: 'https://github.com/harryyangzy', event: 'github_click' },
+  { label: '@uwo.ca', href: 'mailto:hyang746@uwo.ca', event: 'email_click' },
+]
+
+function trackSocialLinkClick(
+  event: AnalyticsClickEvent,
+  href: string,
+  pathname: string,
+  onNavigate?: () => void,
+) {
+  trackClick(event, pathname, { link_url: href })
+  onNavigate?.()
+}
+
+function SidebarIntro({ greeting }: { greeting: ReturnType<typeof getSidebarGreeting> }) {
+  return (
+    <div className="pd-sidebar__intro">
+      {greeting.handwritingLead ? (
+        <p className="pd-sidebar__bio">{greeting.handwritingLead}</p>
+      ) : null}
+      <p className="pd-sidebar__handwriting">{greeting.handwriting}</p>
+      <p className="pd-sidebar__bio">{greeting.bio}</p>
+      {greeting.companyLine ? <p className="pd-sidebar__bio">{greeting.companyLine}</p> : null}
+    </div>
+  )
+}
+
+function SidebarSocial({
+  pathname,
+  onNavigate,
+}: {
+  pathname: string
+  onNavigate?: () => void
+}) {
+  return (
+    <div className="pd-sidebar__social" aria-label="Social links">
+      <p className="pd-sidebar__social-label">find me at</p>
+      {SOCIAL_LINKS.map((link) => {
+        const isExternal = link.href.startsWith('http')
+        return (
+          <a
+            key={link.label}
+            className="pd-sidebar__social-link"
+            href={link.href}
+            target={isExternal ? '_blank' : undefined}
+            rel={isExternal ? 'noreferrer noopener' : undefined}
+            onClick={() => trackSocialLinkClick(link.event, link.href, pathname, onNavigate)}
+          >
+            {link.label}
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
+function MobileSidebarPanel({
+  greeting,
+  pathname,
+  onNavigate,
+  includeSocial = true,
+}: {
+  greeting: ReturnType<typeof getSidebarGreeting>
+  pathname: string
+  onNavigate?: () => void
+  includeSocial?: boolean
+}) {
+  return (
+    <>
+      <SidebarIntro greeting={greeting} />
+      <nav className="pd-sidebar__nav" aria-label="Sections">
+        {NAV_ITEMS.map((item) => (
+          <NavTab key={item.id} item={item} onNavigate={onNavigate} />
+        ))}
+      </nav>
+      {includeSocial ? <SidebarSocial pathname={pathname} onNavigate={onNavigate} /> : null}
+    </>
+  )
+}
 
 function NavTab({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const { pathname } = useLocation()
+  const isMobileLayout = useMobileLayout()
   const designEngineeringActive =
-    item.id === 'de' && (pathname === '/' || pathname.startsWith('/work'))
+    item.id === 'de' &&
+    (isDesignEngineeringPath(pathname) ||
+      pathname.startsWith('/work') ||
+      (!isMobileLayout && isStudioHomePath(pathname)))
   const navIconSrc =
     item.id === 'cp' ? navEmailIcon : item.id === 'mc' ? navInstagramIcon : navFigmaIcon
   const navIconClass =
@@ -220,7 +488,23 @@ export default function PortfolioShell({
   const mobileCloseRef = useRef<HTMLButtonElement>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
   const canvasDocumentRef = useRef<HTMLDivElement>(null)
+  const isMobileLayout = useMobileLayout()
   const isStudio = shellVariant === 'studio'
+  const isDesktopStudioLanding =
+    isStudio && !isMobileLayout && isStudioHomePath(pathname)
+  const shellRoute =
+    isStudio &&
+    (isDesignEngineeringPath(pathname) || isDesktopStudioLanding)
+      ? DESIGN_ENGINEERING_PATH
+      : pathname
+  const isStudioHome = isStudio && isStudioHomePath(pathname) && isMobileLayout
+  const showStudioProjects =
+    isStudio &&
+    (isDesignEngineeringPath(pathname) || isDesktopStudioLanding)
+  const sidebarGreeting = useMemo(
+    () => getSidebarGreeting(pathname, isStudio),
+    [pathname, isStudio],
+  )
   const useCommunityMain = shellVariant === 'community' || shellVariant === 'case-study'
   const isCaseStudy = shellVariant === 'case-study'
   const caseStudyBodyClass = shellVariant === 'case-study' ? 'pd-case-study-body' : 'pd-community-body'
@@ -253,7 +537,28 @@ export default function PortfolioShell({
   }, [mobileNavOpen])
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 1100px)')
+    const routeMeta = ROUTE_META[shellRoute] ?? {
+      ...DEFAULT_ROUTE_META,
+      title: `${pageName} | Harry Yang`,
+    }
+    const canonicalUrl = `${SITE_URL}${pathname === '/' ? '/' : pathname}`
+    const shareImage = routeMeta.image ?? DEFAULT_SHARE_IMAGE
+
+    document.title = routeMeta.title
+    upsertMetaByName('description', routeMeta.description)
+    upsertMetaByProperty('og:title', routeMeta.title)
+    upsertMetaByProperty('og:description', routeMeta.description)
+    upsertMetaByProperty('og:url', canonicalUrl)
+    upsertMetaByProperty('og:image', shareImage)
+    upsertMetaByProperty('og:site_name', 'Harry Yang')
+    upsertMetaByName('twitter:title', routeMeta.title)
+    upsertMetaByName('twitter:description', routeMeta.description)
+    upsertMetaByName('twitter:image', shareImage)
+    upsertCanonical(canonicalUrl)
+  }, [pageName, pathname, shellRoute])
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_LAYOUT_BREAKPOINT_PX}px)`)
     const onChange = () => {
       if (!mq.matches) setMobileNavOpen(false)
     }
@@ -262,30 +567,40 @@ export default function PortfolioShell({
   }, [])
 
   useEffect(() => {
-    if (!isStudio) return
-    if (window.innerWidth > 1100) return
+    if (!showStudioProjects) return
     const canvas = canvasRef.current
     const canvasDocument = canvasDocumentRef.current
     if (!canvas || !canvasDocument) return
 
-    const frame = window.requestAnimationFrame(() => {
-      const documentRect = canvasDocument.getBoundingClientRect()
+    const centerCanvasOnProjects = () => {
       const contentNode = canvasDocument.firstElementChild as HTMLElement | null
-      const contentRect = contentNode?.getBoundingClientRect()
+      if (!contentNode) return
 
-      // On first mobile load, start near the project content instead of the
-      // top-left of the larger scrollable canvas.
-      canvas.scrollLeft = Math.max(0, (canvas.scrollWidth - canvas.clientWidth) / 2)
+      const contentLeft = contentNode.offsetLeft
+      const contentWidth = contentNode.offsetWidth
+      const targetScrollLeft = contentLeft + contentWidth / 2 - canvas.clientWidth / 2
+      const maxScrollLeft = Math.max(0, canvas.scrollWidth - canvas.clientWidth)
+      canvas.scrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScrollLeft))
 
-      if (!contentRect) return
+      if (window.innerWidth > 1100) return
 
+      const documentRect = canvasDocument.getBoundingClientRect()
+      const contentRect = contentNode.getBoundingClientRect()
       const contentTopInDocument = contentRect.top - documentRect.top
-      const targetTop = Math.max(0, contentTopInDocument - 16)
-      canvas.scrollTop = targetTop
+      canvas.scrollTop = Math.max(0, contentTopInDocument - 16)
+    }
+
+    let outerFrame = 0
+    let innerFrame = 0
+    outerFrame = window.requestAnimationFrame(() => {
+      innerFrame = window.requestAnimationFrame(centerCanvasOnProjects)
     })
 
-    return () => window.cancelAnimationFrame(frame)
-  }, [isStudio, pathname])
+    return () => {
+      window.cancelAnimationFrame(outerFrame)
+      window.cancelAnimationFrame(innerFrame)
+    }
+  }, [showStudioProjects, pathname, isMobileLayout])
 
   const closeMobileNav = () => setMobileNavOpen(false)
 
@@ -293,12 +608,19 @@ export default function PortfolioShell({
     <div
       className="pd-page"
       data-name={pageName}
-      data-route={pathname}
+      data-route={shellRoute}
       data-shell={shellVariant}
+      data-mobile-home={isStudioHome ? 'true' : undefined}
     >
+      {!isStudioHome ? (
       <header className="pd-mobile-top" aria-label="Site">
         <div className="pd-mobile-top__row">
-          <p className="pd-mobile-top__name">hey, i’m harry</p>
+          <div className="pd-mobile-top__title">
+            {sidebarGreeting.handwritingLead ? (
+              <p className="pd-sidebar__bio pd-mobile-top__lead">{sidebarGreeting.handwritingLead}</p>
+            ) : null}
+            <p className="pd-mobile-top__name">{sidebarGreeting.handwriting}</p>
+          </div>
           <button
             type="button"
             className={`pd-mobile-top__menu-btn${mobileNavOpen ? ' pd-mobile-top__menu-btn--open' : ''}`}
@@ -314,14 +636,15 @@ export default function PortfolioShell({
               </span>
             ) : (
               <span className="pd-mobile-top__menu-icon-wrap" aria-hidden>
-                <img src={menuIcon} alt="" className="pd-mobile-top__menu-icon" width={19} height={17} draggable={false} />
+                <MobileMenuIcon />
               </span>
             )}
           </button>
         </div>
       </header>
+      ) : null}
 
-      {mobileNavOpen ? (
+      {!isStudioHome && mobileNavOpen ? (
         <div
           className="pd-mobile-menu"
           id="pd-mobile-menu"
@@ -343,49 +666,36 @@ export default function PortfolioShell({
                 </button>
               </div>
               <div className="pd-mobile-menu__body">
-                <div className="pd-sidebar__intro">
-                  <p className="pd-sidebar__handwriting">hey, i’m harry</p>
-                  <p className="pd-sidebar__bio">
-                    i love making, designing and living life, see what my browser looks like
-                  </p>
-                </div>
-                <nav className="pd-sidebar__nav" aria-label="Sections">
-                  {NAV_ITEMS.map((item) => (
-                    <NavTab key={item.id} item={item} onNavigate={closeMobileNav} />
-                  ))}
-                </nav>
+                <MobileSidebarPanel
+                  greeting={sidebarGreeting}
+                  pathname={pathname}
+                  onNavigate={closeMobileNav}
+                />
               </div>
-            </div>
-            <div className="pd-sidebar__social pd-mobile-menu__social-dock" aria-label="Social links">
-              <p className="pd-sidebar__social-label">find me at</p>
-              {SOCIAL_LINKS.map((link) => {
-                const isExternal = link.href.startsWith('http')
-                return (
-                  <a
-                    key={link.label}
-                    className="pd-sidebar__social-link"
-                    href={link.href}
-                    target={isExternal ? '_blank' : undefined}
-                    rel={isExternal ? 'noreferrer noopener' : undefined}
-                    onClick={closeMobileNav}
-                  >
-                    {link.label}
-                  </a>
-                )
-              })}
             </div>
           </div>
         </div>
       ) : null}
 
       <div className="pd-shell">
+        {isStudioHome ? (
+          <section className="pd-mobile-home" aria-label="Site navigation">
+            <div className="pd-mobile-home__inner">
+              <div className="pd-mobile-home__upper">
+                <MobileSidebarPanel
+                  greeting={sidebarGreeting}
+                  pathname={pathname}
+                  includeSocial={false}
+                />
+              </div>
+              <div className="pd-mobile-home__social-dock">
+                <SidebarSocial pathname={pathname} />
+              </div>
+            </div>
+          </section>
+        ) : null}
         <aside className="pd-sidebar" aria-label="Site">
-          <div className="pd-sidebar__intro">
-            <p className="pd-sidebar__handwriting">hey, i’m harry</p>
-            <p className="pd-sidebar__bio">
-              i love making, designing and living life, see what my browser looks like
-            </p>
-          </div>
+          <SidebarIntro greeting={sidebarGreeting} />
           <nav className="pd-sidebar__nav" aria-label="Sections">
             {NAV_ITEMS.map((item) => (
               <NavTab key={item.id} item={item} />
@@ -402,6 +712,7 @@ export default function PortfolioShell({
                   href={link.href}
                   target={isExternal ? '_blank' : undefined}
                   rel={isExternal ? 'noreferrer noopener' : undefined}
+                  onClick={() => trackSocialLinkClick(link.event, link.href, pathname)}
                 >
                   {link.label}
                 </a>
@@ -413,7 +724,7 @@ export default function PortfolioShell({
         <div
           className={`pd-main${useCommunityMain ? ' pd-main--community' : ''}${isCaseStudy ? ' pd-main--case-study' : ''}`}
         >
-          {isStudio ? (
+          {showStudioProjects ? (
             <div className="pd-canvas-workspace">
               <div
                 ref={canvasRef}
@@ -430,9 +741,9 @@ export default function PortfolioShell({
                 <FigmaToolbar activeTool={activeTool} onToolChange={setActiveTool} />
               </div>
             </div>
-          ) : (
+          ) : !isStudio ? (
             <div className={caseStudyBodyClass}>{children}</div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

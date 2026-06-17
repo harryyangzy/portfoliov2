@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { trackClick } from './analytics'
 import PortfolioShell from './PortfolioShell'
 import stushCardImg from './assets/design-engineering/STUSHbanner.png'
 import quxCardImg from './assets/design-engineering/QUXbanner.png'
@@ -28,7 +29,7 @@ const PRODUCT_DESIGN_CARDS: CardConfig[] = [
     id: 'qux',
     variant: 'qux',
     eyebrow: "Queen's UX Designathon: First Place -2",
-    title: 'Capturing Moments in Life',
+    title: 'capturing moments in life',
     imageSrc: quxCardImg,
     imageAlt: 'Coeur / QUX hero motion still',
   },
@@ -75,47 +76,41 @@ function GalleryCardInner({ card }: { card: CardConfig }) {
   )
 }
 
+const PROJECT_PATHS: Record<CardVariant, string> = {
+  stush: '/work/stush',
+  qux: '/work/coeur',
+  stumbl: '/work/stumbl',
+}
+
 function ProjectItem({ card }: { card: CardConfig }) {
+  const { pathname } = useLocation()
   const inner = <GalleryCardInner card={card} />
+  const to = PROJECT_PATHS[card.variant]
 
-  if (card.variant === 'stush') {
-    return (
-      <Link
-        to="/work/stush"
-        className={projectItemClass('stush')}
-        data-variant="stush"
-        style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
-        aria-label="STUSH Foods — case study"
-      >
-        {inner}
-      </Link>
-    )
-  }
-
-  if (card.variant === 'qux') {
-    return (
-      <Link
-        to="/work/coeur"
-        className={projectItemClass('qux')}
-        data-variant="qux"
-        style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
-        aria-label="Coeur (QUX Designathon) — case study"
-      >
-        {inner}
-      </Link>
-    )
+  const handleClick = () => {
+    trackClick('project_click', pathname, {
+      project_name: card.title,
+      link_url: to,
+    })
   }
 
   return (
-    <article className={projectItemClass('stumbl')} data-variant="stumbl">
+    <Link
+      to={to}
+      className={projectItemClass(card.variant)}
+      data-variant={card.variant}
+      style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+      aria-label={`${card.title} — case study`}
+      onClick={handleClick}
+    >
       {inner}
-    </article>
+    </Link>
   )
 }
 
 export default function ProductDesignPage() {
   return (
-    <PortfolioShell pageName="Product Design Homepage">
+    <PortfolioShell pageName="Design Engineering">
       <div className="pd-grid pd-grid--product">
         {PRODUCT_DESIGN_CARDS.map((card) => (
           <ProjectItem key={card.id} card={card} />

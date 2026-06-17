@@ -49,7 +49,7 @@
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 0 40px 80px 0;
+  padding: 0 60px 60px 0;
   box-sizing: border-box;
   flex: 1 1 auto;
 }
@@ -87,7 +87,6 @@
 /* -------- Hero: top grey band — title, season, team, video/image -------- */
 .stush-hero {
   display: flex;
-  min-height: 0;
   position: relative;
   padding: 0 60px;
   align-items: flex-start;
@@ -102,13 +101,21 @@
   color: #000;
 }
 
+.stush-hero__band {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.stush-hero__media-shell {
+  flex: 0 0 auto;
+}
+
 @media (min-width: 900px) {
   .stush-hero {
     flex-wrap: nowrap;
   }
 
   .stush-hero__copy {
-    max-width: calc(100% - 540px);
   }
 
   .stush-hero__img-wrap {
@@ -137,6 +144,12 @@
   }
 }
 
+@media (max-width: 1450px) and (min-width: 1201px) {
+  .stush-hero__band {
+    max-width: calc(100% - 500px);
+  }
+}
+
 .stush-hero__lede {
   display: flex;
   flex-direction: column;
@@ -151,7 +164,7 @@
   display: flex;
   flex-direction: column;
   gap: 80px;
-  padding: 50px 0 30px 0;
+  padding: 50px 0 50px;
   align-items: flex-start;
 }
 
@@ -537,6 +550,87 @@
   object-fit: cover;
 }
 
+@media (max-width: 1400px) {
+  .stush-split,
+  .stush-split--solution,
+  .stush-split--outcome-learned {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stush-split__media,
+  .stush-split__media--problem,
+  .stush-split--solution .stush-split__media,
+  .stush-split__media--outcome-r,
+  .stush-split--outcome-learned .stush-split__media--outcome-l,
+  .stush-split > .stush-audit-wrap {
+    order: 1;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    align-self: stretch;
+  }
+
+  .stush-split__text,
+  .stush-split--solution .stush-split__text,
+  .stush-split__stack,
+  .stush-split--outcome-learned .stush-outcome-learned__stack,
+  .stush-split:has(> .stush-split__media--outcome-r) > .stush-card.stush-split__text {
+    order: 2;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  .stush-card.stush-split__text,
+  .stush-outcome-learned__card {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+  }
+
+  .stush-card.stush-split__text.stush-card--top-bottom,
+  .stush-card.stush-card--top-bottom.stush-outcome-learned__card {
+    height: auto;
+    min-height: 0;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+
+  .stush-card.stush-split__text.stush-card--top-bottom .stush-card__bottom,
+  .stush-card.stush-card--top-bottom.stush-outcome-learned__card .stush-card__bottom {
+    margin-top: 0;
+    height: auto;
+  }
+
+  .stush-split__media > .stush-img-rounded,
+  .stush-split__media img,
+  .stush-audit-bento {
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+
+  .stush-img-rounded,
+  .stush-img-rounded--h312,
+  .stush-img-rounded--h418,
+  .stush-img-rounded--outcome {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .stush-split--outcome-learned .stush-split__media--outcome-l {
+    justify-content: flex-start;
+  }
+}
+
 /* Full-bleed design-system banner image (sits in .stush-band, not inside a .stush-card) */
 .stush-ds-banner {
   width: 100%;
@@ -556,6 +650,15 @@
   padding: 10px;
   min-width: 0;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+.stush-audit-bento {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 /* Flex row(s) of .stush-audit-tile(s) + composite */
@@ -791,6 +894,37 @@
   margin-bottom: 0;
 }
 
+@media (max-width: 700px) {
+  .stush-pain-card.stush-pain-card--left {
+    height: auto;
+  }
+
+  .stush-pain-card--left .stush-pain__body--fill {
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+
+  .stush-pain-card--left .stush-pain__body--fill .stush-pain__prose {
+    gap: 0;
+  }
+
+  .stush-pain-card--left .stush-pain__body--fill .stush-pain__prose .stush-subh {
+    margin: 0 0 8px;
+  }
+
+  .stush-pain-card--left .stush-pain__body--fill .stush-pain__prose p {
+    margin: 0 0 8px;
+  }
+
+  .stush-pain-card--left .stush-pain__body--fill .stush-pain__prose p:last-child {
+    margin-bottom: 0;
+  }
+}
+
 /* -------- Wireframes: 2-up images inside a padded white .stush-card -------- */
 .stush-wire-grid {
   display: grid;
@@ -858,20 +992,41 @@
 }
 
 /* --- Breakpoint: stack hero + tighten padding --- */
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .stush__panel {
-    padding: 0 24px 48px 0;
+    padding: 0 60px 60px 0;
   }
 
   .stush-hero {
-    padding: 0 24px 24px;
+    padding: 0 0 24px;
     border-radius: 32px;
+    background: transparent;
+    gap: 10px;
+    flex-direction: column;
   }
 
   .stush-hero__copy {
-    gap: 40px;
-    padding-top: 32px;
-    max-width: 100%;
+    gap: 80px;
+    padding: 50px 0 50px;
+  }
+
+  .stush-hero__band {
+    order: 1;
+    width: 100%;
+    background: #f6f6f6;
+    border-radius: 60px;
+    padding: 0 60px;
+    box-sizing: border-box;
+  }
+
+  .stush-hero__media-shell {
+    order: 2;
+    width: 100%;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
   }
 
   .stush-hero__img-wrap {
@@ -880,6 +1035,13 @@
     height: auto;
     aspect-ratio: 1 / 1;
     transform: none;
+    margin: 0 auto;
   }
 
+}
+
+@media (max-width: 1100px) {
+  .stush__panel {
+    padding: 0 0 16px 0;
+  }
 }

@@ -1,0 +1,101 @@
+/* Stumbl case study — text-only hero + Figma prototype (extends stushCaseStudy + coeurCaseStudy) */
+
+/* Hero: no media shell — full-width band, same title sizing as Coeur */
+.stumbl .stush-hero {
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  margin-bottom: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stumbl .stush-hero__band {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.stumbl .stush-hero__copy,
+.stumbl .stush-hero__lede {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.stumbl .stush-hero__title {
+  max-width: 100%;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Even 25px gap above and below skill chips (avoid hero margin + padding stacking) */
+.stumbl .stush-skills {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.stumbl .coeur-card-title {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.04em;
+}
+
+/* Figma embed stack — three white cards in one grey band */
+.stumbl-embeds {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Prototype card — uses .stush-card padding; only layout for kicker + embed */
+.stumbl-prototype {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stumbl-prototype .stush-kicker {
+  margin: 0;
+}
+
+.stumbl-prototype__embed {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  min-height: 280px;
+  aspect-ratio: 800 / 450;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+/* Match stacked hero on STUSH / Coeur (stushCaseStudy @1200px) */
+@media (max-width: 1200px) {
+  .stumbl .stush-hero {
+    padding: 0 0 24px;
+    border-radius: 32px;
+    background: transparent;
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .stumbl .stush-hero__band {
+    order: 1;
+    width: 100%;
+    background: #f6f6f6;
+    border-radius: 60px;
+    padding: 0 60px;
+    box-sizing: border-box;
+  }
+
+  .stumbl .stush-hero__copy {
+    padding: 50px 0 50px;
+    gap: 80px;
+  }
+}

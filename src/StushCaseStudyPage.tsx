@@ -8,13 +8,9 @@ function classNames(...tokens: Array<string | undefined>) {
   return tokens.filter(Boolean).join(' ')
 }
 
-function StushHero({
-  heroIsStatic,
-  onHeroVideoError,
-}: {
-  heroIsStatic: boolean
-  onHeroVideoError: () => void
-}) {
+function StushHero() {
+  const [useFallback, setUseFallback] = useState(false)
+
   return (
     <header className="stush-hero">
       <div className="stush-hero__band">
@@ -44,29 +40,31 @@ function StushHero({
           </div>
         </div>
       </div>
-      <div className="stush-hero__img-wrap">
-        {heroIsStatic ? (
-          <img
-            src={stushMedia.heroVideoPreview}
-            className="stush-hero__img"
-            alt=""
-            loading="eager"
-            decoding="async"
-          />
-        ) : (
-          <video
-            className="stush-hero__img"
-            muted
-            loop
-            autoPlay
-            playsInline
-            preload="metadata"
-            poster={stushMedia.heroVideoPreview}
-            onError={onHeroVideoError}
-          >
-            <source src={stushMedia.heroVideo} type="video/webm" />
-          </video>
-        )}
+      <div className="stush-hero__media-shell">
+        <div className="stush-hero__img-wrap">
+          {useFallback ? (
+            <img
+              src={stushMedia.heroVideoPreview}
+              className="stush-hero__img"
+              alt=""
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <video
+              className="stush-hero__img"
+              muted
+              loop
+              autoPlay
+              playsInline
+              preload="metadata"
+              poster={stushMedia.heroVideoPreview}
+              onError={() => setUseFallback(true)}
+            >
+              <source src={stushMedia.heroVideo} type="video/webm" />
+            </video>
+          )}
+        </div>
       </div>
     </header>
   )
@@ -110,35 +108,16 @@ function StushSplitTextCard({
   )
 }
 
-function canPlayWebM(): boolean {
-  if (typeof document === 'undefined') return false
-  const v = document.createElement('video')
-  const c =
-    v.canPlayType('video/webm; codecs="vp8"') ||
-    v.canPlayType('video/webm; codecs="vp9"') ||
-    v.canPlayType('video/webm') ||
-    ''
-  return c.length > 0
-}
-
 export default function StushCaseStudyPage() {
-  const [heroIsStatic, setHeroIsStatic] = useState(
-    () => typeof document === 'undefined' || !canPlayWebM(),
-  )
-
-  const onHeroVideoError = () => {
-    setHeroIsStatic(true)
-  }
-
   return (
     <PortfolioShell pageName="STUSH Foods — case study" shellVariant="case-study">
       <div className="stush">
         <div className="stush__panel">
-          <Link className="stush__back" to="/">
+          <Link className="stush__back" to="/design-engineering">
             ← Back
           </Link>
 
-          <StushHero heroIsStatic={heroIsStatic} onHeroVideoError={onHeroVideoError} />
+          <StushHero />
           <StushSkills />
 
           <div className="stush-stack">

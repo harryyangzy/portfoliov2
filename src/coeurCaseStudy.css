@@ -79,7 +79,6 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  min-height: 321px;
   padding: 0 60px;
   border-radius: 60px;
   overflow: visible;
@@ -97,9 +96,14 @@
 .coeur .stush-hero__copy {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: calc(100% - 560px);
-  padding: 50px 0 30px;
+  padding: 50px 0 50px;
   gap: 80px;
+}
+
+@media (max-width: 1450px) and (min-width: 1201px) {
+  .coeur .stush-hero__band {
+    max-width: calc(100% - 440px);
+  }
 }
 
 @media (min-width: 901px) {
@@ -115,31 +119,49 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .coeur .stush-hero {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 30px;
-    min-height: 0;
+    padding: 0 0 24px;
+    background: transparent;
+    gap: 10px;
+  }
+
+  .coeur .stush-hero__band {
+    order: 1;
+    width: 100%;
+    background: #f6f6f6;
+    border-radius: 60px;
+    padding: 0 60px;
+    box-sizing: border-box;
   }
 
   .coeur .stush-hero__copy {
-    max-width: 100%;
-    padding: 0;
-    gap: 30px;
+    padding: 50px 0 50px;
+    gap: 80px;
   }
 
   .coeur .stush-hero__title {
     white-space: normal;
   }
 
+  .coeur .stush-hero__media-shell {
+    order: 2;
+    width: 100%;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+
   .coeur .stush-hero__img-wrap {
     position: static;
-    width: 100%;
-    max-width: 320px;
+    width: min(460px, 100%);
     height: auto;
     transform: none;
     z-index: 0;
+    margin: 0 auto;
   }
 }
 
@@ -156,6 +178,12 @@
     width: 100%;
     max-width: 360px;
     height: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .coeur .stush-hero__img-wrap {
+    max-width: 420px;
   }
 }
 
@@ -244,29 +272,90 @@
   max-width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.coeur-insp__header {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Collage bounding ≈ figma white frame; inset image cover */
 .coeur-insp__frame {
-  position: relative;
   flex: 1 1 auto;
   width: 100%;
   min-width: 0;
-  aspect-ratio: 562 / 377;
   border-radius: 30px;
   overflow: hidden;
   background: #f0f0f0;
 }
 
 .coeur-insp__grid-img {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
-  object-fit: cover;
-  object-position: center;
+  object-fit: contain;
+  object-position: top center;
   border-radius: 30px;
+}
+
+@media (max-width: 1400px) {
+  .coeur-insp {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coeur-insp__mosaic,
+  .coeur-insp__copy {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .coeur-insp__frame {
+    aspect-ratio: auto;
+  }
+
+  .coeur-insp__grid-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .coeur-user-research {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coeur-user-research .stush-split__media,
+  .coeur-user-research .stush-split__text {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+  }
+
+  .coeur-user-research .stush-split__media img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .coeur-competitive-split {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coeur-competitive-split .stush-split__media,
+  .coeur-competitive-split .stush-split__text {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+  }
+
+  .coeur-competitive-split .stush-split__media img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
 }
 
 /* Design-system + flow: image on top, white text card below */
@@ -300,7 +389,7 @@
   max-width: 100%;
   background: #fff;
   border-radius: 40px;
-  padding: 30px 30px 30px;
+  padding: 10px 10px 30px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -312,7 +401,7 @@
 }
 
 .coeur-feature__body {
-  padding: 0;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -364,11 +453,42 @@
   align-self: stretch;
 }
 
+@media (max-width: 1400px) {
+  .coeur-outro {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coeur-outro__crop {
+    order: 1;
+  }
+
+  .coeur-outro__stack {
+    order: 2;
+  }
+
+  .coeur-outro__crop {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    aspect-ratio: 374 / 418;
+  }
+}
+
 @media (min-width: 900px) {
   .coeur-outro__crop {
     flex: 0 1 374px;
     width: 374px;
     max-width: 374px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1400px) {
+  .coeur-outro__crop {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
   }
 }
 
