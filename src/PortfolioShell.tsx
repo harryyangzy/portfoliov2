@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   designEngineeringChevronToolIcons,
@@ -9,7 +9,18 @@ import {
 import navFigmaIcon from './assets/figma icon.png'
 import navEmailIcon from './assets/email favicon.png'
 import navInstagramIcon from './assets/Instagram_logo_2016.svg'
+import { MOBILE_LAYOUT_BREAKPOINT_PX, useMobileLayout } from './useMobileLayout'
 import './productDesignHomepage.css'
+
+/** CSS-drawn menu icon — avoids raster/SVG downscale blur on mobile. */
+function MobileMenuIcon() {
+  return (
+    <span className="pd-mobile-top__menu-icon" aria-hidden>
+      <span className="pd-mobile-top__menu-bar" />
+      <span className="pd-mobile-top__menu-bar" />
+    </span>
+  )
+}
 
 type ToolId = 'pointer' | 'frame' | 'line' | 'pen' | 'comment' | 'text' | 'search'
 
@@ -157,7 +168,55 @@ const SOCIAL_LINKS = [
   { label: '@uwo.ca', href: 'mailto:hyang746@uwo.ca' },
 ] as const
 
-function NavTab({ item }: { item: NavItem }) {
+function SidebarIntro() {
+  return (
+    <div className="pd-sidebar__intro">
+      <p className="pd-sidebar__handwriting">hey, i’m harry</p>
+      <p className="pd-sidebar__bio">
+        i love making, designing and living life, see what my browser looks like
+      </p>
+    </div>
+  )
+}
+
+function SidebarSocial({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <div className="pd-sidebar__social" aria-label="Social links">
+      <p className="pd-sidebar__social-label">find me at</p>
+      {SOCIAL_LINKS.map((link) => {
+        const isExternal = link.href.startsWith('http')
+        return (
+          <a
+            key={link.label}
+            className="pd-sidebar__social-link"
+            href={link.href}
+            target={isExternal ? '_blank' : undefined}
+            rel={isExternal ? 'noreferrer noopener' : undefined}
+            onClick={onNavigate}
+          >
+            {link.label}
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
+function MobileSidebarPanel({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <>
+      <SidebarIntro />
+      <nav className="pd-sidebar__nav" aria-label="Sections">
+        {NAV_ITEMS.map((item) => (
+          <NavTab key={item.id} item={item} onNavigate={onNavigate} />
+        ))}
+      </nav>
+      <SidebarSocial onNavigate={onNavigate} />
+    </>
+  )
+}
+
+function NavTab({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const { pathname } = useLocation()
   const designEngineeringActive =
     item.id === 'de' && (pathname === '/' || pathname.startsWith('/work'))
@@ -175,6 +234,7 @@ function NavTab({ item }: { item: NavItem }) {
       <Link
         to={item.path}
         className={`pd-nav-item${designEngineeringActive ? ' pd-nav-item--active' : ' pd-nav-item--default'}`}
+        onClick={onNavigate}
       >
         <span className="pd-nav-item__icon-box">
           <img src={navIconSrc} alt="" className={navIconClass} />
@@ -191,6 +251,7 @@ function NavTab({ item }: { item: NavItem }) {
       className={({ isActive }) =>
         `pd-nav-item${isActive ? ' pd-nav-item--active' : ' pd-nav-item--default'}`
       }
+      onClick={onNavigate}
     >
       <span className="pd-nav-item__icon-box">
         <img src={navIconSrc} alt="" className={navIconClass} />
@@ -213,10 +274,52 @@ export default function PortfolioShell({
 }) {
   const { pathname } = useLocation()
   const [activeTool, setActiveTool] = useState<ToolId>('pointer')
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const mobileCloseRef = useRef<HTMLButtonElement>(null)
+  const isMobileLayout = useMobileLayout()
   const isStudio = shellVariant === 'studio'
+  const isMobileHome = isStudio && pathname === '/' && isMobileLayout
   const useCommunityMain = shellVariant === 'community' || shellVariant === 'case-study'
   const isCaseStudy = shellVariant === 'case-study'
   const caseStudyBodyClass = shellVariant === 'case-study' ? 'pd-case-study-body' : 'pd-community-body'
+
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileNavOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    mobileCloseRef.current?.focus()
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_LAYOUT_BREAKPOINT_PX}px)`)
+    const onChange = () => {
+      if (!mq.matches) setMobileNavOpen(false)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  const closeMobileNav = () => setMobileNavOpen(false)
 
   return (
     <div
@@ -224,43 +327,96 @@ export default function PortfolioShell({
       data-name={pageName}
       data-route={pathname}
       data-shell={shellVariant}
+      data-mobile-home={isMobileHome ? 'true' : undefined}
     >
-      <div className="pd-shell">
-        <aside className="pd-sidebar" aria-label="Site">
-          <div className="pd-sidebar__intro">
-            <p className="pd-sidebar__handwriting">hey, i’m harry</p>
-            <p className="pd-sidebar__bio">
-              i love making, designing and living life, see what my browser looks like
-            </p>
+      {!isMobileHome ? (
+        <header className="pd-mobile-top" aria-label="Site">
+          <div className="pd-mobile-top__row">
+            <div className="pd-mobile-top__title">
+              <p className="pd-mobile-top__name">hey, i’m harry</p>
+            </div>
+            <button
+              type="button"
+              className={`pd-mobile-top__menu-btn${mobileNavOpen ? ' pd-mobile-top__menu-btn--open' : ''}`}
+              aria-expanded={mobileNavOpen}
+              aria-controls="pd-mobile-menu"
+              aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setMobileNavOpen((o) => !o)}
+            >
+              {mobileNavOpen ? (
+                <span className="pd-mobile-top__burger pd-mobile-top__burger--close" aria-hidden>
+                  <span className="pd-mobile-top__burger-line" />
+                  <span className="pd-mobile-top__burger-line" />
+                </span>
+              ) : (
+                <MobileMenuIcon />
+              )}
+            </button>
           </div>
+        </header>
+      ) : null}
+
+      {!isMobileHome && mobileNavOpen ? (
+        <div
+          className="pd-mobile-menu"
+          id="pd-mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site navigation"
+        >
+          <div className="pd-mobile-menu__inner">
+            <div className="pd-mobile-menu__upper">
+              <div className="pd-mobile-menu__back-row">
+                <button
+                  ref={mobileCloseRef}
+                  type="button"
+                  className="pd-mobile-menu__back"
+                  aria-label="Close menu"
+                  onClick={closeMobileNav}
+                >
+                  <span className="pd-mobile-menu__back-label">back</span>
+                </button>
+              </div>
+              <div className="pd-mobile-menu__body">
+                <MobileSidebarPanel onNavigate={closeMobileNav} />
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="pd-shell">
+        {isMobileHome ? (
+          <section className="pd-mobile-home" aria-label="Site navigation">
+            <div className="pd-mobile-home__inner">
+              <div className="pd-mobile-home__upper">
+                <SidebarIntro />
+                <nav className="pd-sidebar__nav" aria-label="Sections">
+                  {NAV_ITEMS.map((item) => (
+                    <NavTab key={item.id} item={item} />
+                  ))}
+                </nav>
+              </div>
+              <div className="pd-mobile-home__social-dock">
+                <SidebarSocial />
+              </div>
+            </div>
+          </section>
+        ) : null}
+        <aside className="pd-sidebar" aria-label="Site">
+          <SidebarIntro />
           <nav className="pd-sidebar__nav" aria-label="Sections">
             {NAV_ITEMS.map((item) => (
               <NavTab key={item.id} item={item} />
             ))}
           </nav>
-          <div className="pd-sidebar__social" aria-label="Social links">
-            <p className="pd-sidebar__social-label">find me at</p>
-            {SOCIAL_LINKS.map((link) => {
-              const isExternal = link.href.startsWith('http')
-              return (
-                <a
-                  key={link.label}
-                  className="pd-sidebar__social-link"
-                  href={link.href}
-                  target={isExternal ? '_blank' : undefined}
-                  rel={isExternal ? 'noreferrer noopener' : undefined}
-                >
-                  {link.label}
-                </a>
-              )
-            })}
-          </div>
+          <SidebarSocial />
         </aside>
 
         <div
           className={`pd-main${useCommunityMain ? ' pd-main--community' : ''}${isCaseStudy ? ' pd-main--case-study' : ''}`}
         >
-          {isStudio ? (
+          {isStudio && !isMobileHome ? (
             <div className="pd-canvas-workspace">
               <div className="pd-canvas" tabIndex={0} role="region" aria-label="Scrollable canvas">
                 <div className="pd-canvas__document">{children}</div>
@@ -269,9 +425,9 @@ export default function PortfolioShell({
                 <FigmaToolbar activeTool={activeTool} onToolChange={setActiveTool} />
               </div>
             </div>
-          ) : (
+          ) : !isStudio ? (
             <div className={caseStudyBodyClass}>{children}</div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
