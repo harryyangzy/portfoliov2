@@ -422,18 +422,35 @@
       rgba(255, 255, 255, 0.14) 100%
     ),
     rgba(248, 251, 254, 0.18);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   box-shadow:
     1px 1px 2px rgba(0, 0, 0, 0.2),
     0 6px 18px rgba(45, 69, 93, 0.07),
     inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 0 rgba(147, 166, 186, 0.12);
   cursor: pointer;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease,
     background 0.15s ease;
+}
+
+/* Blur on a pseudo-layer so the icon glyphs stay sharp (Safari/iOS composites blur onto children). */
+.pd-mobile-top__menu-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pd-mobile-top__menu-btn > * {
+  position: relative;
+  z-index: 1;
 }
 
 .pd-mobile-top__menu-btn:hover {
@@ -468,22 +485,24 @@
   outline-offset: 2px;
 }
 
-.pd-mobile-top__menu-icon-wrap {
+/* CSS-drawn icon: crisp at any DPR (no raster downscale, SVG filter, or drop-shadow blur). */
+.pd-mobile-top__menu-icon {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: center;
   width: 19px;
   height: 17px;
-  line-height: 0;
+  gap: 5px;
   color: #2d455d;
-  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
+  transform: translateZ(0);
 }
 
-.pd-mobile-top__menu-icon {
+.pd-mobile-top__menu-bar {
   display: block;
-  width: 19px;
-  height: 17px;
-  flex-shrink: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
 }
 
 .pd-mobile-top__burger {
@@ -494,6 +513,7 @@
   width: 19px;
   height: 17px;
   gap: 4px;
+  transform: translateZ(0);
 }
 
 .pd-mobile-top__burger-line {

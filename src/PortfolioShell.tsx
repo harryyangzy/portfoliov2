@@ -19,20 +19,13 @@ import {
 import { MOBILE_LAYOUT_BREAKPOINT_PX, useMobileLayout } from './useMobileLayout'
 import './productDesignHomepage.css'
 
+/** CSS-drawn menu icon — crisp on high-DPI; no raster/SVG downscale or filter blur. */
 function MobileMenuIcon() {
   return (
-    <svg
-      className="pd-mobile-top__menu-icon"
-      viewBox="0 0 23 21"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M7.35947 2H2.87464C2.38149 2 2 2.3617 2 2.8347C2 3.3077 2.38149 3.67868 2.87464 3.67868H6.96868C7.30364 3.67868 7.54557 3.82707 7.68514 4.13313L13.8169 17.8592C14.1612 18.6383 14.7287 19 15.5848 19H20.1255C20.6094 19 21 18.6291 21 18.1654C21 17.7016 20.6094 17.3214 20.1255 17.3214H16.0035C15.6313 17.3214 15.3987 17.1823 15.2498 16.8762L9.14596 3.15931C8.8296 2.4359 8.15968 2 7.35947 2ZM20.1255 2H14.1053C13.6122 2 13.2307 2.35243 13.2307 2.82542C13.2307 3.29842 13.6122 3.66013 14.1053 3.66013H20.1255C20.6186 3.66013 20.9908 3.29842 20.9908 2.82542C20.9908 2.35243 20.6186 2 20.1255 2Z"
-        fill="currentColor"
-      />
-    </svg>
+    <span className="pd-mobile-top__menu-icon" aria-hidden>
+      <span className="pd-mobile-top__menu-bar" />
+      <span className="pd-mobile-top__menu-bar" />
+    </span>
   )
 }
 
@@ -635,9 +628,7 @@ export default function PortfolioShell({
                 <span className="pd-mobile-top__burger-line" />
               </span>
             ) : (
-              <span className="pd-mobile-top__menu-icon-wrap" aria-hidden>
-                <MobileMenuIcon />
-              </span>
+              <MobileMenuIcon />
             )}
           </button>
         </div>
