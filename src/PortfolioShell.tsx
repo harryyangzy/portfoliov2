@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import DesignEngineeringCanvasTools, {
+  type CanvasToolId,
+} from './DesignEngineeringCanvasTools'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   designEngineeringChevronToolIcons,
@@ -29,7 +32,7 @@ function MobileMenuIcon() {
   )
 }
 
-type ToolId = 'pointer' | 'frame' | 'line' | 'pen' | 'comment' | 'text' | 'search'
+type ToolId = CanvasToolId
 
 type RouteMeta = {
   title: string
@@ -726,6 +729,7 @@ export default function PortfolioShell({
               >
                 <div ref={canvasDocumentRef} className="pd-canvas__document">
                   {children}
+                  <DesignEngineeringCanvasTools activeTool={activeTool} />
                 </div>
               </div>
               <div className="pd-toolbar-dock">
