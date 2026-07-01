@@ -1,5 +1,13 @@
 /* Product Design Homepage — from Figma node 2214:526 */
 
+@font-face {
+  font-family: 'GT Pressura Bold';
+  src: url('/fonts/GTPressura-Bold_5585.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 .pd-page {
   --pd-blue-10: #f8fbfe;
   --pd-grey-30: #f5f5f5;
@@ -12,6 +20,21 @@
   --pd-btn-secondary-stroke: #e5ecf2;
   --pd-border-soft: #eee;
   --pd-white: #fff;
+  /* Figma Tab Button (2724:1642) */
+  --pd-tab-text-active: #2d455d;
+  --pd-tab-text-default: #93a6ba;
+  --pd-tab-text-hover: #fff;
+  --pd-tab-bg-hover: #e5ecf2;
+  --pd-tab-border-start: rgba(147, 166, 186, 0.6);
+  --pd-tab-border-end: rgba(248, 251, 254, 0.6);
+  --pd-tab-border-gradient: linear-gradient(
+    to bottom right,
+    var(--pd-tab-border-start),
+    var(--pd-tab-border-end)
+  );
+  --pd-tab-shadow-active: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+  --pd-tab-shadow-default: 0.5px 0.5px 2px rgba(0, 0, 0, 0.1);
+  --pd-tab-icon-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
 
   --pd-canvas-min-width: 100%;
   --pd-canvas-min-height: 100%;
@@ -23,14 +46,25 @@
   display: flex;
   flex-direction: column;
   background: var(--pd-blue-10);
-  border: 1px solid #000;
   color: var(--pd-text-primary);
 }
 
-/* Product Design Homepage: free-flowing canvas area (2D scroll) */
-.pd-page[data-name='Product Design Homepage'] {
+/* Design Engineering: free-flowing canvas area (2D scroll) */
+.pd-page[data-route='/design-engineering'] {
   --pd-canvas-min-width: 1600px;
   --pd-canvas-min-height: 1800px;
+}
+
+/* Studio landing: no infinite canvas */
+.pd-page[data-mobile-home='true'] {
+  --pd-canvas-min-width: 100%;
+  --pd-canvas-min-height: auto;
+}
+
+@media (min-width: 1101px) {
+  .pd-page[data-mobile-home='true'] .pd-main {
+    display: none;
+  }
 }
 
 .pd-page[data-shell='studio'] {
@@ -66,15 +100,16 @@
 /* ——— Sidebar ——— */
 
 .pd-sidebar {
-  flex: 0 0 384px;
-  width: 384px;
+  flex: 0 0 calc(384px * var(--site-space-scale));
+  width: calc(384px * var(--site-space-scale));
   max-width: 100%;
   min-width: 0;
   align-self: stretch;
   display: flex;
   flex-direction: column;
   gap: 112px;
-  padding: 160px 40px 40px;
+  padding: calc(160px * var(--site-space-scale)) calc(40px * var(--site-space-scale))
+    calc(40px * var(--site-space-scale));
   background: var(--pd-blue-10);
   overflow-x: hidden;
   overflow-y: auto;
@@ -211,8 +246,8 @@
   color: inherit;
   transition:
     box-shadow 0.15s ease,
-    border-color 0.15s ease,
-    background 0.15s ease;
+    background 0.15s ease,
+    filter 0.15s ease;
 }
 
 .pd-nav-item:focus-visible {
@@ -221,35 +256,37 @@
 }
 
 .pd-nav-item--active {
-  border: 1px solid var(--pd-border-soft);
-  background-color: var(--pd-white);
-  background-image: radial-gradient(
-    ellipse 180% 120% at 50% 100%,
-    rgba(229, 236, 242, 0.95) 0%,
-    #fff 55%
-  );
-  /* Figma Tab Button (active): drop-shadow 1px 1px 1.5px */
-  box-shadow: 1px 1px 1.5px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid transparent;
+  background:
+    linear-gradient(var(--pd-white), var(--pd-white)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: none;
+  filter: drop-shadow(var(--pd-tab-shadow-active));
 }
 
 .pd-nav-item--default {
-  border: 2px solid var(--pd-btn-secondary-stroke);
-  background: var(--pd-btn-secondary-fill);
-  box-shadow: none;
+  border: 0.5px solid transparent;
+  background:
+    linear-gradient(var(--pd-blue-10), var(--pd-blue-10)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: var(--pd-tab-shadow-default);
+  filter: none;
 }
 
+.pd-nav-item--active:hover,
 .pd-nav-item--default:hover {
-  border-color: #c5d6e8;
-  background: #e8f0f8;
-}
-
-.pd-nav-item--default:hover .pd-nav-item__label {
-  color: var(--pd-text-primary);
-}
-
-.pd-nav-item--active:hover {
-  border-color: #ddd;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.22);
+  border: 0.5px solid transparent;
+  background:
+    linear-gradient(var(--pd-tab-bg-hover), var(--pd-tab-bg-hover)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: none;
+  filter: none;
 }
 
 .pd-nav-item__icon-box {
@@ -258,6 +295,7 @@
   height: 22px;
   border-radius: 6px;
   background: var(--pd-white);
+  box-shadow: var(--pd-tab-icon-shadow);
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -288,13 +326,28 @@
 }
 
 .pd-nav-item__label {
-  font-family: var(--font-parabolica);
-  font-size: var(--type-h7-size);
-  font-weight: var(--type-h7-weight);
-  line-height: var(--type-h7-line);
-  letter-spacing: var(--type-h7-track);
+  font-family: var(--font-dottonoji);
+  font-size: var(--type-h8-size);
+  font-weight: var(--type-h8-weight);
+  line-height: var(--type-h8-line);
+  letter-spacing: var(--type-h8-track);
+  text-transform: uppercase;
   white-space: nowrap;
-  color: var(--pd-text-primary);
+  -webkit-text-stroke: 0.5px currentColor;
+  paint-order: stroke fill;
+  transition: color 0.15s ease;
+}
+
+.pd-nav-item--active .pd-nav-item__label {
+  color: var(--pd-tab-text-active);
+}
+
+.pd-nav-item--default .pd-nav-item__label {
+  color: var(--pd-tab-text-default);
+}
+
+.pd-nav-item:hover .pd-nav-item__label {
+  color: var(--pd-tab-text-hover);
 }
 
 @media (max-width: 420px) {
@@ -303,19 +356,7 @@
   }
 }
 
-.pd-nav-item--active .pd-nav-item__label {
-  font-weight: 500;
-  letter-spacing: -0.36px;
-  color: var(--pd-text-primary);
-}
-
-.pd-nav-item--default .pd-nav-item__label {
-  font-weight: 400;
-  letter-spacing: -0.72px;
-  color: var(--pd-text-secondary);
-}
-
-/* ——— Mobile top bar + menu — hidden on wide viewports ——— */
+/* ——— Mobile top bar + menu (Figma 2645:4705) — hidden on wide viewports ——— */
 
 .pd-mobile-top {
   display: none;
@@ -323,6 +364,7 @@
   width: 100%;
   box-sizing: border-box;
   background: var(--pd-blue-10);
+  /* Figma 2645:4706 — mobile header stroke */
   border: 2px solid #d2dfed;
   border-top: none;
   border-radius: 0 0 30px 30px;
@@ -356,6 +398,10 @@
   min-width: 0;
 }
 
+.pd-mobile-top__lead {
+  margin: 0;
+}
+
 .pd-mobile-top__menu-btn {
   position: relative;
   isolation: isolate;
@@ -367,6 +413,7 @@
   margin: 0;
   border-radius: 16px;
   border: 0.5px solid rgba(147, 166, 186, 0.6);
+  /* Glass + gradient (Figma 2645:4702 menu button) */
   background:
     linear-gradient(
       152deg,
@@ -389,6 +436,7 @@
     background 0.15s ease;
 }
 
+/* Blur on a pseudo-layer so the icon glyphs stay sharp (Safari/iOS composites blur onto children). */
 .pd-mobile-top__menu-btn::before {
   content: '';
   position: absolute;
@@ -437,7 +485,7 @@
   outline-offset: 2px;
 }
 
-/* CSS-drawn icon: crisp at any DPR (no raster downscale or SVG filter blur). */
+/* CSS-drawn icon: crisp at any DPR (no raster downscale, SVG filter, or drop-shadow blur). */
 .pd-mobile-top__menu-icon {
   display: flex;
   flex-direction: column;
@@ -474,7 +522,7 @@
   height: 2px;
   flex-shrink: 0;
   border-radius: 1px;
-  background: #2d455d;
+  background: var(--pd-text-primary);
 }
 
 .pd-mobile-top__burger--close {
@@ -496,6 +544,8 @@
 .pd-mobile-top__burger--close .pd-mobile-top__burger-line:last-child {
   transform: rotate(-45deg);
 }
+
+/* ——— Mobile menu overlay (Figma 2638:4462) — copy + nav match desktop sidebar ——— */
 
 .pd-mobile-menu {
   position: fixed;
@@ -539,6 +589,7 @@
   flex-shrink: 0;
 }
 
+/* Liquid glass “back” control (Figma 2649:3524) */
 .pd-mobile-menu__back {
   position: relative;
   isolation: isolate;
@@ -568,6 +619,29 @@
     inset 0 -1px 1px rgba(147, 166, 186, 0.14);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.pd-mobile-menu__back::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 75%;
+  height: 120%;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 42%,
+    rgba(255, 255, 255, 0.08) 58%,
+    transparent 72%
+  );
+  transform: rotate(-14deg);
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 .pd-mobile-menu__back-label {
@@ -579,6 +653,29 @@
   line-height: var(--type-h8-line);
   letter-spacing: var(--type-h8-track);
   color: #2d455d;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
+.pd-mobile-menu__back:hover {
+  border-color: rgba(255, 255, 255, 0.62);
+  background:
+    linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.68) 0%,
+      rgba(255, 255, 255, 0.2) 40%,
+      rgba(248, 251, 254, 0.32) 100%
+    ),
+    rgba(248, 251, 254, 0.18);
+  box-shadow:
+    0 0 0 0.5px rgba(147, 166, 186, 0.22),
+    0 0 1px rgba(0, 0, 0, 0.4),
+    1px 3px 12px rgba(45, 69, 93, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.98),
+    inset 0 -1px 1px rgba(147, 166, 186, 0.12);
+}
+
+.pd-mobile-menu__back:hover::before {
+  opacity: 0.78;
 }
 
 .pd-mobile-menu__back:focus-visible {
@@ -611,10 +708,17 @@
   white-space: normal;
 }
 
+.pd-mobile-menu__social-dock {
+  width: 100%;
+  flex-shrink: 0;
+}
+
 .pd-mobile-menu .pd-sidebar__social {
   margin-top: 0;
   width: 100%;
 }
+
+/* ——— Mobile home (studio `/` landing): inline nav, no back button ——— */
 
 .pd-mobile-home {
   display: none;
@@ -757,7 +861,8 @@
   flex-direction: column;
   align-items: stretch;
   background: var(--pd-white);
-  padding: 60px 0 60px 60px;
+  padding: calc(60px * var(--site-space-scale)) 0 calc(60px * var(--site-space-scale))
+    calc(60px * var(--site-space-scale));
   box-sizing: border-box;
 }
 
@@ -792,21 +897,359 @@
   min-width: var(--pd-canvas-min-width);
   min-height: var(--pd-canvas-min-height);
   margin: 0 auto;
-  padding: 220px 24px 180px;
+  padding: calc(220px * var(--site-space-scale)) calc(24px * var(--site-space-scale))
+    calc(180px * var(--site-space-scale));
   position: relative;
   z-index: 1;
+}
+
+/* ——— Canvas tools: comments + temporary pen ink ——— */
+
+.pd-canvas-tools {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.pd-canvas-tools--intercept {
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.pd-canvas-tools--comment {
+  cursor: crosshair;
+}
+
+.pd-canvas-tools--pen {
+  cursor: crosshair;
+}
+
+.pd-canvas-tools--frame {
+  cursor: crosshair;
+}
+
+.pd-canvas-frame {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid var(--pd-blue-80);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+}
+
+.pd-canvas-frame--draft {
+  border-style: dashed;
+  background: rgba(119, 183, 248, 0.1);
+}
+
+.pd-canvas-ink {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.pd-canvas-ink--fading path {
+  animation: pd-canvas-ink-fade 420ms ease forwards;
+}
+
+@keyframes pd-canvas-ink-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.pd-canvas-comment-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--pd-white);
+  border-radius: 999px;
+  background: hsl(var(--pd-comment-hue, 145) 58% 52%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  color: var(--pd-white);
+  font-family: var(--font-parabolica-text);
+  font-size: 11px;
+  font-weight: var(--type-h7-bold-weight);
+  letter-spacing: var(--type-h7-bold-track);
+  line-height: 1;
+  pointer-events: auto;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.pd-canvas-comment-pin:hover {
+  transform: translate(-50%, calc(-100% - 2px)) scale(1.06);
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.14),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.pd-canvas-comment-pin:focus-visible {
+  outline: 2px solid var(--pd-blue-80);
+  outline-offset: 2px;
+}
+
+.pd-canvas-comment-pin__glyph {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.pd-canvas-comment-composer,
+.pd-canvas-comment-thread {
+  position: absolute;
+  transform: translate(-12px, calc(-100% - 12px));
+  z-index: 4;
+  pointer-events: auto;
+}
+
+.pd-canvas-comment-composer__card,
+.pd-canvas-comment-thread__card {
+  width: min(252px, calc(100vw - 48px));
+  border: 0.5px solid transparent;
+  border-radius: 16px;
+  background:
+    linear-gradient(var(--pd-white), var(--pd-white)) padding-box,
+    var(--pd-tab-border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: var(--pd-tab-shadow-default);
+  filter: drop-shadow(0 4px 14px rgba(45, 69, 93, 0.07));
+  padding: 10px 12px 12px;
+}
+
+.pd-canvas-comment-composer__header,
+.pd-canvas-comment-thread__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pd-canvas-comment-composer__meta,
+.pd-canvas-comment-thread__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-top: 1px;
+}
+
+.pd-canvas-comment-composer__avatar,
+.pd-canvas-comment-thread__avatar {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: hsl(var(--pd-comment-hue, 200) 58% 52%);
+  border: 2px solid var(--pd-white);
+  box-shadow: var(--pd-tab-icon-shadow);
+  color: var(--pd-white);
+  font-family: var(--font-parabolica-text);
+  font-size: 10px;
+  font-weight: var(--type-h7-bold-weight);
+  letter-spacing: var(--type-h7-bold-track);
+}
+
+.pd-canvas-comment-composer__author,
+.pd-canvas-comment-thread__author {
+  font-family: var(--font-parabolica-text);
+  font-size: var(--type-small-size);
+  font-weight: var(--type-h7-bold-weight);
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-h7-bold-track);
+  color: var(--pd-tab-text-active);
+}
+
+.pd-canvas-comment-composer__hint,
+.pd-canvas-comment-thread__time {
+  font-family: var(--type-font-body);
+  font-size: 12px;
+  font-weight: var(--type-small-weight);
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
+  color: var(--pd-text-secondary);
+}
+
+.pd-canvas-comment-composer__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pd-canvas-comment-composer__input {
+  width: 100%;
+  min-height: 68px;
+  resize: vertical;
+  border: 1px solid var(--pd-btn-secondary-stroke);
+  border-radius: 12px;
+  padding: 9px 11px;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-small-size);
+  font-weight: var(--type-small-weight);
+  line-height: var(--type-body-large-line);
+  letter-spacing: var(--type-small-track);
+  color: var(--pd-text-primary);
+  background: var(--pd-blue-10);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.pd-canvas-comment-composer__input::placeholder {
+  color: var(--pd-text-secondary);
+}
+
+.pd-canvas-comment-composer__input:focus {
+  outline: none;
+  border-color: var(--pd-blue-80);
+  background: var(--pd-white);
+}
+
+.pd-canvas-comment-composer__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.pd-canvas-comment-composer__cancel,
+.pd-canvas-comment-composer__post,
+.pd-canvas-comment-thread__delete,
+.pd-canvas-comment-thread__close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pd-canvas-comment-composer__cancel {
+  padding: 5px 10px;
+  border-radius: 100px;
+  font-family: var(--type-font-body);
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
+  color: var(--pd-text-secondary);
+}
+
+.pd-canvas-comment-composer__cancel:hover {
+  background: var(--pd-btn-secondary-fill);
+  color: var(--pd-text-primary);
+}
+
+.pd-canvas-comment-composer__post {
+  padding: 5px 14px 6px;
+  border-radius: 100px;
+  border: 1px solid var(--pd-btn-secondary-stroke);
+  background: var(--pd-blue-80);
+  font-family: var(--type-font-body);
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
+  color: var(--pd-white);
+}
+
+.pd-canvas-comment-composer__post:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.pd-canvas-comment-composer__post:not(:disabled):hover {
+  border-color: var(--pd-blue-80);
+  background: #5fa8f0;
+}
+
+.pd-canvas-comment-composer__post:focus-visible,
+.pd-canvas-comment-composer__cancel:focus-visible,
+.pd-canvas-comment-thread__close:focus-visible,
+.pd-canvas-comment-thread__delete:focus-visible {
+  outline: 2px solid var(--pd-blue-80);
+  outline-offset: 2px;
+}
+
+.pd-canvas-comment-thread__close {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: var(--pd-grey-90);
+  font-family: var(--type-font-body);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.pd-canvas-comment-thread__close:hover {
+  background: var(--pd-btn-secondary-fill);
+  color: var(--pd-text-primary);
+}
+
+.pd-canvas-comment-thread__body {
+  margin: 0;
+  font-family: var(--font-parabolica);
+  font-size: var(--type-small-size);
+  font-weight: var(--type-small-weight);
+  line-height: var(--type-body-large-line);
+  letter-spacing: var(--type-small-track);
+  color: var(--pd-text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.pd-canvas-comment-thread__delete {
+  margin-top: 10px;
+  padding: 0;
+  font-family: var(--type-font-body);
+  font-size: 12px;
+  line-height: var(--type-small-line);
+  letter-spacing: var(--type-small-track);
+  color: var(--pd-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pd-canvas-comment-thread__delete:hover {
+  color: var(--pd-text-primary);
 }
 
 .pd-toolbar-dock {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 45px;
+  bottom: calc(45px * var(--site-space-scale));
   display: flex;
   justify-content: center;
   align-items: flex-end;
   min-width: 0;
-  padding: 8px;
+  padding: calc(8px * var(--site-space-scale));
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 3;
@@ -846,6 +1289,106 @@
   width: 100%;
   min-width: 0;
   max-width: 408px;
+}
+
+/* Design Engineering homepage — Figma 2641:2491 (label → image → title strip) */
+.pd-grid--product .pd-card--gallery {
+  gap: 6px;
+  border-radius: 0;
+}
+
+.pd-card--gallery .pd-card__stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Inset stroke must sit above image/title paint (box-shadow on the stack paints underneath children). */
+.pd-card--gallery .pd-card__stack::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.15s ease;
+}
+
+.pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 244px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.pd-grid--product .pd-card--gallery .pd-card__cover--gallery {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  pointer-events: none;
+}
+
+.pd-grid--product .pd-card--gallery .pd-card__media--stush,
+.pd-grid--product .pd-card--gallery .pd-card__media--qux,
+.pd-grid--product .pd-card--gallery .pd-card__media--stumbl {
+  border: 0;
+  background: var(--pd-grey-50, #d3d9df);
+}
+
+.pd-card--gallery .pd-card__title-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  background: var(--pd-white);
+  flex-shrink: 0;
+}
+
+.pd-card--gallery .pd-card__title--strip {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 18px;
+  line-height: 16px;
+  letter-spacing: -0.36px;
+  position: relative;
+  z-index: 1;
+}
+
+.pd-card--gallery .pd-card__title--strip-stush {
+  font-family: 'GT Pressura Bold', 'DM Sans', 'Parabolica', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #2e3133;
+}
+
+.pd-card--gallery .pd-card__title--strip-qux {
+  font-family: 'DM Sans', 'Parabolica', sans-serif;
+  font-weight: 700;
+  color: #ff7a4e;
+  letter-spacing: -0.36px;
+  text-transform: none;
+}
+
+.pd-card--gallery .pd-card__title--strip-stumbl {
+  font-family: var(--font-parabolica-text);
+  font-weight: 500;
+  letter-spacing: -0.72px;
+  color: #000;
 }
 
 .pd-card__eyebrow {
@@ -972,6 +1515,20 @@
   box-shadow: none;
 }
 
+/* Gallery cards: blue inset stroke on image and on white title strip only (not eyebrow) */
+.pd-grid--product .pd-card--gallery.pd-project-item:hover .pd-card__media::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:hover .pd-card__media--gallery::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:focus-visible .pd-card__media::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:focus-visible .pd-card__media--gallery::after {
+  border-color: transparent;
+}
+
+/* One stroke around image + title strip only (not the eyebrow) */
+.pd-grid--product .pd-card--gallery.pd-project-item:hover .pd-card__stack::after,
+.pd-grid--product .pd-card--gallery.pd-project-item:focus-visible .pd-card__stack::after {
+  border-color: var(--pd-blue-80);
+}
+
 /* Community project cards — Figma Frame 170 (grey-50 fill, tighter title line-height) */
 .pd-card__media--community {
   background: var(--pd-grey-50, #d3d9df);
@@ -1096,6 +1653,10 @@
 /* ——— Responsive: sidebar stacks; canvas stays scrollable; smaller “infinite” min size ——— */
 
 @media (max-width: 1100px) {
+  .pd-page {
+    border: 0;
+  }
+
   .pd-mobile-top {
     display: flex;
   }
@@ -1132,8 +1693,8 @@
     min-height: 100dvh;
   }
 
-  .pd-case-study-body {
-    padding: 24px 0 24px 24px;
+  .pd-case-study-body:not(:has(> .mstush)) {
+    padding: calc(16px * var(--site-space-scale));
   }
 
   .pd-case-study-body:has(> .mstush) {
@@ -1141,7 +1702,8 @@
   }
 
   .pd-canvas__document {
-    padding: 80px 20px 140px;
+    padding: calc(80px * var(--site-space-scale)) calc(20px * var(--site-space-scale))
+      calc(140px * var(--site-space-scale));
   }
 
   .pd-toolbar-dock {
@@ -1158,6 +1720,16 @@
     column-gap: 20px;
   }
 
+  /*
+   * Keep initial mobile viewport centered on the project cards while preserving
+   * a horizontally scrollable canvas.
+   */
+  .pd-page[data-route='/design-engineering'] .pd-canvas__document {
+    padding-left: max(20px, calc(50vw - 140px));
+    padding-right: max(20px, calc(50vw - 140px));
+  }
+
+  /* Studio home (`/`, `/name-company`): nav only — no project canvas */
   .app-root:has(> .pd-page[data-mobile-home='true']) {
     min-height: 100dvh;
   }
@@ -1212,6 +1784,45 @@
   .pd-page[data-mobile-home='true'] .pd-mobile-home__social-dock {
     margin-top: auto;
   }
+
+  /* Design Engineering (`/design-engineering`): smaller project cards on mobile */
+  .pd-page[data-route='/design-engineering'] {
+    --pd-canvas-min-width: 100%;
+    --pd-canvas-min-height: auto;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-canvas__document {
+    padding: 24px max(16px, calc(50vw - 140px)) 120px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-grid--product {
+    max-width: 280px;
+    column-gap: 16px;
+    row-gap: 16px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-card {
+    max-width: 280px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+    height: 168px;
+    aspect-ratio: auto;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-card--gallery .pd-card__title--strip {
+    font-size: 15px;
+    line-height: 14px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-card__eyebrow {
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-toolbar-dock {
+    bottom: 16px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1219,5 +1830,16 @@
     height: auto;
     aspect-ratio: 408 / 309;
     max-height: none;
+  }
+
+  .pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+    height: auto;
+    aspect-ratio: 408 / 244;
+    max-height: none;
+  }
+
+  .pd-page[data-route='/design-engineering'] .pd-grid--product .pd-card--gallery .pd-card__media--gallery {
+    height: 168px;
+    aspect-ratio: auto;
   }
 }

@@ -5,37 +5,78 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      ;(function (l) {
+        if (l.search[1] !== '/') return
+        var decoded = l.search
+          .slice(1)
+          .split('&')
+          .map(function (s) {
+            return s.replace(/~and~/g, '&')
+          })
+          .join('?')
+        window.history.replaceState(null, '', decoded)
+      })(window.location)
+    </script>
     <title>Harry Yang - designing + building</title>
     <meta
       name="description"
-      content="portfolio of my life story, product design + engineering, community leadership and marketing campaigns"
+      content="Portfolio of Harry Yang across product design, engineering, community leadership, and marketing campaigns."
     />
     <meta name="theme-color" content="#f8fbfe" />
     <link rel="canonical" href="https://harryyang.ca/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Harry Yang - designing + building" />
+    <meta property="og:site_name" content="Harry Yang" />
     <meta
       property="og:description"
-      content="portfolio of my life story, product design + engineering, community leadership and marketing campaigns"
+      content="Portfolio of Harry Yang across product design, engineering, community leadership, and marketing campaigns."
     />
     <meta property="og:url" content="https://harryyang.ca/" />
     <meta property="og:image" content="https://harryyang.ca/social-preview.png" />
+    <meta property="og:image:alt" content="Harry Yang portfolio preview" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Harry Yang - designing + building" />
     <meta
       name="twitter:description"
-      content="portfolio of my life story, product design + engineering, community leadership and marketing campaigns"
+      content="Portfolio of Harry Yang across product design, engineering, community leadership, and marketing campaigns."
     />
     <meta name="twitter:image" content="https://harryyang.ca/social-preview.png" />
+    <meta name="twitter:image:alt" content="Harry Yang portfolio preview" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Hedvig+Letters+Sans:wght@400&family=Reenie+Beanie&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DotGothic16&family=Hedvig+Letters+Sans:wght@400&family=Reenie+Beanie&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://use.typekit.net/zky0gmg.css" />
+    <script>
+      ;(function (d) {
+        var config = { kitId: 'zky0gmg', scriptTimeout: 3000, async: true },
+          h = d.documentElement,
+          t = setTimeout(function () {
+            h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive'
+          }, config.scriptTimeout),
+          tk = d.createElement('script'),
+          f = false,
+          s = d.getElementsByTagName('script')[0]
+        h.className += ' wf-loading'
+        tk.src = 'https://use.typekit.net/' + config.kitId + '.js'
+        tk.async = true
+        tk.onload = tk.onreadystatechange = function () {
+          var a = this.readyState
+          if (f || (a && a != 'complete' && a != 'loaded')) return
+          f = true
+          clearTimeout(t)
+          try {
+            Typekit.load(config)
+          } catch (e) {}
+        }
+        s.parentNode.insertBefore(tk, s)
+      })(document)
+    </script>
   </head>
   <body>
     <div id="root"></div>

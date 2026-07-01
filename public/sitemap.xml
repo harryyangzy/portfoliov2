@@ -4,10 +4,28 @@
     <loc>https://harryyang.ca/</loc>
   </url>
   <url>
+    <loc>https://harryyang.ca/design-engineering</loc>
+  </url>
+  <url>
     <loc>https://harryyang.ca/community</loc>
   </url>
   <url>
     <loc>https://harryyang.ca/marketing</loc>
+  </url>
+  <url>
+    <loc>https://harryyang.ca/marketing/stush</loc>
+  </url>
+  <url>
+    <loc>https://harryyang.ca/marketing/yee-hong</loc>
+  </url>
+  <url>
+    <loc>https://harryyang.ca/marketing/tsac</loc>
+  </url>
+  <url>
+    <loc>https://harryyang.ca/marketing/csa</loc>
+  </url>
+  <url>
+    <loc>https://harryyang.ca/marketing/other</loc>
   </url>
   <url>
     <loc>https://harryyang.ca/work/stush</loc>
@@ -16,6 +34,6 @@
     <loc>https://harryyang.ca/work/coeur</loc>
   </url>
   <url>
-    <loc>https://harryyang.ca/work/qux</loc>
+    <loc>https://harryyang.ca/work/stumbl</loc>
   </url>
 </urlset>

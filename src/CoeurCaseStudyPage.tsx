@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
 import { coeurMedia } from './assets/design-engineering/coeur/media'
@@ -6,87 +6,66 @@ import './stushCaseStudy.css'
 import './coeurCaseStudy.css'
 
 export default function CoeurCaseStudyPage() {
-  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
-  const [heroIsStatic, setHeroIsStatic] = useState(false)
-
-  const playHeroVideo = () => {
-    const video = heroVideoRef.current
-    if (!video) return
-    video.currentTime = 0
-    void video.play().catch(() => {})
-  }
-
-  const resetHeroVideo = () => {
-    const video = heroVideoRef.current
-    if (!video) return
-    video.pause()
-    video.currentTime = 0
-  }
-
-  const onHeroVideoError = () => {
-    setHeroIsStatic(true)
-  }
+  const [useHeroFallback, setUseHeroFallback] = useState(false)
 
   return (
     <PortfolioShell pageName="Coeur — case study" shellVariant="case-study">
       <div className="stush coeur">
         <div className="stush__panel">
-          <Link className="stush__back" to="/">
+          <Link className="stush__back" to="/design-engineering">
             ← Back
           </Link>
 
           <header className="stush-hero">
-            <div className="stush-hero__copy">
-              <div className="coeur-hero__text">
-                <h1 className="stush-hero__title">Capturing Moments While Living in Them</h1>
-                <p className="stush-hero__meta-top">Winter 2026</p>
-              </div>
-              <div className="stush-hero__meta-row">
-                <div className="stush-hero__meta-col">
-                  <p className="stush-hero__meta-label">Team</p>
-                  <div>
-                    <p className="stush-hero__meta-val">Designer</p>
-                    <p className="stush-hero__meta-sub">Designer (3)</p>
-                  </div>
+            <div className="stush-hero__band">
+              <div className="stush-hero__copy">
+                <div className="coeur-hero__text">
+                  <h1 className="stush-hero__title">Capturing Moments While Living in Them</h1>
+                  <p className="stush-hero__meta-top">Winter 2026</p>
                 </div>
-                <div className="stush-hero__meta-col">
-                  <p className="stush-hero__meta-label">Status</p>
-                  <div>
-                    <p className="stush-hero__meta-val">First Place</p>
-                    <p className="stush-hero__meta-sub">Demoed</p>
+                <div className="stush-hero__meta-row">
+                  <div className="stush-hero__meta-col">
+                    <p className="stush-hero__meta-label">Team</p>
+                    <div>
+                      <p className="stush-hero__meta-val">Designer</p>
+                      <p className="stush-hero__meta-sub">Designer (3)</p>
+                    </div>
+                  </div>
+                  <div className="stush-hero__meta-col">
+                    <p className="stush-hero__meta-label">Status</p>
+                    <div>
+                      <p className="stush-hero__meta-val">First Place</p>
+                      <p className="stush-hero__meta-sub">Demoed</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              className="stush-hero__img-wrap"
-              onMouseEnter={playHeroVideo}
-              onMouseLeave={resetHeroVideo}
-              onFocus={playHeroVideo}
-              onBlur={resetHeroVideo}
-            >
-              {heroIsStatic ? (
-                <img
-                  src={coeurMedia.hero}
-                  className="stush-hero__img"
-                  alt=""
-                  loading="eager"
-                  decoding="async"
-                />
-              ) : (
-                <video
-                  ref={heroVideoRef}
-                  className="stush-hero__img"
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster={coeurMedia.poster}
-                  onError={onHeroVideoError}
-                >
-                  <source src={coeurMedia.heroVideo} type="video/webm" />
-                </video>
-              )}
+            <div className="stush-hero__media-shell">
+              <div className="stush-hero__img-wrap">
+                {useHeroFallback ? (
+                  <img
+                    src={coeurMedia.hero}
+                    className="stush-hero__img"
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                  />
+                ) : (
+                  <video
+                    className="stush-hero__img"
+                    muted
+                    loop
+                    autoPlay
+                    playsInline
+                    preload="metadata"
+                    poster={coeurMedia.poster}
+                    onError={() => setUseHeroFallback(true)}
+                  >
+                    <source src={coeurMedia.heroVideo} type="video/webm" />
+                  </video>
+                )}
+              </div>
             </div>
           </header>
 
@@ -137,7 +116,7 @@ export default function CoeurCaseStudyPage() {
             </div>
 
             <div className="stush-band">
-              <div className="stush-split">
+              <div className="stush-split coeur-user-research">
                 <div className="stush-split__media">
                   <img
                     className="stush-img-rounded stush-img-rounded--h418"
@@ -182,7 +161,7 @@ export default function CoeurCaseStudyPage() {
             </div>
 
             <div className="stush-band">
-              <div className="stush-split">
+              <div className="stush-split coeur-competitive-split">
                 <div className="stush-card stush-split__text stush-card--competitive stush-card--pad-sm stush-card--top-bottom">
                   <p className="stush-kicker">Competitive analysis</p>
                   <div className="stush-card__bottom">
@@ -230,8 +209,10 @@ export default function CoeurCaseStudyPage() {
                   </div>
                 </div>
                 <div className="stush-card stush-split__text coeur-insp__copy">
-                  <p className="stush-kicker">Inspiration</p>
-                  <h2 className="stush-h2 coeur-card-title">How do we remember?</h2>
+                  <div className="coeur-insp__header">
+                    <p className="stush-kicker">Inspiration</p>
+                    <h2 className="stush-h2 coeur-card-title">How do we remember?</h2>
+                  </div>
                   <div className="stush-prose">
                     <p className="stush-subh">Nostalgia as Orbs</p>
                     <p>

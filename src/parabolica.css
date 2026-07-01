@@ -1,4 +1,7 @@
 :root {
-  --font-parabolica: 'Parabolica', 'DM Sans', system-ui, sans-serif;
-  --font-parabolica-text: 'Parabolica Text', 'Parabolica', 'DM Sans', system-ui, sans-serif;
+  /* Match Adobe Fonts kit zky0gmg css_names */
+  --font-parabolica: parabolica, 'Parabolica', 'DM Sans', system-ui, sans-serif;
+  --font-parabolica-text: parabolica-text, 'Parabolica Text', parabolica, 'DM Sans', system-ui,
+    sans-serif;
+  --font-dottonoji: dottonoji, 'Dottonoji', 'DotGothic16', 'DM Mono', ui-monospace, monospace;
 }
