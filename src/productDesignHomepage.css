@@ -1240,6 +1240,86 @@
   color: var(--pd-text-primary);
 }
 
+/* ——— Canvas tools: text ——— */
+
+.pd-canvas-tools--text {
+  cursor: text;
+}
+
+.pd-canvas-text,
+.pd-canvas-text-editor__input {
+  font-family: var(--font-parabolica);
+  font-size: 17px;
+  font-weight: var(--type-small-weight);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--pd-tab-text-active);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.pd-canvas-text {
+  position: absolute;
+  margin: 0;
+  padding: 2px 3px;
+  max-width: min(440px, calc(100vw - 48px));
+  border: 1.5px solid transparent;
+  border-radius: 4px;
+  pointer-events: none;
+  cursor: text;
+}
+
+.pd-canvas-tools--text .pd-canvas-text--interactive {
+  pointer-events: auto;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pd-canvas-tools--text .pd-canvas-text--interactive:hover {
+  border-color: rgba(119, 183, 248, 0.55);
+}
+
+.pd-canvas-text--interactive:focus-visible {
+  outline: none;
+  border-color: var(--pd-blue-80);
+  box-shadow: 0 0 0 2px rgba(119, 183, 248, 0.25);
+}
+
+.pd-canvas-text-editor {
+  position: absolute;
+  z-index: 4;
+  pointer-events: auto;
+}
+
+.pd-canvas-text-editor__input {
+  display: block;
+  box-sizing: content-box;
+  margin: 0;
+  padding: 2px 3px;
+  min-width: 8px;
+  max-width: min(440px, calc(100vw - 48px));
+  field-sizing: content;
+  resize: none;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  caret-color: var(--pd-blue-80);
+  transition: border-color 0.12s ease;
+}
+
+/* Only once the user starts typing: outer stroke, no fill. */
+.pd-canvas-text-editor__input--typing {
+  border-color: var(--pd-blue-80);
+}
+
+.pd-canvas-text-editor__input::placeholder {
+  color: transparent;
+}
+
+.pd-canvas-text-editor__input:focus {
+  outline: none;
+}
+
 .pd-toolbar-dock {
   position: absolute;
   left: 0;

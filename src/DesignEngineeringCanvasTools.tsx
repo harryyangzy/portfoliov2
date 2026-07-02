@@ -33,6 +33,24 @@ type CanvasFrame = {
   height: number
 }
 
+type CanvasTextNode = {
+  id: string
+  x: number
+  y: number
+  text: string
+  createdAt: number
+}
+
+type TextDraft = {
+  /** null while placing a brand-new node; set when re-editing an existing one. */
+  id: string | null
+  /** Fresh per opened draft so the editor remounts and reclaims focus. */
+  key: string
+  x: number
+  y: number
+  value: string
+}
+
 type FrameDraft = {
   start: Point
   current: Point
@@ -40,6 +58,7 @@ type FrameDraft = {
 
 const COMMENTS_STORAGE_KEY = 'hy-de-canvas-comments-v3'
 const FRAMES_STORAGE_KEY = 'hy-de-canvas-frames-v3'
+const TEXTS_STORAGE_KEY = 'hy-de-canvas-texts-v1'
 const LEGACY_STORAGE_KEYS = [
   'hy-de-canvas-comments',
   'hy-de-canvas-frames',
@@ -111,6 +130,25 @@ function loadFrames(): CanvasFrame[] {
 function saveFrames(frames: CanvasFrame[]) {
   try {
     sessionStorage.setItem(FRAMES_STORAGE_KEY, JSON.stringify(frames))
+  } catch {
+    /* ignore quota */
+  }
+}
+
+function loadTexts(): CanvasTextNode[] {
+  try {
+    const raw = sessionStorage.getItem(TEXTS_STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as CanvasTextNode[]
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+function saveTexts(texts: CanvasTextNode[]) {
+  try {
+    sessionStorage.setItem(TEXTS_STORAGE_KEY, JSON.stringify(texts))
   } catch {
     /* ignore quota */
   }
@@ -374,6 +412,100 @@ function CommentThread({
   )
 }
 
+function CanvasTextLabel({
+  node,
+  interactive,
+  onEdit,
+}: {
+  node: CanvasTextNode
+  interactive: boolean
+  onEdit: (node: CanvasTextNode) => void
+}) {
+  return (
+    <div
+      className={`pd-canvas-text${interactive ? ' pd-canvas-text--interactive' : ''}`}
+      style={{ left: node.x, top: node.y }}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={(event) => {
+        if (!interactive) return
+        event.stopPropagation()
+        onEdit(node)
+      }}
+      onPointerDown={(event) => {
+        if (interactive) event.stopPropagation()
+      }}
+      onKeyDown={(event) => {
+        if (!interactive) return
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onEdit(node)
+        }
+      }}
+    >
+      {node.text}
+    </div>
+  )
+}
+
+function CanvasTextEditor({
+  draft,
+  onChange,
+  onCommit,
+}: {
+  draft: TextDraft
+  onChange: (value: string) => void
+  onCommit: () => void
+}) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // The editor is remounted per draft (via `key`), so mount-time focus is enough.
+  useEffect(() => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+    textarea.focus()
+    const end = textarea.value.length
+    textarea.setSelectionRange(end, end)
+    // Fallback auto-size for browsers without `field-sizing: content`.
+    textarea.style.height = 'auto'
+    textarea.style.height = `${textarea.scrollHeight}px`
+  }, [])
+
+  return (
+    <div
+      className="pd-canvas-text-editor"
+      style={{ left: draft.x, top: draft.y }}
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
+    >
+      <textarea
+        ref={textareaRef}
+        className={`pd-canvas-text-editor__input${
+          draft.value.length > 0 ? ' pd-canvas-text-editor__input--typing' : ''
+        }`}
+        rows={1}
+        placeholder="Text"
+        value={draft.value}
+        aria-label="Canvas text"
+        spellCheck={false}
+        onChange={(event) => {
+          onChange(event.target.value)
+          const textarea = event.currentTarget
+          textarea.style.height = 'auto'
+          textarea.style.height = `${textarea.scrollHeight}px`
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault()
+            event.stopPropagation()
+            onCommit()
+          }
+        }}
+      />
+    </div>
+  )
+}
+
 export default function DesignEngineeringCanvasTools({
   activeTool,
 }: {
@@ -390,11 +522,14 @@ export default function DesignEngineeringCanvasTools({
   const [inkFading, setInkFading] = useState(false)
   const [frames, setFrames] = useState<CanvasFrame[]>(() => loadFrames())
   const [frameDraft, setFrameDraft] = useState<FrameDraft | null>(null)
+  const [textNodes, setTextNodes] = useState<CanvasTextNode[]>(() => loadTexts())
+  const [textDraft, setTextDraft] = useState<TextDraft | null>(null)
 
   const isCommentTool = activeTool === 'comment'
   const isPenTool = activeTool === 'pen'
   const isFrameTool = activeTool === 'frame'
-  const interceptPointer = isCommentTool || isPenTool || isFrameTool
+  const isTextTool = activeTool === 'text'
+  const interceptPointer = isCommentTool || isPenTool || isFrameTool || isTextTool
 
   useEffect(() => {
     saveComments(comments)
@@ -403,6 +538,28 @@ export default function DesignEngineeringCanvasTools({
   useEffect(() => {
     saveFrames(frames)
   }, [frames])
+
+  useEffect(() => {
+    saveTexts(textNodes)
+  }, [textNodes])
+
+  const commitTextDraft = useCallback((pending: TextDraft | null) => {
+    if (!pending) return
+    const value = pending.value.replace(/\s+$/, '')
+    setTextNodes((prev) => {
+      if (pending.id) {
+        if (!value) return prev.filter((node) => node.id !== pending.id)
+        return prev.map((node) =>
+          node.id === pending.id ? { ...node, text: value } : node,
+        )
+      }
+      if (!value) return prev
+      return [
+        ...prev,
+        { id: createId(), x: pending.x, y: pending.y, text: value, createdAt: Date.now() },
+      ]
+    })
+  }, [])
 
   useEffect(() => {
     const previousTool = previousToolRef.current
@@ -419,6 +576,26 @@ export default function DesignEngineeringCanvasTools({
 
     return () => window.clearTimeout(timer)
   }, [activeTool, activeStrokeId, strokes.length])
+
+  useEffect(() => {
+    if (isTextTool || !textDraft) return
+    commitTextDraft(textDraft)
+    setTextDraft(null)
+  }, [isTextTool, textDraft, commitTextDraft])
+
+  useEffect(() => {
+    if (!textDraft) return
+    const onPointerDown = (event: PointerEvent) => {
+      const layer = layerRef.current
+      if (layer && layer.contains(event.target as Node)) return
+      setTextDraft((prev) => {
+        commitTextDraft(prev)
+        return null
+      })
+    }
+    window.addEventListener('pointerdown', onPointerDown)
+    return () => window.removeEventListener('pointerdown', onPointerDown)
+  }, [textDraft, commitTextDraft])
 
   useEffect(() => {
     if (!openCommentId || isCommentTool) return
@@ -477,6 +654,17 @@ export default function DesignEngineeringCanvasTools({
       event.preventDefault()
       setFrameDraft({ start: point, current: point })
       event.currentTarget.setPointerCapture(event.pointerId)
+      return
+    }
+
+    if (isTextTool) {
+      const point = localPointFromEvent(event)
+      if (!point) return
+      event.preventDefault()
+      setTextDraft((prev) => {
+        commitTextDraft(prev)
+        return { id: null, key: createId(), x: point.x, y: point.y, value: '' }
+      })
       return
     }
 
@@ -552,6 +740,7 @@ export default function DesignEngineeringCanvasTools({
     isCommentTool ? 'pd-canvas-tools--comment' : '',
     isPenTool ? 'pd-canvas-tools--pen' : '',
     isFrameTool ? 'pd-canvas-tools--frame' : '',
+    isTextTool ? 'pd-canvas-tools--text' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -561,7 +750,11 @@ export default function DesignEngineeringCanvasTools({
       ref={layerRef}
       className={layerClass}
       aria-hidden={
-        !interceptPointer && comments.length === 0 && strokes.length === 0 && frames.length === 0
+        !interceptPointer &&
+        comments.length === 0 &&
+        strokes.length === 0 &&
+        frames.length === 0 &&
+        textNodes.length === 0
           ? true
           : undefined
       }
@@ -594,6 +787,38 @@ export default function DesignEngineeringCanvasTools({
       ))}
 
       {draftFrame ? <CanvasFrameRect frame={draftFrame} draft /> : null}
+
+      {textNodes.map((node) =>
+        textDraft?.id === node.id ? null : (
+          <CanvasTextLabel
+            key={node.id}
+            node={node}
+            interactive={isTextTool}
+            onEdit={(target) => {
+              setTextDraft((prev) => {
+                commitTextDraft(prev)
+                return { id: target.id, key: createId(), x: target.x, y: target.y, value: target.text }
+              })
+            }}
+          />
+        ),
+      )}
+
+      {textDraft ? (
+        <CanvasTextEditor
+          key={textDraft.key}
+          draft={textDraft}
+          onChange={(value) =>
+            setTextDraft((prev) => (prev ? { ...prev, value } : prev))
+          }
+          onCommit={() =>
+            setTextDraft((prev) => {
+              commitTextDraft(prev)
+              return null
+            })
+          }
+        />
+      ) : null}
 
       {comments.map((comment, index) =>
         openCommentId === comment.id ? null : (
