@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
+import { isSafari } from './browser'
 import { stushMedia } from './assets/design-engineering/stush/media'
 import './stushCaseStudy.css'
 
@@ -61,7 +62,11 @@ function StushHero() {
               poster={stushMedia.heroVideoPreview}
               onError={() => setUseFallback(true)}
             >
-              <source src={stushMedia.heroVideo} type="video/webm" />
+              {isSafari ? (
+                <source src={stushMedia.heroVideoHevc} type={'video/mp4; codecs="hvc1"'} />
+              ) : (
+                <source src={stushMedia.heroVideo} type="video/webm" />
+              )}
             </video>
           )}
         </div>

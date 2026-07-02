@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
+import { isSafari } from './browser'
 import { coeurMedia } from './assets/design-engineering/coeur/media'
 import './stushCaseStudy.css'
 import './coeurCaseStudy.css'
@@ -62,7 +63,11 @@ export default function CoeurCaseStudyPage() {
                     poster={coeurMedia.poster}
                     onError={() => setUseHeroFallback(true)}
                   >
-                    <source src={coeurMedia.heroVideo} type="video/webm" />
+                    {isSafari ? (
+                      <source src={coeurMedia.heroVideoHevc} type={'video/mp4; codecs="hvc1"'} />
+                    ) : (
+                      <source src={coeurMedia.heroVideo} type="video/webm" />
+                    )}
                   </video>
                 )}
               </div>
@@ -293,13 +298,18 @@ export default function CoeurCaseStudyPage() {
                 </div>
                 <div className="coeur-feature">
                   <div className="coeur-feature__crop coeur-feature__crop--capture">
-                    <img
+                    <video
                       className="coeur-feature__media"
-                      src={coeurMedia.featureCaptureWebp}
-                      loading="lazy"
-                      decoding="async"
+                      muted
+                      loop
+                      autoPlay
+                      playsInline
+                      preload="metadata"
                       aria-label="Capture flow on device"
-                    />
+                    >
+                      <source src={coeurMedia.captureFlowMp4} type="video/mp4" />
+                      <source src={coeurMedia.captureFlowWebm} type="video/webm" />
+                    </video>
                   </div>
                   <div className="coeur-feature__body">
                     <h2 className="stush-h2 coeur-card-title">

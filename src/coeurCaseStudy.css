@@ -396,7 +396,8 @@
   box-sizing: border-box;
 }
 
-.coeur img.coeur-feature__media {
+.coeur img.coeur-feature__media,
+.coeur video.coeur-feature__media {
   background: #f0f0f0;
 }
 

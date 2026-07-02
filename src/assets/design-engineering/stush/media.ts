@@ -3,7 +3,10 @@
  * Folder `figma/` holds PNGs used on the page.
  */
 import hero from './figma/figma-39-hero.png'
+/** VP9 hero with alpha (transparent bg) — Chrome/Firefox */
 import heroVideo from '../stush assets/figma-50-design-system.webm'
+/** HEVC (hvc1) hero with alpha — Safari, which can't play VP9 alpha */
+import heroVideoHevc from '../stush assets/figma-50-design-system-alpha.mp4'
 /** Still from `stush assets` — poster + Safari / no-WebM fallback (matches design-system webm) */
 import heroVideoPreview from '../stush assets/pattiesmadebetter0.png'
 import problemSite from './figma/figma-48-problem.png'
@@ -22,6 +25,7 @@ export const stushMedia = {
   /** PNG poster + static fallback when `heroVideo` (WebM) cannot play (e.g. Safari) */
   heroVideoPreview,
   heroVideo,
+  heroVideoHevc,
   problemSite,
   solutionFood,
   /** Initial observation — single bento layout image */
