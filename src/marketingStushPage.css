@@ -1,9 +1,20 @@
+/* Match Campaigns portfolio chrome: white body + visible border curve */
 .pd-page[data-name='Campaigns / STUSH'] .pd-case-study-body,
 .pd-page[data-name='Campaigns / Yee Hong Foundation'] .pd-case-study-body,
 .pd-page[data-name='Campaigns / Trudeau Student Activities Council'] .pd-case-study-body,
 .pd-page[data-name="Campaigns / Chinese Students’ Association at Western"] .pd-case-study-body,
 .pd-page[data-name='Campaigns / For the Love of Designing'] .pd-case-study-body {
+  background: var(--pd-white, #fff);
   overflow: hidden;
+}
+
+/* pd-main overflow:hidden clips the border’s AA on the left arc */
+.pd-page[data-name='Campaigns / STUSH'] .pd-main.pd-main--case-study,
+.pd-page[data-name='Campaigns / Yee Hong Foundation'] .pd-main.pd-main--case-study,
+.pd-page[data-name='Campaigns / Trudeau Student Activities Council'] .pd-main.pd-main--case-study,
+.pd-page[data-name="Campaigns / Chinese Students’ Association at Western"] .pd-main.pd-main--case-study,
+.pd-page[data-name='Campaigns / For the Love of Designing'] .pd-main.pd-main--case-study {
+  overflow: visible;
 }
 
 .mstush {
@@ -14,7 +25,7 @@
   min-height: 0;
   box-sizing: border-box;
   background: #fff;
-  border: 0;
+  border: 1px solid #93a6ba;
   border-radius: 60px 0 0 60px;
   overflow: auto;
 }
@@ -219,6 +230,8 @@
 @media (max-width: 1100px) {
   .mstush {
     border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 
   .mstush__panel {
