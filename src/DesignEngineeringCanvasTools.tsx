@@ -56,6 +56,11 @@ type FrameDraft = {
   current: Point
 }
 
+type LineDraft = {
+  start: Point
+  current: Point
+}
+
 const COMMENTS_STORAGE_KEY = 'hy-de-canvas-comments-v3'
 const FRAMES_STORAGE_KEY = 'hy-de-canvas-frames-v3'
 const TEXTS_STORAGE_KEY = 'hy-de-canvas-texts-v1'
@@ -69,6 +74,7 @@ const GUEST_NAME_KEY = 'hy-de-canvas-pizza-ingredient'
 const INK_COLOR = 'rgba(13, 153, 255, 0.72)'
 const INK_WIDTH = 3.5
 const FRAME_MIN_SIZE = 6
+const LINE_MIN_LENGTH = 4
 
 const GUEST_NAMES = [
   'Tomato Sauce',
@@ -522,14 +528,16 @@ export default function DesignEngineeringCanvasTools({
   const [inkFading, setInkFading] = useState(false)
   const [frames, setFrames] = useState<CanvasFrame[]>(() => loadFrames())
   const [frameDraft, setFrameDraft] = useState<FrameDraft | null>(null)
+  const [lineDraft, setLineDraft] = useState<LineDraft | null>(null)
   const [textNodes, setTextNodes] = useState<CanvasTextNode[]>(() => loadTexts())
   const [textDraft, setTextDraft] = useState<TextDraft | null>(null)
 
   const isCommentTool = activeTool === 'comment'
   const isPenTool = activeTool === 'pen'
+  const isLineTool = activeTool === 'line'
   const isFrameTool = activeTool === 'frame'
   const isTextTool = activeTool === 'text'
-  const interceptPointer = isCommentTool || isPenTool || isFrameTool || isTextTool
+  const interceptPointer = isCommentTool || isPenTool || isLineTool || isFrameTool || isTextTool
 
   useEffect(() => {
     saveComments(comments)
@@ -564,9 +572,12 @@ export default function DesignEngineeringCanvasTools({
   useEffect(() => {
     const previousTool = previousToolRef.current
     previousToolRef.current = activeTool
-    if (previousTool !== 'pen' || activeTool === 'pen') return
-    if (strokes.length === 0 && !activeStrokeId) return
+    const wasInk = previousTool === 'pen' || previousTool === 'line'
+    const isInk = activeTool === 'pen' || activeTool === 'line'
+    if (!wasInk || isInk) return
+    if (strokes.length === 0 && !activeStrokeId && !lineDraft) return
 
+    setLineDraft(null)
     setInkFading(true)
     const timer = window.setTimeout(() => {
       setStrokes([])
@@ -575,7 +586,7 @@ export default function DesignEngineeringCanvasTools({
     }, 420)
 
     return () => window.clearTimeout(timer)
-  }, [activeTool, activeStrokeId, strokes.length])
+  }, [activeTool, activeStrokeId, strokes.length, lineDraft])
 
   useEffect(() => {
     if (isTextTool || !textDraft) return
@@ -612,17 +623,18 @@ export default function DesignEngineeringCanvasTools({
   }, [openCommentId, isCommentTool])
 
   useEffect(() => {
-    if (!draft && !openCommentId && !frameDraft) return
+    if (!draft && !openCommentId && !frameDraft && !lineDraft) return
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setDraft(null)
         setOpenCommentId(null)
         setFrameDraft(null)
+        setLineDraft(null)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [draft, openCommentId, frameDraft])
+  }, [draft, openCommentId, frameDraft, lineDraft])
 
   const localPointFromEvent = useCallback((event: React.PointerEvent<HTMLElement>) => {
     const layer = layerRef.current
@@ -644,6 +656,15 @@ export default function DesignEngineeringCanvasTools({
       const strokeId = createId()
       setActiveStrokeId(strokeId)
       setStrokes((prev) => [...prev, { id: strokeId, points: [point] }])
+      event.currentTarget.setPointerCapture(event.pointerId)
+      return
+    }
+
+    if (isLineTool) {
+      const point = localPointFromEvent(event)
+      if (!point) return
+      event.preventDefault()
+      setLineDraft({ start: point, current: point })
       event.currentTarget.setPointerCapture(event.pointerId)
       return
     }
@@ -678,6 +699,13 @@ export default function DesignEngineeringCanvasTools({
   }
 
   const handleLayerPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (isLineTool && lineDraft) {
+      const point = localPointFromEvent(event)
+      if (!point) return
+      setLineDraft((prev) => (prev ? { ...prev, current: point } : prev))
+      return
+    }
+
     if (isFrameTool && frameDraft) {
       const point = localPointFromEvent(event)
       if (!point) return
@@ -702,6 +730,19 @@ export default function DesignEngineeringCanvasTools({
   const finishPointerGesture = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+
+    if (lineDraft) {
+      const { start, current } = lineDraft
+      const length = Math.hypot(current.x - start.x, current.y - start.y)
+      if (length >= LINE_MIN_LENGTH) {
+        setStrokes((prev) => [
+          ...prev,
+          { id: createId(), points: [start, current] },
+        ])
+      }
+      setLineDraft(null)
+      return
     }
 
     if (frameDraft) {
@@ -734,11 +775,15 @@ export default function DesignEngineeringCanvasTools({
 
   const openComment = comments.find((comment) => comment.id === openCommentId) ?? null
   const draftFrame = frameDraft ? rectFromPoints(frameDraft.start, frameDraft.current) : null
+  const draftLinePath = lineDraft
+    ? pointsToPath([lineDraft.start, lineDraft.current])
+    : ''
   const layerClass = [
     'pd-canvas-tools',
     interceptPointer ? 'pd-canvas-tools--intercept' : '',
     isCommentTool ? 'pd-canvas-tools--comment' : '',
     isPenTool ? 'pd-canvas-tools--pen' : '',
+    isLineTool ? 'pd-canvas-tools--line' : '',
     isFrameTool ? 'pd-canvas-tools--frame' : '',
     isTextTool ? 'pd-canvas-tools--text' : '',
   ]
@@ -780,6 +825,16 @@ export default function DesignEngineeringCanvasTools({
             strokeLinejoin="round"
           />
         ))}
+        {draftLinePath ? (
+          <path
+            d={draftLinePath}
+            fill="none"
+            stroke={INK_COLOR}
+            strokeWidth={INK_WIDTH}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ) : null}
       </svg>
 
       {frames.map((frame) => (

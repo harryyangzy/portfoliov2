@@ -926,6 +926,10 @@
   cursor: crosshair;
 }
 
+.pd-canvas-tools--line {
+  cursor: crosshair;
+}
+
 .pd-canvas-tools--frame {
   cursor: crosshair;
 }
