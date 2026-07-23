@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react'
+import PixelCursorTrail from './PixelCursorTrail'
 
 export type CanvasToolId =
   | 'pointer'
@@ -813,6 +814,8 @@ export default function DesignEngineeringCanvasTools({
         setOpenCommentId(null)
       }}
     >
+      <PixelCursorTrail tone="blue" listenClosest=".pd-canvas" />
+
       <svg className={`pd-canvas-ink${inkFading ? ' pd-canvas-ink--fading' : ''}`} aria-hidden>
         {strokes.map((stroke) => (
           <path

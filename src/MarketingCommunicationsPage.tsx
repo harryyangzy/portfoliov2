@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import PortfolioShell from './PortfolioShell'
+import PixelCursorTrail from './PixelCursorTrail'
 import csaCard from './assets/marketing/csa-blue.png'
 import csaCardHover from './assets/marketing/csa.png'
 import iconBar from './assets/marketing/iconbar.png'
@@ -31,6 +32,7 @@ export default function MarketingCommunicationsPage() {
   return (
     <PortfolioShell pageName="Campaigns" shellVariant="community">
       <div className="mc">
+        <PixelCursorTrail tone="blue" />
         <section className="mc__hero">
           <div className="mc-profile">
             <div className="mc-profile__avatar-wrap" aria-hidden>

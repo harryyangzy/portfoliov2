@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import PortfolioShell from './PortfolioShell'
+import PixelCursorTrail from './PixelCursorTrail'
 import { communityProjectAssets as a } from './assets/community-projects/assets'
 import chevronBackward from './assets/community-projects/chevron.backward 1.svg'
 import w5SummitImage from './assets/community-projects/w5/summit-2.webp'
@@ -201,6 +202,7 @@ export default function CommunityProjectsPage() {
       <div
         className={`cp${!isWideLayout && readerLayerOpen ? ' cp--reader-layer' : ''}`}
       >
+        <PixelCursorTrail tone="beige" />
         <header className="cp__top">
           <div className="cp__brand">
             <div>
