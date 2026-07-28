@@ -36,6 +36,32 @@
   margin-bottom: 25px;
 }
 
+.stumbl-testflight {
+  background: #cfe8fc;
+  color: #0b4f8a;
+  text-decoration: none;
+  border-color: transparent;
+}
+
+.stumbl-testflight:hover {
+  background: #b7dcfa;
+  border-color: #93c5f0;
+  color: #0b4f8a;
+}
+
+.stumbl-github {
+  background: transparent;
+  color: #5c6166;
+  border: 1px solid #cad1d9;
+  text-decoration: none;
+}
+
+.stumbl-github:hover {
+  background: transparent;
+  border-color: #93a6ba;
+  color: #000;
+}
+
 .stumbl .coeur-card-title {
   font-size: 32px;
   font-weight: 400;

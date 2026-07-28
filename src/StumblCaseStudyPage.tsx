@@ -68,6 +68,22 @@ export default function StumblCaseStudyPage() {
             <span className="stush-skill">
               <span aria-hidden>💻</span> Design Engineering
             </span>
+            <a
+              className="stush-skill stumbl-testflight"
+              href="https://testflight.apple.com/join/MueHNP7M"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span aria-hidden>📲</span> Download on TestFlight
+            </a>
+            <a
+              className="stush-skill stumbl-github"
+              href="https://github.com/harryyangzy/stumbl"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span aria-hidden>🔗</span> View on GitHub
+            </a>
           </div>
 
           <div className="stush-stack">
