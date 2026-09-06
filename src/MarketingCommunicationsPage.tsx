@@ -46,7 +46,7 @@ export default function MarketingCommunicationsPage() {
                     ⋯
                   </span>
                 </div>
-                <p className="mc-profile__role">Previous Marketing Intern (x2)</p>
+                <p className="mc-profile__role">Previous Marketing Intern x2</p>
               </div>
               <div className="mc-profile__stats">
                 <span className="mc-profile__stat-block">
@@ -62,7 +62,9 @@ export default function MarketingCommunicationsPage() {
             <div className="mc-profile__tail">
               <div className="mc-profile__about">
                 <p className="mc-profile__tagline">Telling stories beautifully through marketing</p>
-                <p className="mc-profile__school">🐎&nbsp; Business and CS @ Western</p>
+                <p className="mc-profile__school">
+                  🐎&nbsp; Business and CS @ Ivey Business School and Western University
+                </p>
               </div>
               <p className="mc-profile__link">🔗 harryyang.ca/marketing</p>
             </div>
